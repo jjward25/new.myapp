@@ -1,0 +1,266 @@
+[
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Learn notes by sound",
+        "Priority": 3,
+        "Complete Date": null
+    },
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Finish 3 courses",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Finish 6 courses",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Learn to read",
+        "Priority": 4,
+        "Complete Date": null
+    },
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Play a full song in real time with two hands",
+        "Priority": 5,
+        "Complete Date": null
+    },
+    {
+        "Project": "Learn Piano",
+        "Project Priority": 6,
+        "Type": "Life",
+        "Milestone": "Able to improvise with intent",
+        "Priority": 6,
+        "Complete Date": null
+    },
+    {
+        "Project": "21-minute 5k",
+        "Project Priority": 4,
+        "Type": "Life",
+        "Milestone": "21 minutes",
+        "Priority": 3,
+        "Complete Date": null
+    },
+    {
+        "Project": "21-minute 5k",
+        "Project Priority": 4,
+        "Type": "Life",
+        "Milestone": "26 minutes",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "21-minute 5k",
+        "Project Priority": 4,
+        "Type": "Life",
+        "Milestone": "31 minutes",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Headstand Pushup",
+        "Project Priority": 8,
+        "Type": "Life",
+        "Milestone": "1 Rep",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Girlfriend",
+        "Project Priority": 9,
+        "Type": "Life",
+        "Milestone": "1 Girlfriend",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Write Something",
+        "Project Priority": 7,
+        "Type": "Life",
+        "Milestone": "1 Something",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 5 Jobs",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 10 Jobs",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 25 Jobs",
+        "Priority": 4,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 50 Jobs",
+        "Priority": 6,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 100 Jobs",
+        "Priority": 7,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Apply to 250 Jobs",
+        "Priority": 9,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Interview with 5 companies",
+        "Priority": 3,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Interview with 10 companies",
+        "Priority": 5,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Interview with 15 companies",
+        "Priority": 8,
+        "Complete Date": null
+    },
+    {
+        "Project": "Get a Job",
+        "Project Priority": 1,
+        "Type": "Career",
+        "Milestone": "Get and accept an offer",
+        "Priority": 0,
+        "Complete Date": null
+    },
+    {
+        "Project": "Coding",
+        "Project Priority": 5,
+        "Type": "Prof Dev",
+        "Milestone": "useState and useEffect",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Coding",
+        "Project Priority": 5,
+        "Type": "Prof Dev",
+        "Milestone": "Storage (MongoDB, GSheets)",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "Coding",
+        "Project Priority": 5,
+        "Type": "Prof Dev",
+        "Milestone": "Secure Storage & Authentication",
+        "Priority": 3,
+        "Complete Date": null
+    },
+    {
+        "Project": "Analytics",
+        "Project Priority": 3,
+        "Type": "Prof Dev",
+        "Milestone": "1 Course Complete",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Analytics",
+        "Project Priority": 3,
+        "Type": "Prof Dev",
+        "Milestone": "2 Courses Complete",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "Analytics",
+        "Project Priority": 3,
+        "Type": "Prof Dev",
+        "Milestone": "3 Courses Complete",
+        "Priority": 3,
+        "Complete Date": null
+    },
+    {
+        "Project": "Analytics",
+        "Project Priority": 3,
+        "Type": "Prof Dev",
+        "Milestone": "4 Courses Complete",
+        "Priority": 4,
+        "Complete Date": null
+    },
+    {
+        "Project": "Analytics",
+        "Project Priority": 3,
+        "Type": "Prof Dev",
+        "Milestone": "5 Courses Complete",
+        "Priority": 5,
+        "Complete Date": null
+    },
+    {
+        "Project": "Portfolio",
+        "Project Priority": 2,
+        "Type": "Prof Dev",
+        "Milestone": "GTM Overview",
+        "Priority": 1,
+        "Complete Date": null
+    },
+    {
+        "Project": "Portfolio",
+        "Project Priority": 2,
+        "Type": "Prof Dev",
+        "Milestone": "GTM Dash",
+        "Priority": 2,
+        "Complete Date": null
+    },
+    {
+        "Project": "Portfolio",
+        "Project Priority": 2,
+        "Type": "Prof Dev",
+        "Milestone": "ML Example",
+        "Priority": 2,
+        "Complete Date": null
+    }
+]
