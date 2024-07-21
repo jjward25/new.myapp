@@ -2,7 +2,7 @@
 import React from 'react';
 import fs from 'fs';
 import path from 'path';
-import TaskCard from './backlogTaskCard/TaskCard';
+import TaskCard from './components/TaskCard';
 import {getCurrentFormattedDate} from '../../components/date' 
 
 const Backlog = async () => {
