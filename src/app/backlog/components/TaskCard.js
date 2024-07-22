@@ -59,8 +59,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-front bg-white p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-between items-center border-b mb-3'>
-            <h2 className="font-bold text-xl flex-1">{isEditing ? 
+          <div className='flex flex-row justify-between items-center border-b mb-3 border-cyan-600'>
+            <h2 className="font-bold text-xl flex-1 mb-2">{isEditing ? 
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
@@ -76,7 +76,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             </button>
           </div>
           <div className='flex flex-col md:flex-row'>
-            <div className='flex flex-col mr-5 pr-5 md:border-r'>
+            <div className='flex flex-col mr-5 pr-5 md:border-r md:border-cyan-600'>
               <p className='mb-1 text-left'>
                 <strong>Start Date:</strong> {isEditing ? 
                   <input
@@ -116,7 +116,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-back bg-gray-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-between items-center mb-4'>
+          <div className='flex flex-row justify-between items-center border-b border-cyan-600 mb-3 pb-3'>
             <h2 className="font-bold text-xl flex-1">{editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
@@ -127,7 +127,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           </div>
           <div className="flex flex-col flex-1 overflow-auto">
             {Object.keys(editableTask).map((key, index) => (
-              key !== "Task Name" && key !== "Start Date" && key !== "Due Date" && key !== "Priority" && key !== "Notes" && (
+              key !== "Task Name" && key !== "_id" && (
                 <p className='text-left mb-2' key={index}>
                   <strong>{key}:</strong> {isEditing ? 
                     <input
@@ -150,13 +150,13 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             ) : (
               <button
                 onClick={() => setIsEditing(true)}
-                className="btn btn-secondary mt-4 bg-neutral-400 hover:bg-neutral-500 text-cyan-700 w-full"
+                className="btn btn-secondary mt-3 bg-neutral-400 hover:bg-neutral-500 text-cyan-700 w-full"
               >
                 Edit
               </button>
             )}
           </div>
-          <div className='h-5'></div>
+          <div className='h-7'></div>
         </div>
       </div>
     </div>
