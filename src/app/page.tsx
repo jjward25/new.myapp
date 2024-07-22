@@ -1,6 +1,5 @@
 import Daily from './daily/page'
 import {getCurrentFormattedDate} from '../components/date' 
-import BacklogList from '../components/backlog.js';
 
 export default function Home() {
   const today = getCurrentFormattedDate();
@@ -16,8 +15,6 @@ export default function Home() {
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
         <Daily/>
       </div>
-      <BacklogList/>
-
     </main>
   );
 }

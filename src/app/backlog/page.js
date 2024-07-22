@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import TaskCard from './components/TaskCard';
 import {getCurrentFormattedDate} from '../../components/date' 
+import BacklogList from './components/BacklogList.js';
 
 const Backlog = async () => {
   const filePath = path.join(process.cwd(), 'src/utils/jsons/todos.json');
@@ -31,13 +32,14 @@ const Backlog = async () => {
     <div className="flex flex-col w-full h-full mb-10">
       <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Section</h1>
       <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
-      
+      <BacklogList/>
       <div className='flex flex-col md:flex-row'>
         <div className='h-auto w-full'>Analytics Placeholder</div>
         <div className="flex flex-col w-full max-w-[750px] m-auto">
           {incompleteTasks.map((task, index) => (
             <TaskCard key={index} task={task} />
           ))}
+            
         </div>
       </div>
 

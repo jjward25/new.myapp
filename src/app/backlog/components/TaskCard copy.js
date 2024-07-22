@@ -1,25 +1,10 @@
-"use client";
-import React, { useState, useEffect, useRef } from 'react';
+"use client"
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableTask, setEditableTask] = useState({ ...task });
-  const [isFlipped, setIsFlipped] = useState(false);
-
-  const cardRef = useRef(null);
-
-  useEffect(() => {
-    if (cardRef.current) {
-      // Reset height to auto to ensure dynamic resizing
-      cardRef.current.style.height = 'auto';
-      // Calculate the max height of front and back faces
-      const frontHeight = cardRef.current.querySelector('.flip-card-front').scrollHeight;
-      const backHeight = cardRef.current.querySelector('.flip-card-back').scrollHeight;
-      const maxHeight = Math.max(frontHeight, backHeight);
-      cardRef.current.style.height = `${maxHeight}px`;
-    }
-  }, [isFlipped, editableTask]);
 
   const handleInputChange = (e, key) => {
     setEditableTask({ ...editableTask, [key]: e.target.value });
@@ -45,22 +30,12 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   };
 
   return (
-    <div
-      ref={cardRef}
-      className="flip-card relative w-full mx-auto my-2 md:m-3 p-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-lg cursor-pointer perspective-1000 overflow-hidden"
-      onClick={() => setIsFlipped(!isFlipped)}
-    >
-      <div
-        className={`flip-card-inner transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
-        style={{ transformStyle: 'preserve-3d' }}
-      >
+    <div className="flip-card w-full mx-auto my-2 md:m-3 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] rounded-lg relative">
+      <div className="flip-card-inner min-h-[130px] w-full h-auto text-center transition-transform duration-800 transform-style-preserve-3d">
         {/* Front Face */}
-        <div
-          className={`flip-card-face flip-card-front bg-white p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
-          style={{ backfaceVisibility: 'hidden' }}
-        >
+        <div className="flip-card-front absolute w-full h-full backface-hidden border border-gray-300 rounded-lg shadow-lg bg-white p-4 flex flex-col">
           <div className='flex flex-row justify-between items-center border-b mb-3'>
-            <h2 className="font-bold text-xl flex-1">{isEditing ? 
+            <h2 className="font-bold text-xl mb-2 flex-1">{isEditing ? 
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
@@ -69,7 +44,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               />
               : editableTask["Task Name"]}</h2>
             <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+              onClick={handleDelete}
               className="text-red-500 hover:text-red-700 font-bold"
             >
               &times;
@@ -108,24 +83,20 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                 : editableTask["Notes"]}
             </p>
           </div>
-          <div className='h-5'></div>
         </div>
 
         {/* Back Face */}
-        <div
-          className={`flip-card-face flip-card-back bg-gray-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          <div className='flex flex-row justify-between items-center mb-4'>
-            <h2 className="font-bold text-xl flex-1">{editableTask["Task Name"]}</h2>
+        <div className="flip-card-back absolute w-full h-full backface-hidden bg-gray-100 p-4 flex flex-col">
+          <div className='flex justify-between items-center mb-4'>
+            <h2 className="font-bold text-xl">{editableTask["Task Name"]}</h2>
             <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+              onClick={handleDelete}
               className="text-red-500 hover:text-red-700 font-bold"
             >
               &times;
             </button>
           </div>
-          <div className="flex flex-col flex-1 overflow-auto">
+          <div className="flex-1 ">
             {Object.keys(editableTask).map((key, index) => (
               key !== "Task Name" && key !== "Start Date" && key !== "Due Date" && key !== "Priority" && key !== "Notes" && (
                 <p className='text-left mb-2' key={index}>
@@ -156,7 +127,6 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               </button>
             )}
           </div>
-          <div className='h-5'></div>
         </div>
       </div>
     </div>
