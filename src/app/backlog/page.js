@@ -64,21 +64,6 @@ const Backlog = () => {
       <p className='text-white mb-10'>{getCurrentFormattedDate()}</p>
 
       <div className="flex flex-col w-full h-full mb-10">
-        
-        <div className="flex space-x-5 mb-8 border-t border-b border-neutral-500 py-2 w-full justify-evenly">
-          <button
-            onClick={() => handleToggleSortOrder('date')}
-            className="btn btn-sm btn-outline btn-default text-neutral-500 hover:text-neutral-400 hover:underline"
-          >
-            Due Date {sortOrder === 'date' && dateOrder === 'asc' ? 'Descending' : 'Ascending'}
-          </button>
-          <button
-            onClick={() => handleToggleSortOrder('priority')}
-            className="btn btn-sm btn-outline btn-default text-neutral-500 hover:text-neutral-400 hover:underline"
-          >
-            Priority {sortOrder === 'priority' && priorityOrder === 'asc' ? 'Descending' : 'Ascending'}
-          </button>
-        </div>
 
         <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
           Task Backlog
@@ -87,6 +72,20 @@ const Backlog = () => {
         
 
         <div className='flex flex-col items-center'>
+          <div className="flex space-x-5 mb-8 border-t border-b border-neutral-500 py-2 w-full justify-evenly max-w-[1000px]">
+            <button
+              onClick={() => handleToggleSortOrder('date')}
+              className="btn btn-sm btn-outline btn-default text-neutral-500 hover:text-neutral-400 hover:underline"
+            >
+              Due Date {sortOrder === 'date' && dateOrder === 'asc' ? 'Descending' : 'Ascending'}
+            </button>
+            <button
+              onClick={() => handleToggleSortOrder('priority')}
+              className="btn btn-sm btn-outline btn-default text-neutral-500 hover:text-neutral-400 hover:underline"
+            >
+              Priority {sortOrder === 'priority' && priorityOrder === 'asc' ? 'Descending' : 'Ascending'}
+            </button>
+          </div>
           <AddNewTaskForm />
           <div className='h-4'></div>
           <BacklogList backlog={sortedBacklog} loading={loading} error={error} />
