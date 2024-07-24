@@ -37,7 +37,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
       <div className="flex flex-col">
         {/* Date */}
         <div className="flex items-center md:ml-1 mb-3 py-1 md:px-1 rounded">
-          <div className="w-auto ">
+          <div className="w-auto">
             {isEditing ? (
               <input
                 type="text"
@@ -61,7 +61,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Sleep Score */}
               <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Sleep Score:</label>
+                  <label className="block text-sm text-black font-semibold">Sleep Score:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -80,7 +80,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Fab Morning */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Fab Morning:</label>
+                  <label className="block text-sm text-black font-semibold">Fab Morning:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -104,7 +104,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Work Score */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Work Score:</label>
+                  <label className="block text-sm text-black font-semibold">Work Score:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -123,7 +123,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Workout */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Workout:</label>
+                  <label className="block text-sm text-black font-semibold">Workout:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -147,7 +147,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Piano */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Piano:</label>
+                  <label className="block text-sm text-black font-semibold">Piano:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -171,7 +171,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Prof Dev */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Prof Dev:</label>
+                  <label className="block text-sm text-black font-semibold">Prof Dev:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -195,7 +195,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Spanish */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Spanish:</label>
+                  <label className="block text-sm text-black font-semibold">Spanish:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -219,7 +219,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Fab Evening */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Fab Evening:</label>
+                  <label className="block text-sm text-black font-semibold">Fab Evening:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -252,7 +252,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Protein % */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Protein %:</label>
+                  <label className="block text-sm text-black font-semibold">Protein %:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -272,7 +272,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Calories % */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Calories %:</label>
+                  <label className="block text-black text-sm font-semibold">Calories %:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -292,7 +292,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Social Activities */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Social Activities:</label>
+                  <label className="block text-sm text-black font-semibold">Social Activities:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -311,7 +311,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Mood Score */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Mood Score:</label>
+                  <label className="block text-sm text-black font-semibold">Mood Score:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -330,7 +330,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Mood Summary */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Mood Summary:</label>
+                  <label className="block text-sm text-black font-semibold">Mood Summary:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -349,7 +349,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Performance Score */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Performance Score:</label>
+                  <label className="block text-sm text-black font-semibold">Performance Score:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -368,7 +368,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Performance Rating */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm font-semibold">Performance Summary:</label>
+                  <label className="block text-sm text-black font-semibold">Performance Summary:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -390,7 +390,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
         {/* Journal */}
         <div className="flex flex-col justify-start mb-2 py-1 md:px-6 rounded text-sm">
           <div className="w-full">
-            <label className="block border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Journal:</label>
+            <label className="block border-b border-cyan-200 font-bold text-black text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Journal:</label>
           </div>
           <div className="w-full">
             {isEditing ? (
