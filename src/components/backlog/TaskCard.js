@@ -69,7 +69,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       onClick={handleCardClick}
     >
       <div
-        className={`flip-card-inner transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
+        className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Front Face */}
@@ -77,9 +77,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-front bg-white p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-between items-center border-b border-cyan-600'>
+          <div className='flex flex-row justify-between items-center border-b border-cyan-600 text-black'>
             <p className='mb-2 mr-2 bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
-            <h2 className="font-bold text-md flex-1 mb-2">{isEditing ? 
+            <h2 className="font-bold text-md flex-1 mb-2 text-black">{isEditing ? 
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
@@ -111,7 +111,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
           <div className='flex flex-col md:flex-row text-sm'>
             <div className='flex flex-col pr-2 md:border-r md:border-cyan-600 md:w-45/100 pt-2 pb-1'>
-              <p className='text-left mb-1'>
+              <p className='text-left mb-1 text-black'>
                 <strong>Start Date:</strong> {isEditing ? 
                   <input
                     type="text"
@@ -122,7 +122,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                   />
                   : editableTask["Start Date"]}
               </p>
-              <p className='text-left'>
+              <p className='text-left text-black'>
                 <strong>Due Date:</strong> {isEditing ? 
                   <input
                     type="text"
@@ -136,7 +136,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
      
             </div>
 
-            <p className='text-left md:w-3/5 md:ml-3 pt-2'>
+            <p className='text-left md:w-3/5 md:ml-3 pt-2 text-black'>
               <strong>Notes:</strong> {isEditing ? 
                 <textarea
                   value={editableTask["Notes"] || ''}
@@ -157,7 +157,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className='flex flex-row justify-between items-center border-b border-cyan-600 mb-3 pb-3'>
-            <h2 className="font-bold text-md flex-1">{editableTask["Task Name"]}</h2>
+            <h2 className="font-bold text-black text-md flex-1">{editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
               className="text-red-500 hover:text-red-700 font-bold"
@@ -168,7 +168,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           <div className="flex flex-col flex-1 overflow-auto text-sm">
             {Object.keys(editableTask).map((key, index) => (
               key !== "Task Name" && key !== "_id" && (
-                <p className='text-left mb-2' key={index}>
+                <p className='text-left mb-2 text-black' key={index}>
                   <strong>{key}:</strong> {isEditing ? 
                     <input
                       type="text"
