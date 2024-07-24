@@ -44,7 +44,7 @@ export async function getMostRecentRoutine() {
     .collection('Routines')
     .find({})
     .sort({ Date: -1 }) // Sort by Date in descending order
-    .limit(1)
+    .limit(2)
     .toArray();
   return mostRecentRoutine;
 }
