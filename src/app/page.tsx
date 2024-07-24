@@ -1,6 +1,6 @@
 import React from 'react';
 import { getCurrentFormattedDate } from '../components/date';
-import Routines from '../components/daily/Routines';
+import Routines from '../components/routines/Routines';
 import ClientWrapper from '../components/ClientWrapper';
 
 export default function Home() {
