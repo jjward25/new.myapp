@@ -21,12 +21,12 @@ export default function Home() {
         
         <div className='w-full md:grid md:grid-cols-2'>
           
-          <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
+          <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
             <p className='w-full text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>{`Today's Tasks`}</p>
             <AddNewTaskForm />
             <BacklogListShort />
           </div>
-          <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
+          <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
             <p className='w-full  text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Daily Habits</p>
             <Routines/>
           </div>
