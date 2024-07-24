@@ -71,7 +71,7 @@ const Backlog = () => {
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
         
 
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center md:w-[750px] max-w-[750px] mx-auto'>
           <div className="flex space-x-5 mb-8 border-t border-b border-neutral-500 py-2 w-full justify-evenly max-w-[1000px]">
             <button
               onClick={() => handleToggleSortOrder('date')}
