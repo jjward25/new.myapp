@@ -1,9 +1,17 @@
+"use client"
+import { useState } from 'react';
 import { getCurrentFormattedDate } from '../components/date';
 import Routines from '../components/daily/Routines';
 import BacklogListShort from '../components/backlog/BacklogListShort';
 import AddNewTaskForm from '../components/backlog/NewButton';
 
 export default function Home() {
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const handleTaskAdded = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   const today = getCurrentFormattedDate();
 
   return (
@@ -23,8 +31,8 @@ export default function Home() {
           
           <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
             <p className='w-full text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>{`Today's Tasks`}</p>
-            <AddNewTaskForm />
-            <BacklogListShort />
+            <AddNewTaskForm onTaskAdded={handleTaskAdded} />
+            <BacklogListShort refreshTrigger={refreshTrigger} />
           </div>
           <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
             <p className='w-full  text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Daily Habits</p>

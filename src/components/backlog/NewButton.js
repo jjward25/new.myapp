@@ -1,11 +1,15 @@
-// src/components/Backlog/AddNewTaskForm.js
 "use client";
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { getCurrentFormattedDate } from '../../components/date';
 
-const AddNewTaskForm = () => {
+const formatDate = (dateString) => {
+  // Ensure the date is in the format YYYY-MM-DD
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date.toISOString().split('T')[0];
+};
+
+const AddNewTaskForm = ({ onTaskAdded }) => {
   const [formData, setFormData] = useState({
     "Task Name": '',
     "Start Date": '',
@@ -28,8 +32,16 @@ const AddNewTaskForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Format date fields
+    const formattedData = {
+      ...formData,
+      "Start Date": formatDate(formData["Start Date"]),
+      "Due Date": formatDate(formData["Due Date"]),
+      "Complete Date": formatDate(formData["Complete Date"])
+    };
+
     try {
-      await axios.post('/api/backlog', formData);
+      await axios.post('/api/backlog', formattedData);
       alert('Task added successfully');
       setFormData({
         "Task Name": '',
@@ -43,6 +55,7 @@ const AddNewTaskForm = () => {
         "Complete Date": ''
       });
       setIsFormVisible(false);
+      onTaskAdded(); // Trigger refresh in the parent component
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -50,7 +63,6 @@ const AddNewTaskForm = () => {
 
   return (
     <div className="flex flex-col w-full max-w-[1000px] mb-4">
-      {/* Button to show the form */}
       <button
         onClick={() => setIsFormVisible(!isFormVisible)}
         className="btn mx-auto border-cyan-700 hover:border-cyan-500 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 w-full max-w-[1000px]"
@@ -58,7 +70,6 @@ const AddNewTaskForm = () => {
         {isFormVisible ? 'Hide Form' : 'Add New Task'}
       </button>
 
-      {/* Form to add a new task */}
       {isFormVisible && (
         <form onSubmit={handleSubmit} className="space-y-4 w-full mx-auto my-5 bg-slate-800 rounded-lg p-4">
           <div>
@@ -71,6 +82,7 @@ const AddNewTaskForm = () => {
                 value={formData["Task Name"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                required
               />
             </label>
           </div>
@@ -80,7 +92,7 @@ const AddNewTaskForm = () => {
               <input
                 id="start-date"
                 name="Start Date"
-                type="text"
+                type="date"
                 value={formData["Start Date"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
@@ -93,10 +105,11 @@ const AddNewTaskForm = () => {
               <input
                 id="due-date"
                 name="Due Date"
-                type="text"
+                type="date"
                 value={formData["Due Date"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                required
               />
             </label>
           </div>
@@ -110,6 +123,7 @@ const AddNewTaskForm = () => {
                 value={formData["Priority"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                required
               />
             </label>
           </div>
@@ -170,7 +184,7 @@ const AddNewTaskForm = () => {
               <input
                 id="complete-date"
                 name="Complete Date"
-                type="text"
+                type="date"
                 value={formData["Complete Date"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
