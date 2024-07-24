@@ -131,6 +131,17 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                   />
                   : editableTask["Due Date"]}
               </p>
+              <p className='text-left'>
+                <strong>Due Date:</strong> {isEditing ? 
+                  <input
+                    type="text"
+                    value={editableTask["Priority"] || ''}
+                    onChange={(e) => handleInputChange(e, "Priority")}
+                    className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  : editableTask["Priority"]}
+              </p>
             </div>
             <p className='text-left'>
               <strong>Notes:</strong> {isEditing ? 

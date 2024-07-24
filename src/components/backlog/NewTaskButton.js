@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const formatDate = (dateString) => {
-  // Ensure the date is in the format YYYY-MM-DD
   const date = new Date(dateString);
   return isNaN(date.getTime()) ? null : date.toISOString().split('T')[0];
 };
@@ -32,7 +30,6 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Format date fields
     const formattedData = {
       ...formData,
       "Start Date": formatDate(formData["Start Date"]),
@@ -41,21 +38,33 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
     };
 
     try {
-      await axios.post('/api/backlog', formattedData);
-      alert('Task added successfully');
-      setFormData({
-        "Task Name": '',
-        "Start Date": '',
-        "Due Date": '',
-        "Priority": '',
-        "Type": '',
-        "Project": '',
-        "Notes": '',
-        "Links": '',
-        "Complete Date": ''
+      const response = await fetch('/api/backlog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formattedData),
       });
-      setIsFormVisible(false);
-      onTaskAdded(); // Trigger refresh in the parent component
+
+      if (response.ok) {
+        alert('Task added successfully');
+        setFormData({
+          "Task Name": '',
+          "Start Date": '',
+          "Due Date": '',
+          "Priority": '',
+          "Type": '',
+          "Project": '',
+          "Notes": '',
+          "Links": '',
+          "Complete Date": ''
+        });
+        setIsFormVisible(false);
+        if (onTaskAdded) onTaskAdded(); // Trigger refresh in the parent component
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error}`);
+      }
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -72,6 +81,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
 
       {isFormVisible && (
         <form onSubmit={handleSubmit} className="space-y-4 w-full mx-auto my-5 bg-slate-800 rounded-lg p-4">
+          {/* Form Fields */}
           <div>
             <label htmlFor="task-name" className="block mb-2 text-cyan-500">
               Task Name:
@@ -116,32 +126,41 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
           <div>
             <label htmlFor="priority" className="block mb-2 text-cyan-500">
               Priority:
-              <input
+              <select
                 id="priority"
                 name="Priority"
-                type="text"
                 value={formData["Priority"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                 required
-              />
+              >
+                <option value="">Select priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
             </label>
           </div>
           <div>
-            <label htmlFor="type" className="block mb-2 text-neutral-400">
+            <label htmlFor="type" className="block mb-2 text-cyan-500">
               Type:
-              <input
+              <select
                 id="type"
                 name="Type"
-                type="text"
                 value={formData["Type"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-              />
+                required
+              >
+                <option value="">Select type</option>
+                <option value="Task">Task</option>
+                <option value="Event">Event</option>
+                <option value="Reminder">Reminder</option>
+              </select>
             </label>
           </div>
           <div>
-            <label htmlFor="project" className="block mb-2 text-neutral-400">
+            <label htmlFor="project" className="block mb-2 text-cyan-500">
               Project:
               <input
                 id="project"
@@ -161,12 +180,12 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 name="Notes"
                 value={formData["Notes"]}
                 onChange={handleInputChange}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                className="textarea textarea-bordered bg-neutral-100 text-cyan-700 w-full"
               />
             </label>
           </div>
           <div>
-            <label htmlFor="links" className="block mb-2 text-neutral-400">
+            <label htmlFor="links" className="block mb-2 text-cyan-500">
               Links:
               <input
                 id="links"
@@ -179,7 +198,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
             </label>
           </div>
           <div>
-            <label htmlFor="complete-date" className="block mb-2 text-neutral-400">
+            <label htmlFor="complete-date" className="block mb-2 text-cyan-500">
               Complete Date:
               <input
                 id="complete-date"
@@ -193,7 +212,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
           </div>
           <button
             type="submit"
-            className="btn btn-primary bg-cyan-700 hover:bg-cyan-800 text-neutral-100 w-full"
+            className="btn btn-primary w-full max-w-[1000px] text-neutral-100"
           >
             Add Task
           </button>

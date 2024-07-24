@@ -59,7 +59,7 @@ const PrjList = ({ milestones }) => {
 
   return (
     <div className="container mx-auto md:px-0 h-0 md:h-auto">
-      <div className="flex justify-start space-x-5 mb-8 border-t border-b border-neutral-500 py-2">
+      <div className="flex space-x-5 mb-8 border-t border-b border-neutral-500 py-2 w-full justify-evenly">
         <button
           onClick={() => handleToggleSortOrder('date')}
           className="btn btn-sm btn-outline btn-default text-neutral-500 hover:text-neutral-400 hover:underline"

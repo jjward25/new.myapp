@@ -3,7 +3,7 @@
 
 import React from 'react';
 import BacklogList from '../../components/backlog/BacklogList';
-import AddNewTaskForm from '../../components/backlog/NewButton';
+import AddNewTaskForm from '../../components/backlog/NewTaskButton';
 import { getCurrentFormattedDate } from '../../components/date'; // Ensure this path is correct
 
 const Backlog = () => {

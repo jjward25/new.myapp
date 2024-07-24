@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from './TaskCard';
 import { getCurrentDate } from '../date';
@@ -10,35 +10,38 @@ const BacklogListShort = ({ refreshTrigger }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchBacklog = async () => {
-    try {
-      const response = await axios.get('/api/backlog');
-      setBacklog(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchBacklog = async () => {
+      try {
+        const response = await axios.get('/api/backlog');
+        setBacklog(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchBacklog();
-  }, [refreshTrigger]); // Refetch when refreshTrigger changes
+  }, [refreshTrigger]);
 
   const handleEdit = (updatedItem) => {
-    setBacklog(backlog.map(item => item._id === updatedItem._id ? updatedItem : item));
+    setBacklog(prevBacklog =>
+      prevBacklog.map(item => item._id === updatedItem._id ? updatedItem : item)
+    );
   };
 
   const handleDelete = (id) => {
-    setBacklog(backlog.filter(item => item._id !== id));
+    setBacklog(prevBacklog =>
+      prevBacklog.filter(item => item._id !== id)
+    );
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   const today = getCurrentDate();
-
-  const filteredBacklog = backlog.filter(item => 
+  const filteredBacklog = backlog.filter(item =>
     item["Complete Date"] === null && item["Due Date"] === today
   );
 
