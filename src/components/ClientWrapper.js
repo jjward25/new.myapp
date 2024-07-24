@@ -26,6 +26,9 @@ const ClientWrapper = () => {
 
   return (
     <div className='flex flex-col w-full h-full justify-start'>
+
+      <AddNewTaskForm onTaskAdded={handleTaskAdded} />
+
       <div className="flex space-x-5 mb-4 border-t border-b border-neutral-500 py-2 w-full justify-evenly">
         <button
           onClick={() => handleToggleSortOrder('date')}
@@ -41,7 +44,7 @@ const ClientWrapper = () => {
         </button>
       </div>
 
-      <AddNewTaskForm onTaskAdded={handleTaskAdded} />
+      
       
       <BacklogListShort
         refreshTrigger={refreshTrigger}

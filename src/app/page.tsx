@@ -16,10 +16,8 @@ export default function Home() {
       
           
       <div className="flex flex-col w-full h-full mb-10 justify-center">
-        <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
-          Daily Overview
-        </h1>
-        <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
+    
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div>
 
         <div className='w-full md:grid md:grid-cols-2'>
           
