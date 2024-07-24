@@ -7,7 +7,7 @@ const BacklogList = ({ backlog, loading, error }) => {
   if (error) return <div>Error: {error}</div>;
 
   const filteredBacklog = backlog.filter(item =>
-    item["Complete Date"] === null
+    item["Complete Date"] != null
   );
 
   return (

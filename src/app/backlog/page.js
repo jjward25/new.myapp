@@ -6,6 +6,8 @@ import BacklogList from '../../components/backlog/BacklogList';
 import AddNewTaskForm from '../../components/backlog/NewTaskButton';
 import { getCurrentFormattedDate } from '../../components/date';
 import axios from 'axios';
+import BacklogListCompleted from '../../components/backlog/BacklogListCompleted';
+
 
 const Backlog = () => {
   const [backlog, setBacklog] = useState([]);
@@ -31,6 +33,16 @@ const Backlog = () => {
   }, []);
 
   const handleToggleSortOrder = (type) => {
+    if (type === 'date') {
+      setDateOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+      setSortOrder('date');
+    } else if (type === 'priority') {
+      setPriorityOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+      setSortOrder('priority');
+    }
+  };
+
+  const handleToggleSortOrderTwo = (type) => {
     if (type === 'date') {
       setDateOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
       setSortOrder('date');
@@ -66,7 +78,7 @@ const Backlog = () => {
       <div className="flex flex-col w-full h-full mb-10">
 
         <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
-          Task Backlog
+          Open Tasks
         </h1>
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
         
@@ -86,10 +98,30 @@ const Backlog = () => {
               Priority {sortOrder === 'priority' && priorityOrder === 'asc' ? 'Descending' : 'Ascending'}
             </button>
           </div>
+
           <AddNewTaskForm />
           <div className='h-4'></div>
           <BacklogList backlog={sortedBacklog} loading={loading} error={error} />
+
         </div>
+
+      </div>
+
+      <div className="flex flex-col w-full h-full mb-10">
+
+        <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
+          Completed Tasks
+        </h1>
+        <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
+        
+
+        <div className='flex flex-col items-center md:w-[750px] max-w-[750px] mx-auto'>
+
+          <div className='h-4'></div>
+          <BacklogListCompleted backlog={sortedBacklog} loading={loading} error={error} />
+          
+        </div>
+
       </div>
     </main>
   );
