@@ -65,7 +65,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full mx-auto mb-4  p-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-lg cursor-pointer perspective-1000 overflow-hidden"
+      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4  p-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-lg cursor-pointer perspective-1000 overflow-hidden"
       onClick={handleCardClick}
     >
       <div
@@ -89,9 +89,22 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               : editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="text-red-500 hover:text-red-700 font-bold"
+              className="absolute top-4 right-5 bg-black border border-cyan-200 text-cyan-700 hover:text-red-800 rounded-lg"
             >
-              &times;
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
           </div>
           <div className='flex flex-col md:flex-row'>

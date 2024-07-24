@@ -21,9 +21,11 @@ const Backlog = () => {
         </h1>
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
         
+        <div className='flex flex-col items-center'>
         <AddNewTaskForm />
         <div className='h-4'></div>
         <BacklogList />
+        </div>
 
       </div>
     </main>

@@ -49,7 +49,7 @@ const AddNewTaskForm = () => {
   };
 
   return (
-    <div className="flex flex-col w-full mb-4">
+    <div className="flex flex-col w-full max-w-[1000px] mb-4">
       {/* Button to show the form */}
       <button
         onClick={() => setIsFormVisible(!isFormVisible)}
@@ -60,7 +60,7 @@ const AddNewTaskForm = () => {
 
       {/* Form to add a new task */}
       {isFormVisible && (
-        <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-[1000px] mx-auto my-5 bg-slate-800 rounded-lg p-4">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full mx-auto my-5 bg-slate-800 rounded-lg p-4">
           <div>
             <label htmlFor="task-name" className="block mb-2 text-cyan-500">
               Task Name:
