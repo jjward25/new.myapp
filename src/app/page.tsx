@@ -1,7 +1,10 @@
 import React from 'react';
 import { getCurrentFormattedDate } from '../components/date';
 import Routines from '../components/routines/Routines';
-import ClientWrapper from '../components/ClientWrapper';
+import ClientWrapper from '../components/tasks/ClientWrappers/DailyTaskClientWrapper';
+import ListClientWrapper from '../components/tasks/ClientWrappers/ListClientWrapper';
+import EventsClientWrapper from '../components/tasks/ClientWrappers/EventsClientWrapper';
+
 
 export default function Home() {
   const today = getCurrentFormattedDate();
@@ -22,11 +25,11 @@ export default function Home() {
         <div className='w-full md:grid md:grid-cols-2'>
           
           <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
-            <p className='w-full text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>{`Today's Tasks`}</p>
+            <ListClientWrapper/>
             <ClientWrapper />
           </div>
           <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
-            <p className='w-full  text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Daily Habits</p>
+            <EventsClientWrapper/>
             <Routines/>
           </div>
         </div>

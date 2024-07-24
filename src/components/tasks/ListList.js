@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from './TaskCard';
-import { getCurrentDate } from '../date';
 
-const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
+const ListList = ({ refreshTrigger }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,32 +39,11 @@ const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const today = getCurrentDate();
-  const filteredBacklog = backlog.filter(item =>
-    item["Complete Date"] === null && item["Due Date"] === today
-  );
-
-  // Sort filteredBacklog
-  const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
-  const sortedBacklog = [...filteredBacklog];
-  
-  if (sortOrder === 'date') {
-    sortedBacklog.sort((a, b) => {
-      const dateA = new Date(a['Start Date']);
-      const dateB = new Date(b['Start Date']);
-      return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
-    });
-  } else if (sortOrder === 'priority') {
-    sortedBacklog.sort((a, b) => {
-      const priorityA = priorityOrderMap[a['Priority']] || Infinity;
-      const priorityB = priorityOrderMap[b['Priority']] || Infinity;
-      return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
-    });
-  }
+  const filteredBacklog = backlog.filter(item => item["Type"] === "List");
 
   return (
     <div className="w-full">
-      {sortedBacklog.map(item => (
+      {filteredBacklog.map(item => (
         <TaskCard
           key={item._id}
           task={item}
@@ -77,4 +55,4 @@ const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder 
   );
 };
 
-export default BacklogListShort;
+export default ListList;

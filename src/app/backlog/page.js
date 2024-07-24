@@ -1,35 +1,21 @@
-// src/app/backlog/page.js
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import BacklogList from '../../components/backlog/BacklogList';
-import AddNewTaskForm from '../../components/backlog/NewTaskButton';
+import BacklogList from '../../components/tasks/BacklogList';
+import AddNewTaskForm from '../../components/tasks/NewTaskButton';
 import { getCurrentFormattedDate } from '../../components/date';
-import axios from 'axios';
-import BacklogListCompleted from '../../components/backlog/BacklogListCompleted';
-
+import BacklogListCompleted from '../../components/tasks/BacklogListCompleted';
 
 const Backlog = () => {
-  const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState('date');
   const [dateOrder, setDateOrder] = useState('asc');
   const [priorityOrder, setPriorityOrder] = useState('asc');
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   useEffect(() => {
-    const fetchBacklog = async () => {
-      try {
-        const response = await axios.get('/api/backlog');
-        setBacklog(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBacklog();
+    setLoading(false);
   }, []);
 
   const handleToggleSortOrder = (type) => {
@@ -40,33 +26,8 @@ const Backlog = () => {
       setPriorityOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
       setSortOrder('priority');
     }
+    setRefreshTrigger(prev => !prev); // Trigger refresh
   };
-
-  const handleToggleSortOrderTwo = (type) => {
-    if (type === 'date') {
-      setDateOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-      setSortOrder('date');
-    } else if (type === 'priority') {
-      setPriorityOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-      setSortOrder('priority');
-    }
-  };
-
-  const sortedBacklog = [...backlog];
-  if (sortOrder === 'date') {
-    sortedBacklog.sort((a, b) => {
-      const dateA = new Date(a['Due Date']);
-      const dateB = new Date(b['Due Date']);
-      return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
-    });
-  } else if (sortOrder === 'priority') {
-    const priorityOrderMap = { P0: 4, P1: 3, P2: 2, P3: 1 };
-    sortedBacklog.sort((a, b) => {
-      const priorityA = priorityOrderMap[a['Priority']] || Infinity;
-      const priorityB = priorityOrderMap[b['Priority']] || Infinity;
-      return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
-    });
-  }
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-12 w-full h-full">
@@ -82,7 +43,6 @@ const Backlog = () => {
         </h1>
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
         
-
         <div className='flex flex-col items-center md:w-[750px] max-w-[750px] mx-auto'>
           <div className="flex space-x-5 mb-8 border-t border-b border-neutral-500 py-2 w-full justify-evenly max-w-[1000px]">
             <button
@@ -101,8 +61,12 @@ const Backlog = () => {
 
           <AddNewTaskForm />
           <div className='h-4'></div>
-          <BacklogList backlog={sortedBacklog} loading={loading} error={error} />
-
+          <BacklogList
+            refreshTrigger={refreshTrigger}
+            sortOrder={sortOrder}
+            dateOrder={dateOrder}
+            priorityOrder={priorityOrder}
+          />
         </div>
 
       </div>
@@ -114,12 +78,14 @@ const Backlog = () => {
         </h1>
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-8"></div>
         
-
         <div className='flex flex-col items-center md:w-[750px] max-w-[750px] mx-auto'>
-
           <div className='h-4'></div>
-          <BacklogListCompleted backlog={sortedBacklog} loading={loading} error={error} />
-          
+          <BacklogListCompleted
+            refreshTrigger={refreshTrigger}
+            sortOrder={sortOrder}
+            dateOrder={dateOrder}
+            priorityOrder={priorityOrder}
+          />
         </div>
 
       </div>

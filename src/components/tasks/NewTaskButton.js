@@ -76,7 +76,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
         onClick={() => setIsFormVisible(!isFormVisible)}
         className="btn mx-auto border-cyan-700 hover:border-cyan-500 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 w-full max-w-[1000px]"
       >
-        {isFormVisible ? 'Hide Form' : 'Add New Task'}
+        {isFormVisible ? 'Hide Form' : 'Add New'}
       </button>
 
       {isFormVisible && (
@@ -155,6 +155,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 <option value="">Select type</option>
                 <option value="Event">Event</option>
                 <option value="Task">Task</option>
+                <option value="List">List</option>
               </select>
             </label>
           </div>

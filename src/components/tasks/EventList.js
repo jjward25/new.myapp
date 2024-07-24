@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from './TaskCard';
+import { getCurrentDate } from '../date';
 
-const BacklogList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
+const EventList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,11 +40,32 @@ const BacklogList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) =>
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const filteredBacklog = backlog.filter(item => item["Complete Date"] === null);
+  const today = getCurrentDate();
+  const filteredBacklog = backlog.filter(item => item["Due Date"] >= today && item["Complete Date"] === null && item["Type"] === "Event");
+
+  // Define priority order mapping
+  const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  
+  // Sort filteredBacklog
+  const sortedBacklog = [...filteredBacklog];
+  
+  if (sortOrder === 'date') {
+    sortedBacklog.sort((a, b) => {
+      const dateA = new Date(a['Due Date']);
+      const dateB = new Date(b['Due Date']);
+      return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+  } else if (sortOrder === 'priority') {
+    sortedBacklog.sort((a, b) => {
+      const priorityA = priorityOrderMap[a['Priority']] ?? Infinity;
+      const priorityB = priorityOrderMap[b['Priority']] ?? Infinity;
+      return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
+    });
+  }
 
   return (
     <div className="w-full">
-      {filteredBacklog.map(item => (
+      {sortedBacklog.map(item => (
         <TaskCard
           key={item._id}
           task={item}
@@ -55,4 +77,4 @@ const BacklogList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) =>
   );
 };
 
-export default BacklogList;
+export default EventList;
