@@ -1,7 +1,7 @@
 // src/app/milestones/page.js
 import { promises as fs } from 'fs';
 import path from 'path';
-import MilestonesPage from './components/MilestonesPage';
+import PrjList from '../../components/projects/PrjList';
 import {getCurrentFormattedDate} from '../../components/date' 
 
 // Function to read and parse the JSON file
@@ -30,7 +30,7 @@ const Milestones = async () => {
     <div className="flex flex-col w-full h-full mb-10">
 
       <div className="flex flex-col w-full m-auto">
-          <MilestonesPage milestones={milestones} />
+          <PrjList milestones={milestones} />
       </div>
 
     </div>

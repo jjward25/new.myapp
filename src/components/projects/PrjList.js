@@ -1,10 +1,9 @@
 // src/components/MilestonesPage.js
 'use client'; // Ensure this component runs in the client
-
 import React, { useState } from 'react';
 import PrjCard from './PrjCard';
 
-const MilestonesPage = ({ milestones }) => {
+const PrjList = ({ milestones }) => {
   // Group milestones by project and sort projects by Project Priority
   const projects = milestones.reduce((acc, milestone) => {
     if (!milestone || !milestone.Project || milestone["Project Priority"] === undefined) {
@@ -114,4 +113,4 @@ const MilestonesPage = ({ milestones }) => {
   );
 };
 
-export default MilestonesPage;
+export default PrjList;

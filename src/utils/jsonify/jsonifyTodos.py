@@ -37,7 +37,7 @@ def excel_to_json(excel_file, sheet_name, output_json_file):
         print(f"An error occurred: {e}")
 
 # Example usage
-excel_file = r'C:\Users\Joe\Desktop\Coding\new.myapp\src\libs\life.xlsx'
+excel_file = r'C:\Users\Joe\Desktop\Coding\new.myapp\src\utils\life.xlsx'
 sheet_name = 'todos'
 output_json_file = 'todos.json'
 excel_to_json(excel_file, sheet_name, output_json_file)

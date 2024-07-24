@@ -2,10 +2,10 @@
 import React from 'react';
 import fs from 'fs';
 import path from 'path';
-import TaskCard from '../backlog/components/TaskCard';
+import TaskCard from '../../components/backlog/TaskCard';
 
 const Tasks = async () => {
-  const filePath = path.join(process.cwd(), 'src/utils/jsons/daily.json');
+  const filePath = path.join(process.cwd(), 'src/utils/jsons/routines.json');
   const jsonData = fs.readFileSync(filePath, 'utf8');
   const tasks = JSON.parse(jsonData);
 

@@ -9,17 +9,26 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
   const cardRef = useRef(null);
 
-  useEffect(() => {
+  const adjustHeight = () => {
     if (cardRef.current) {
-      // Reset height to auto to ensure dynamic resizing
       cardRef.current.style.height = 'auto';
-      // Calculate the max height of front and back faces
       const frontHeight = cardRef.current.querySelector('.flip-card-front').scrollHeight;
       const backHeight = cardRef.current.querySelector('.flip-card-back').scrollHeight;
       const maxHeight = Math.max(frontHeight, backHeight);
       cardRef.current.style.height = `${maxHeight}px`;
     }
-  }, [isFlipped, editableTask]);
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [isFlipped, editableTask, isEditing]);
+
+  useEffect(() => {
+    window.addEventListener('resize', adjustHeight);
+    return () => {
+      window.removeEventListener('resize', adjustHeight);
+    };
+  }, []);
 
   const handleInputChange = (e, key) => {
     setEditableTask({ ...editableTask, [key]: e.target.value });
@@ -30,6 +39,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       await axios.put('/api/backlog', { id: task._id, updatedItem: editableTask });
       onEdit(editableTask);
       setIsEditing(false);
+      adjustHeight(); // Recalculate height after saving
     } catch (err) {
       console.error('Error updating task:', err);
     }
@@ -44,11 +54,19 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     }
   };
 
+  const handleCardClick = (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.closest('button')) {
+      e.stopPropagation();
+      return;
+    }
+    setIsFlipped(!isFlipped);
+  };
+
   return (
     <div
       ref={cardRef}
       className="flip-card relative w-full mx-auto my-2 md:m-3 p-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-lg cursor-pointer perspective-1000 overflow-hidden"
-      onClick={() => setIsFlipped(!isFlipped)}
+      onClick={handleCardClick}
     >
       <div
         className={`flip-card-inner transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
@@ -66,6 +84,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                 value={editableTask["Task Name"] || ''}
                 onChange={(e) => handleInputChange(e, "Task Name")}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                onClick={(e) => e.stopPropagation()}
               />
               : editableTask["Task Name"]}</h2>
             <button
@@ -84,6 +103,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                     value={editableTask["Start Date"] || ''}
                     onChange={(e) => handleInputChange(e, "Start Date")}
                     className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    onClick={(e) => e.stopPropagation()}
                   />
                   : editableTask["Start Date"]}
               </p>
@@ -94,6 +114,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                     value={editableTask["Due Date"] || ''}
                     onChange={(e) => handleInputChange(e, "Due Date")}
                     className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    onClick={(e) => e.stopPropagation()}
                   />
                   : editableTask["Due Date"]}
               </p>
@@ -104,6 +125,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                   value={editableTask["Notes"] || ''}
                   onChange={(e) => handleInputChange(e, "Notes")}
                   className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                  onClick={(e) => e.stopPropagation()}
                 />
                 : editableTask["Notes"]}
             </p>
@@ -135,6 +157,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                       value={editableTask[key] || ''}
                       onChange={(e) => handleInputChange(e, key)}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                      onClick={(e) => e.stopPropagation()}
                     />
                     : editableTask[key]}
                 </p>
@@ -149,7 +172,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               </button>
             ) : (
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={() => { setIsEditing(true); adjustHeight(); }}
                 className="btn btn-secondary mt-3 bg-neutral-400 hover:bg-neutral-500 text-cyan-700 w-full"
               >
                 Edit

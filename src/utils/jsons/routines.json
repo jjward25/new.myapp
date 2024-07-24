@@ -1,0 +1,21 @@
+[
+    {
+        "Date": "2024-07-20",
+        "Sleep Score": 1,
+        "Fab Morning": false,
+        "Work Score": 2,
+        "Workout": false,
+        "Piano": false,
+        "Prof Dev": false,
+        "Spanish": false,
+        "Fab Evening": false,
+        "Protein %": 0.8,
+        "Calories %": 0.8,
+        "Social Activities": "Text",
+        "Mood Score": 1,
+        "Mood Summary": "Text",
+        "Performance Score": 1,
+        "Performance Rating": "Text",
+        "Journal": "Text"
+    }
+]
