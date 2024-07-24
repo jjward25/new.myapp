@@ -135,9 +135,10 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 required
               >
                 <option value="">Select priority</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="P0">P0 - Top Priority</option>
+                <option value="P1">P1 - Action Items</option>
+                <option value="P2">P2 - Next Up</option>
+                <option value="P3">P3 - Time Permitting</option>
               </select>
             </label>
           </div>
@@ -150,12 +151,10 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 value={formData["Type"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                required
               >
                 <option value="">Select type</option>
-                <option value="Task">Task</option>
                 <option value="Event">Event</option>
-                <option value="Reminder">Reminder</option>
+                <option value="Task">Task</option>
               </select>
             </label>
           </div>

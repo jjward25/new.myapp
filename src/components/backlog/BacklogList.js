@@ -1,37 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import TaskCard from './TaskCard';
 
-const BacklogList = () => {
-  const [backlog, setBacklog] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchBacklog = async () => {
-      try {
-        const response = await axios.get('/api/backlog');
-        setBacklog(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBacklog();
-  }, []);
-
-  const handleEdit = (updatedItem) => {
-    setBacklog(backlog.map(item => item._id === updatedItem._id ? updatedItem : item));
-  };
-
-  const handleDelete = (id) => {
-    setBacklog(backlog.filter(item => item._id !== id));
-  };
-
+const BacklogList = ({ backlog, loading, error }) => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -41,8 +12,7 @@ const BacklogList = () => {
         <TaskCard
           key={item._id}
           task={item}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          // Add handlers here if needed
         />
       ))}
     </div>
