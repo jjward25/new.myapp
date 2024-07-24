@@ -32,8 +32,8 @@ const ListClientWrapper = () => {
   return (
     <div className='flex flex-col w-full justify-start'>
       <div className="cursor-pointer flex items-center justify-between p-2 bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600 rounded-lg mb-3" onClick={toggleOpen}>
-        <p className='text-xl md:text-3xl font-semibold'>
-          Quick Lists
+      <p className={`${isOpen ? 'text-cyan-200' : 'text-neutral-800'} 'text-xl md:text-3xl font-semibold`}>
+        Quick Lists
         </p>
         <svg
           className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
