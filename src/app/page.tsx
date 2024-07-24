@@ -25,7 +25,7 @@ export default function Home() {
             <Routines/>
           </div>
           <div className='flex flex-col ml-5'>
-            <p className='text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Today's Tasks</p>
+            <p className='text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>{`Today's Tasks`}</p>
             <AddNewTaskForm />
             <BacklogListShort />
           </div>
