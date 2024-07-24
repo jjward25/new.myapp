@@ -1,6 +1,7 @@
 import { getCurrentFormattedDate } from '../components/date';
-import AddRoutineButton from '../components/daily/NewDailyButton';
-import RoutineCardList from '../components/daily/RoutineCardList';
+import Routines from '../components/daily/Routines';
+import BacklogListShort from '../components/backlog/BacklogListShort';
+import AddNewTaskForm from '../components/backlog/NewButton';
 
 export default function Home() {
   const today = getCurrentFormattedDate();
@@ -17,9 +18,17 @@ export default function Home() {
           Daily Overview
         </h1>
         <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
-        <div className='w-1/2'>
-          <AddRoutineButton />
-          <RoutineCardList />
+        
+        <div className='w-full md:grid md:grid-cols-2'>
+          <div className='flex flex-col mr-5'>
+            <p className='text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Daily Habits</p>
+            <Routines/>
+          </div>
+          <div className='flex flex-col ml-5'>
+            <p className='text-xl md:text-3xl font-semibold mb-3 rounded-lg px-2  bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600'>Today's Tasks</p>
+            <AddNewTaskForm />
+            <BacklogListShort />
+          </div>
         </div>
       </div>
     </main>

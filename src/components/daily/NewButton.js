@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from 'react';
-import NewDailyForm from './NewDailyForm';
+import NewDailyForm from './NewForm';
 
 const AddRoutineButton = () => {
   const [isFormVisible, setFormVisible] = useState(false);

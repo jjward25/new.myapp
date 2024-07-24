@@ -1,9 +1,7 @@
-// app/api/backlog/route.js
-
 import { ObjectId } from 'mongodb';
 import { getBacklog, addItem, updateItem, deleteItem } from '../../../utils/mongoDB/taskCRUD';
 
-export async function GET(req, res) {
+export async function GET(req) {
   try {
     const backlog = await getBacklog();
     return new Response(JSON.stringify(backlog), { status: 200 });
@@ -13,9 +11,11 @@ export async function GET(req, res) {
   }
 }
 
-export async function POST(req, res) {
+export async function POST(req) {
   try {
     const newItem = await req.json();
+    // Ensure the new item has a new ObjectId
+    newItem._id = new ObjectId();
     const result = await addItem(newItem);
     return new Response(JSON.stringify(result), { status: 201 });
   } catch (error) {
@@ -24,9 +24,15 @@ export async function POST(req, res) {
   }
 }
 
-export async function PUT(req, res) {
+export async function PUT(req) {
   try {
     const { id, updatedItem } = await req.json();
+    
+    // Validate id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+      return new Response(JSON.stringify({ error: 'Invalid ID format' }), { status: 400 });
+    }
+    
     const objectId = new ObjectId(id);
     const result = await updateItem(objectId, updatedItem);
     return new Response(JSON.stringify(result), { status: 200 });
@@ -36,9 +42,15 @@ export async function PUT(req, res) {
   }
 }
 
-export async function DELETE(req, res) {
+export async function DELETE(req) {
   try {
     const { id } = await req.json();
+    
+    // Validate id is a valid ObjectId
+    if (!ObjectId.isValid(id)) {
+      return new Response(JSON.stringify({ error: 'Invalid ID format' }), { status: 400 });
+    }
+    
     const objectId = new ObjectId(id);
     const result = await deleteItem(objectId);
     return new Response(JSON.stringify(result), { status: 200 });
