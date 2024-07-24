@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import AddNewTaskForm from '../NewTaskButton';
-import BacklogListShort from '../BacklogListShort';
+import BacklogListTomorrow from '../ListTomorrow';
 
 const ClientWrapper = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [sortOrder, setSortOrder] = useState('date');
   const [dateOrder, setDateOrder] = useState('asc');
   const [priorityOrder, setPriorityOrder] = useState('asc');
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleTaskAdded = () => {
     setRefreshTrigger(prev => prev + 1);
@@ -30,10 +30,10 @@ const ClientWrapper = () => {
   };
 
   return (
-    <div className='flex flex-col w-full h-full justify-start'>
+    <div className='flex flex-col w-full justify-start'>
       <div className="cursor-pointer flex items-center justify-between p-2 bg-gradient-to-br from-purple-500 via-cyan-500 to-pink-600 rounded-lg mb-3" onClick={toggleOpen}>
-        <p className='text-xl md:text-3xl font-semibold'>
-          Today's Tasks
+        <p className='text-xl md:text-3xl font-semibold text-neutral-800'>
+          {`Tomorrow's Tasks`}
         </p>
         <svg
           className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
@@ -65,7 +65,7 @@ const ClientWrapper = () => {
             </button>
           </div>
 
-          <BacklogListShort
+          <BacklogListTomorrow
             refreshTrigger={refreshTrigger}
             sortOrder={sortOrder}
             dateOrder={dateOrder}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { getCurrentFormattedDate } from '../components/date';
 import Routines from '../components/routines/Routines';
-import ClientWrapper from '../components/tasks/ClientWrappers/DailyTaskClientWrapper';
+import ClientWrapper from '../components/tasks/ClientWrappers/TodayClientWrapper';
 import ListClientWrapper from '../components/tasks/ClientWrappers/ListClientWrapper';
 import EventsClientWrapper from '../components/tasks/ClientWrappers/EventsClientWrapper';
+import TomorrowClientWrapper from '../components/tasks/ClientWrappers/TomorrowClientWrapper';
 
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
           <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
             <ListClientWrapper/>
             <ClientWrapper />
+            <TomorrowClientWrapper/>
           </div>
           <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
             <EventsClientWrapper/>

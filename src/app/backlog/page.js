@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import BacklogList from '../../components/tasks/BacklogList';
+import BacklogList from '../../components/tasks/ListBacklog';
 import AddNewTaskForm from '../../components/tasks/NewTaskButton';
 import { getCurrentFormattedDate } from '../../components/date';
-import BacklogListCompleted from '../../components/tasks/BacklogListCompleted';
+import BacklogListCompleted from '../../components/tasks/ListCompleted';
 
 const Backlog = () => {
   const [loading, setLoading] = useState(true);
