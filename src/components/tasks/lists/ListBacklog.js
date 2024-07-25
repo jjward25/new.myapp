@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from '../TaskCard';
+import { getCurrentDate } from '../../date';
 
 const BacklogList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
   const [backlog, setBacklog] = useState([]);
@@ -39,7 +40,8 @@ const BacklogList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) =>
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const filteredBacklog = backlog.filter(item => item["Complete Date"] === null && item["Type"] != "List");
+  const today = getCurrentDate();
+  const filteredBacklog = backlog.filter(item => item["Complete Date"] === null && item["Type"] != "List" && item["Due Date"] >= today);
 
   // Define priority order mapping
   const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
