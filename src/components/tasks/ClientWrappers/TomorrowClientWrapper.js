@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import AddNewTaskForm from '../NewTaskButton';
-import BacklogListTomorrow from '../ListTomorrow';
+import BacklogListTomorrow from '../lists/ListTomorrow';
 
 const ClientWrapper = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);

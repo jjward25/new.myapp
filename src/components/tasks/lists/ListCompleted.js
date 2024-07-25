@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskCard from './TaskCard';
+import TaskCard from '../TaskCard';
 
 const BacklogListComplete = ({ refreshTrigger }) => {
   const [backlog, setBacklog] = useState([]);

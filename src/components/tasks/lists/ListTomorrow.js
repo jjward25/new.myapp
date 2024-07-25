@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskCard from './TaskCard';
-import { getCurrentDate } from '../date';
+import TaskCard from '../TaskCard';
+import { getTomorrowDate } from '../../date';
 
-const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
+const BacklogListTomorrow = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,9 +40,9 @@ const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const today = getCurrentDate();
+  const tomorrow = getTomorrowDate();
   const filteredBacklog = backlog.filter(item =>
-    item["Complete Date"] === null && item["Due Date"] === today && item["Type"] != "List" && item["Type"] != "Event"
+    item["Complete Date"] === null && item["Due Date"] === tomorrow && item["Type"] != "List" && item["Type"] != "Event"
   );
 
   // Sort filteredBacklog
@@ -77,4 +77,4 @@ const BacklogListShort = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder 
   );
 };
 
-export default BacklogListShort;
+export default BacklogListTomorrow;

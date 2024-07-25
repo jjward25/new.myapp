@@ -15,8 +15,17 @@ export async function addRoutine(newRoutine) {
   const client = await clientPromise;
   const db = client.db('Personal');
   const collection = db.collection('Routines');
-  const result = await collection.insertOne(newRoutine);
-  return result.ops[0];  // Return the newly added routine
+  try {
+    const result = await collection.insertOne(newRoutine);
+    if (result.acknowledged) {
+      return { ...newRoutine, _id: result.insertedId }; // Return the newly added routine with its ID
+    } else {
+      throw new Error('Insert operation was not acknowledged');
+    }
+  } catch (error) {
+    console.error('Error in addRoutine:', error);
+    throw new Error('Failed to insert routine into database.');
+  }
 }
 
 

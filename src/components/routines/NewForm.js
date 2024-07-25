@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const NewDailyForm = ({ onRoutineAdded }) => {
+const NewDailyForm = ({ onRoutineAdded, onClose }) => {
   const [routine, setRoutine] = useState({
     Date: new Date().toISOString().split('T')[0],
     "Sleep Score": 0,
@@ -23,6 +23,8 @@ const NewDailyForm = ({ onRoutineAdded }) => {
     Journal: ""
   });
 
+  const [error, setError] = useState('');
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setRoutine(prevRoutine => ({
@@ -33,17 +35,25 @@ const NewDailyForm = ({ onRoutineAdded }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear any previous errors
     try {
       const response = await axios.post('/api/routines', routine);
-      onRoutineAdded(response.data); // Pass the new routine data to parent
+      if (response.status === 200) {
+        onRoutineAdded(response.data); // Pass the new routine data to parent
+      } else {
+        throw new Error('Failed to add routine');
+      }
     } catch (error) {
       console.error('Error adding routine:', error);
+      setError('Failed to Add Routine. Please try again.');
+    } finally {
+      if (onClose) onClose(); // Close the form regardless of success or failure
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-auto">
-      {/* Existing input fields */}
+      {/* Date */}
       <label className="block">
         Date:
         <input
@@ -54,6 +64,8 @@ const NewDailyForm = ({ onRoutineAdded }) => {
           className="input input-bordered w-full"
         />
       </label>
+
+      {/* Sleep Score */}
       <label className="block">
         Sleep Score:
         <input
@@ -64,6 +76,7 @@ const NewDailyForm = ({ onRoutineAdded }) => {
           className="input input-bordered w-full"
         />
       </label>
+
       {/* Checkbox fields */}
       <label className="flex items-center space-x-2">
         <input
@@ -125,7 +138,8 @@ const NewDailyForm = ({ onRoutineAdded }) => {
         />
         <span>Fab Evening</span>
       </label>
-      {/* Other existing fields */}
+
+      {/* Other fields */}
       <label className="block">
         Protein %:
         <input
@@ -186,11 +200,11 @@ const NewDailyForm = ({ onRoutineAdded }) => {
         />
       </label>
       <label className="block">
-        Performance Summary:
+        Performance Rating:
         <input
           type="text"
-          name="Performance Summary"
-          value={routine["Performance Summary"]}
+          name="Performance Rating"
+          value={routine["Performance Rating"]}
           onChange={handleChange}
           className="input input-bordered w-full"
         />
@@ -204,12 +218,14 @@ const NewDailyForm = ({ onRoutineAdded }) => {
           className="textarea textarea-bordered w-full"
         />
       </label>
+
       <button
         type="submit"
         className="btn btn-primary bg-cyan-700 hover:bg-cyan-800 text-neutral-100 w-full"
       >
         Add Routine
       </button>
+      {error && <p className="text-red-500">{error}</p>}
     </form>
   );
 };

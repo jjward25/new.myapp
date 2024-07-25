@@ -38,7 +38,10 @@ const AddRoutineButton = () => {
             >
               Close
             </button>
-            <NewDailyForm onRoutineAdded={handleRoutineAdded} />
+            <NewDailyForm 
+              onRoutineAdded={handleRoutineAdded} 
+              onClose={() => setFormVisible(false)} 
+            />
           </div>
         </div>
       )}

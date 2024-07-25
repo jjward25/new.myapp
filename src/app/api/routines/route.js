@@ -27,16 +27,20 @@ export async function GET(req, res) {
   }
 }
 
+
 export async function POST(req) {
   try {
     const newRoutine = await req.json();
+    newRoutine._id = new ObjectId(); // Set a new ObjectId for the new routine
     const result = await addRoutine(newRoutine);
-    return new Response(JSON.stringify(result), { status: 200 });
+
+    return new Response(JSON.stringify(result), { status: 201 }); // Return the newly created routine
   } catch (error) {
     console.error('Error adding new routine:', error);
-    return new Response(JSON.stringify({ error: 'Unable to add new routine' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Failed to add routine' }), { status: 500 });
   }
 }
+
 
 export async function DELETE(req, res) {
   try {

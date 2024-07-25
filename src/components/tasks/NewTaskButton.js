@@ -132,7 +132,6 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 value={formData["Priority"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                required
               >
                 <option value="">Select priority</option>
                 <option value="P0">P0 - Top Priority</option>

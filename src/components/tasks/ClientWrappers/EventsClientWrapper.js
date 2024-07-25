@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import AddNewTaskForm from '../NewTaskButton';
-import EventList from '../ListEvents';
+import EventList from '../lists/ListEvents';
 
 const ClientWrapper = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
