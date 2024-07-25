@@ -2,7 +2,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import PrjList from '../../components/projects/PrjList';
-import {getCurrentFormattedDate} from '../../components/date' 
+import {getCurrentFormattedDate} from '../../components/Date' 
 
 // Function to read and parse the JSON file
 const fetchMilestonesData = async () => {

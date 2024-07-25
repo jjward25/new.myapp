@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import BacklogList from '../../components/tasks/lists/ListBacklog';
 import AddNewTaskForm from '../../components/tasks/NewTaskButton';
-import { getCurrentFormattedDate } from '../../components/date';
+import { getCurrentFormattedDate } from '../../components/Date';
 import BacklogListCompleted from '../../components/tasks/lists/ListCompleted';
 
 const Backlog = () => {

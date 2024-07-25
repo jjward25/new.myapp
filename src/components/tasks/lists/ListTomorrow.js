@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from '../TaskCard';
-import { getTomorrowDate } from '../../date';
+import { getTomorrowDate } from '../../Date';
 
 const BacklogListTomorrow = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
   const [backlog, setBacklog] = useState([]);

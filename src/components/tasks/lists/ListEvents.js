@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from '../TaskCard';
-import { getCurrentDate } from '../../date';
+import { getCurrentDate } from '../../Date';
 
 const EventList = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
   const [backlog, setBacklog] = useState([]);
