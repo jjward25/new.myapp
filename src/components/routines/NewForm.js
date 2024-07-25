@@ -11,6 +11,7 @@ const NewDailyForm = ({ onRoutineAdded, onClose }) => {
     Workout: false,
     Piano: false,
     "Prof Dev": false,
+    "Project Work": false,
     Spanish: false,
     "Fab Evening": false,
     "Protein %": 0,
@@ -121,6 +122,16 @@ const NewDailyForm = ({ onRoutineAdded, onClose }) => {
       <label className="flex items-center space-x-2">
         <input
           type="checkbox"
+          name="Project Work"
+          checked={routine["Project Work"]}
+          onChange={handleChange}
+          className="checkbox checkbox-primary"
+        />
+        <span>Project Work</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input
+          type="checkbox"
           name="Spanish"
           checked={routine.Spanish}
           onChange={handleChange}
@@ -190,21 +201,21 @@ const NewDailyForm = ({ onRoutineAdded, onClose }) => {
         />
       </label>
       <label className="block">
-        Performance Score:
+        Daily Score:
         <input
           type="number"
-          name="Performance Score"
-          value={routine["Performance Score"]}
+          name="Daily Score"
+          value={routine["Daily Score"]}
           onChange={handleChange}
           className="input input-bordered w-full"
         />
       </label>
       <label className="block">
-        Performance Rating:
+        Daily Rating:
         <input
           type="text"
-          name="Performance Rating"
-          value={routine["Performance Rating"]}
+          name="Daily Rating"
+          value={routine["Daily Rating"]}
           onChange={handleChange}
           className="input input-bordered w-full"
         />

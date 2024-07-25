@@ -1,4 +1,4 @@
-// src/pages/api/routines/recent.js
+// src/app/api/routines/recent.js
 
 import { getMostRecentRoutine } from '../../../../utils/mongoDB/routinesCRUD';
 
@@ -11,3 +11,4 @@ export async function GET(req) {
     return new Response(JSON.stringify({ error: 'Unable to fetch most recent routine' }), { status: 500 });
   }
 }
+

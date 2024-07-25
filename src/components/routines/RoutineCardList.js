@@ -36,7 +36,11 @@ const RoutineCardList = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put('/api/routines', { id: editableRoutine._id, updatedItem: editableRoutine });
+      await axios.put('/api/routines', { id: editableRoutine._id, updatedItem: editableRoutine }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       setRoutines((prev) => 
         prev.map((r, index) => (index === editingIndex ? editableRoutine : r))
       );
