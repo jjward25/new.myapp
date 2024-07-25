@@ -9,7 +9,6 @@ export async function GET(req) {
     return new Response(JSON.stringify(routine), {
       status: 200,
       headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
   } catch (error) {
@@ -17,7 +16,6 @@ export async function GET(req) {
     return new Response(JSON.stringify({ error: 'Unable to fetch most recent routine' }), {
       status: 500,
       headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
     });
   }
