@@ -11,7 +11,7 @@ const RoutineCardList = () => {
   useEffect(() => {
     const fetchMostRecentRoutines = async () => {
       try {
-        const response = await axios.get('/api/routines/recent');
+        const response = await axios.get(`/api/routines/recent?_=${new Date().getTime()}`);
         setRoutines(response.data);
         if (response.data.length > 0) {
           setEditableRoutine(response.data[0]);
@@ -41,9 +41,9 @@ const RoutineCardList = () => {
           'Content-Type': 'application/json'
         }
       });
-      setRoutines((prev) => 
-        prev.map((r, index) => (index === editingIndex ? editableRoutine : r))
-      );
+  
+      // Fetch updated routines
+      await fetchMostRecentRoutines(); // Refetch data
       setEditingIndex(null);
       setEditableRoutine(null);
     } catch (err) {
