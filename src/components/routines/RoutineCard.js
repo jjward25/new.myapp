@@ -16,7 +16,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
     <div className="routine-card bg-white p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px]">
       <button
         onClick={handleDelete}
-        className="absolute top-4 right-5 bg-black border border-cyan-200 text-cyan-700 hover:text-red-800 rounded-lg"
+        className={`absolute top-4 right-5 rounded-lg ${isEditing ? 'text-white bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 border border-white' : 'text-cyan-700 bg-black border border-cyan-200'}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
