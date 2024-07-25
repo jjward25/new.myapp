@@ -8,19 +8,19 @@ const RoutineCardList = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editableRoutine, setEditableRoutine] = useState(null);
 
-  useEffect(() => {
-    const fetchMostRecentRoutines = async () => {
-      try {
-        const response = await axios.get(`/api/routines/recent?_=${new Date().getTime()}`);
-        setRoutines(response.data);
-        if (response.data.length > 0) {
-          setEditableRoutine(response.data[0]);
-        }
-      } catch (err) {
-        console.error('Error fetching routines:', err);
+  const fetchMostRecentRoutines = async () => {
+    try {
+      const response = await axios.get('/api/routines/recent');
+      setRoutines(response.data);
+      if (response.data.length > 0) {
+        setEditableRoutine(response.data[0]);
       }
-    };
+    } catch (err) {
+      console.error('Error fetching routines:', err);
+    }
+  };
 
+  useEffect(() => {
     fetchMostRecentRoutines();
   }, []);
 
@@ -41,9 +41,9 @@ const RoutineCardList = () => {
           'Content-Type': 'application/json'
         }
       });
-  
-      // Fetch updated routines
-      await fetchMostRecentRoutines(); // Refetch data
+      setRoutines((prev) => 
+        prev.map((r, index) => (index === editingIndex ? editableRoutine : r))
+      );
       setEditingIndex(null);
       setEditableRoutine(null);
     } catch (err) {
@@ -64,7 +64,7 @@ const RoutineCardList = () => {
       {routines.map((routine, index) => (
         <RoutineCard
           key={routine._id}
-          routine={editingIndex === index ? editableRoutine : routine} // Ensure the correct routine is passed
+          routine={editingIndex === index ? editableRoutine : routine}
           isEditing={editingIndex === index}
           onInputChange={handleInputChange}
           onEditToggle={() => handleEditToggle(index)}
