@@ -1,4 +1,3 @@
-// src/pages/index.tsx
 import React from 'react';
 import { getCurrentDate, getTomorrowDate, getCurrentFormattedDate } from '../components/Date';
 import Routines from '../components/routines/Routines';
@@ -7,13 +6,14 @@ import TaskListWrap from '../components/tasks/TaskClientWrap';
 
 export default function Home() {
   const today = getCurrentDate(); // 'YYYY-MM-DD'
-  console.log(today)
   const tomorrow = getTomorrowDate(); // 'YYYY-MM-DD'
-  const formattedDate = getCurrentFormattedDate()
+  const formattedDate = getCurrentFormattedDate();
+
+  console.log(today, tomorrow); // Ensure the dates are correct
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
-      <h1 className="hover:animate-spin text-5xl font-semibold text-fuchsia-400 mt-2 mb-10 drop-shadow-md">
+      <h1 className="hover:animate-spin text-5xl font-semibold text-white mt-2 mb-10 drop-shadow-md">
         {`Joe's Life`}
       </h1>
 
@@ -33,7 +33,7 @@ export default function Home() {
             <TaskListWrap
               completeDateFilter={null}
               typeFilter={['Task']}
-              dueDateFilter={'today'}
+              dueDateFilter={today}
               isOpen={true}
               title="Today's Tasks"
             />

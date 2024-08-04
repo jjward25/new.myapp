@@ -56,9 +56,9 @@ const GenericListTemplate = ({
       ? item["Complete Date"] !== null
       : true;
     
-      const isDueDateMatch = dueDateFilter
-      ? item["Due Date"] === dueDateFilter
-      : true;
+    const isDueDateMatch = dueDateFilter
+    ? item["Due Date"] === dueDateFilter
+    : true;
 
     const isDueDateFromMatch = dueDateFromFilter
       ? new Date(item["Due Date"]) >= new Date(dueDateFromFilter)
@@ -89,8 +89,9 @@ const GenericListTemplate = ({
     });
   } else if (sortOrder === 'priority') {
     sortedBacklog.sort((a, b) => {
-      const priorityA = priorityOrderMap[a['Priority']] || Infinity;
-      const priorityB = priorityOrderMap[b['Priority']] || Infinity;
+      const priorityA = priorityOrderMap[a['Priority']] ?? Infinity;
+      const priorityB = priorityOrderMap[b['Priority']] ?? Infinity;
+      console.log(`Comparing priority ${a['Priority']} (${priorityA}) to ${b['Priority']} (${priorityB})`);
       return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
     });
   }

@@ -1,10 +1,11 @@
-// src/components/tasks/TaskListWrap.tsx
+// src/components/tasks/TaskClientWrap.tsx
 'use client';
 
 import React, { useState } from 'react';
 import ListTemplate from './TaskList';
 import AddNewTaskForm from './NewTaskButton';
 
+// Define the props interface
 interface ListWrapProps {
   title: string;
   refreshTrigger?: () => void; // Optional
@@ -25,11 +26,11 @@ const ListWrap: React.FC<ListWrapProps> = ({
   sortOrder = 'date',
   dateOrder = 'asc',
   priorityOrder = 'asc',
-  dueDateFilter,
-  priorityFilter,
+  dueDateFilter = null,
+  priorityFilter = [],
   typeFilter,
-  completeDateFilter,
-  dueDateFromFilter,
+  completeDateFilter = null,
+  dueDateFromFilter = null,
   isOpen: initialIsOpen = false,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
@@ -56,19 +57,24 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const toggleOpen = () => {
     setIsOpen(prev => !prev);
   };
- 
-  // Convert date strings to Date objects if needed
-  const dueDateFilterDate = dueDateFilter ? new Date(dueDateFilter) : undefined;
-  const dueDateFromFilterDate = dueDateFromFilter ? new Date(dueDateFromFilter) : undefined;
+
+  // Convert date strings to ISO format
+  const parseDate = (dateString: string | null | undefined): string | undefined => {
+    return dateString ? new Date(dateString).toISOString().split('T')[0] : undefined;
+  };
+
+  const dueDateFilterDate = parseDate(dueDateFilter);
+  const dueDateFromFilterDate = parseDate(dueDateFromFilter);
+  const completeDateFilterDate = parseDate(completeDateFilter);
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-600 to-fuchsia-300' : 'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-black' : 'text-neutral-800'} text-xl md:text-2xl font-semibold`}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-cyan-800' : 'rounded-lg bg-gradient-to-tr from-cyan-200 via-neutral-300 to-cyan-200'} cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+        <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-xl md:text-2xl font-semibold`}>
           {title}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -78,7 +84,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
         </svg>
       </div>
 
-      <div className={`px-3 ${isOpen ? 'bg-gradient-to-tr from-cyan-700 to-fuchsia-300 rounded-br-lg rounded-bl-lg mb-3' : ''}`}>
+      <div className={`px-3 ${isOpen ? 'bg-slate-300 rounded-br-lg rounded-bl-lg mb-3' : ''}`}>
         {isOpen && (
           <div className='mt-3'>
             <AddNewTaskForm onTaskAdded={handleTaskAdded} />
@@ -105,7 +111,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               dueDateFilter={dueDateFilterDate}
               priorityFilter={priorityFilter}
               typeFilter={typeFilter}
-              completeDateFilter={completeDateFilter ? new Date(completeDateFilter) : undefined}
+              completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
             />
           </div>
