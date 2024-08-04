@@ -1,15 +1,13 @@
 import React from 'react';
-import { getCurrentDate, getTomorrowDate, getCurrentFormattedDate } from '../components/Date';
+import { getCurrentDate, getTomorrowDate } from '../utils/Date';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrap from '../components/tasks/TaskClientWrap';
+import DateUpdater from '../components/Date'
 
 export default function Home() {
   const today = getCurrentDate(); // 'YYYY-MM-DD'
   const tomorrow = getTomorrowDate(); // 'YYYY-MM-DD'
-  const formattedDate = getCurrentFormattedDate();
-
-  console.log(today, tomorrow); // Ensure the dates are correct
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
@@ -17,7 +15,7 @@ export default function Home() {
         {`Joe's Life`}
       </h1>
 
-      <p className="text-neutral-400 mb-3">{formattedDate}</p>
+      <DateUpdater/>
       <Weather/>
 
       <div className="flex flex-col w-full h-full mb-10 justify-center">

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getCurrentFormattedDate } from '../../components/Date';
+import { getCurrentFormattedDate } from '../../utils/Date';
 import TaskListWrap from '../../components/tasks/TaskClientWrapStyle2'
-import { getCurrentDate, getTomorrowDate } from '../../components/Date'
+import { getCurrentDate, getTomorrowDate } from '../../utils/Date'
 
 const Backlog = () => {
   const today = getCurrentDate();
