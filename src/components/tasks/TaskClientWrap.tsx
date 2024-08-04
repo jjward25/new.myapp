@@ -4,17 +4,31 @@ import React, { useState } from 'react';
 import ListTemplate from './TaskList';
 import AddNewTaskForm from './NewTaskButton';
 
-const ListWrap = ({
+interface ListWrapProps {
+  title?: string;
+  refreshTrigger?: () => void;
+  sortOrder?: string;
+  dateOrder?: string;
+  priorityOrder?: string;
+  dueDateFilter?: Date | null;
+  priorityFilter?: string[];
+  typeFilter?: string[];
+  completeDateFilter?: Date | null;
+  dueDateFromFilter?: Date | null;
+  isOpen?: boolean;
+}
+
+const ListWrap: React.FC<ListWrapProps> = ({
   title = '',
   refreshTrigger = () => {},
   sortOrder = 'date',
   dateOrder = 'asc',
   priorityOrder = 'asc',
-  dueDateFilter,
+  dueDateFilter = null,
   priorityFilter = [],
   typeFilter = [],
-  completeDateFilter,
-  dueDateFromFilter,
+  completeDateFilter = null,
+  dueDateFromFilter = null,
   isOpen: initialIsOpen = false,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
@@ -25,10 +39,10 @@ const ListWrap = ({
 
   const handleTaskAdded = () => {
     setInternalRefreshTrigger(prev => prev + 1);
-    refreshTrigger(); // Ensure this is safe
+    refreshTrigger();
   };
 
-  const handleToggleSortOrder = (type) => {
+  const handleToggleSortOrder = (type: 'date' | 'priority') => {
     if (type === 'date') {
       setInternalDateOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
       setInternalSortOrder('date');

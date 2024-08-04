@@ -6,8 +6,8 @@ import TaskListWrap from '../components/tasks/TaskClientWrap';
 
 export default function Home() {
   const todayFormatted = getCurrentFormattedDate();
-  const today = getCurrentDate();
-  const tomorrow = getTomorrowDate();
+  const today = new Date(getCurrentDate()); // Ensure it's a Date object
+  const tomorrow = new Date(getTomorrowDate()); // Ensure it's a Date object
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
