@@ -5,20 +5,10 @@ import PrjList from '../../components/projects/PrjList';
 import {getCurrentFormattedDate} from '../../components/Date' 
 
 // Function to read and parse the JSON file
-const fetchMilestonesData = async () => {
-  const filePath = path.join(process.cwd(), 'src/utils/jsons/prj_milestones.json');
-  const jsonData = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(jsonData);
-};
+
 
 const Milestones = async () => {
-  const milestones = await fetchMilestonesData();
   const today = getCurrentFormattedDate();
-
-  // Ensure milestones is an array
-  if (!Array.isArray(milestones)) {
-    throw new Error('Invalid data format');
-  }
 
   return (
 
@@ -30,7 +20,7 @@ const Milestones = async () => {
     <div className="flex flex-col w-full h-full mb-10">
 
       <div className="flex flex-col w-full m-auto">
-          <PrjList milestones={milestones} />
+          <PrjList  />
       </div>
 
     </div>

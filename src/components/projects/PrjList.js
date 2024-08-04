@@ -1,33 +1,54 @@
 // src/components/MilestonesPage.js
 'use client'; // Ensure this component runs in the client
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PrjCard from './PrjCard';
 
-const PrjList = ({ milestones }) => {
-  // Group milestones by project and sort projects by Project Priority
-  const projects = milestones.reduce((acc, milestone) => {
-    if (!milestone || !milestone.Project || milestone["Project Priority"] === undefined) {
-      console.warn('Skipping invalid milestone:', milestone);
-      return acc;
-    }
-
-    const { Project, "Project Priority": projectPriority } = milestone;
-    if (!acc[Project]) {
-      acc[Project] = { projectPriority, milestones: [] };
-    }
-    acc[Project].milestones.push(milestone);
-
-    return acc;
-  }, {});
-
-  // Convert to an array and sort by Project Priority
-  const sortedProjects = Object.entries(projects)
-    .sort((b, a) => b[1].projectPriority - a[1].projectPriority);
-
+const PrjList = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [visibleProjects, setVisibleProjects] = useState({});
   const [sortOrder, setSortOrder] = useState('priority'); // 'priority' or 'date'
   const [dateOrder, setDateOrder] = useState('asc'); // 'asc' or 'desc'
   const [priorityOrder, setPriorityOrder] = useState('asc'); // 'asc' or 'desc'
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        console.log('Fetched Data:', data); // Debugging line
+
+        // Transform data into the expected format
+        const transformedProjects = data[0].Projects.map((project) => {
+          return {
+            projectName: project["Project Name"],
+            projectPriority: project["Project Priority"],
+            milestones: Object.entries(project.Milestones).map(([milestoneName, milestone]) => ({
+              ...milestone,
+              milestoneName,
+            })),
+          };
+        });
+
+        setProjects(transformedProjects);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setError('Unable to fetch projects');
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Sort projects by Project Priority
+  const sortedProjects = projects.sort((a, b) => b.projectPriority - a.projectPriority);
 
   const handleToggleVisibility = (projectName) => {
     setVisibleProjects((prev) => ({
@@ -54,8 +75,11 @@ const PrjList = ({ milestones }) => {
         return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
     }
-    return milestones.sort((a, b) => priorityOrder === 'asc' ? a.Priority - b.Priority : b.Priority - a.Priority);
+    return milestones.sort((a, b) => priorityOrder === 'asc' ? a["Milestone Priority"] - b["Milestone Priority"] : b["Milestone Priority"] - a["Milestone Priority"]);
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="container mx-auto md:px-0 h-0 md:h-auto">
@@ -73,7 +97,7 @@ const PrjList = ({ milestones }) => {
           Priority {sortOrder === 'priority' && priorityOrder === 'asc' ? 'Descending' : 'Ascending'}
         </button>
       </div>
-      {sortedProjects.map(([projectName, { projectPriority, milestones }]) => {
+      {sortedProjects.map(({ projectName, projectPriority, milestones }) => {
         // Sort milestones based on selected criteria
         const sortedMilestones = sortMilestones(milestones);
 
@@ -93,7 +117,12 @@ const PrjList = ({ milestones }) => {
             <div className="flex flex-row flex-wrap space-4">
               {/* Render the milestones */}
               {shownMilestones.map((milestone, index) => (
-                <PrjCard key={index} milestone={milestone} />
+                <div key={index} className="w-full">
+                  <h2 className="text-lg font-semibold mb-2">{milestone.milestoneName}</h2>
+                  <div className="flex flex-row flex-wrap space-4">
+                    <PrjCard key={index} milestone={milestone} />
+                  </div>
+                </div>
               ))}
             </div>
 

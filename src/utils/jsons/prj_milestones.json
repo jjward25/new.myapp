@@ -1,258 +1,540 @@
-[
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Learn notes by sound",
-        "Priority": 3,
-        "Complete Date": null
-    },
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Finish 3 courses",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Finish 6 courses",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Learn to read",
-        "Priority": 4,
-        "Complete Date": null
-    },
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Play a full song in real time with two hands",
-        "Priority": 5,
-        "Complete Date": null
-    },
-    {
-        "Project": "Learn Piano",
-        "Project Priority": 6,
-        "Type": "Life",
-        "Milestone": "Able to improvise with intent",
-        "Priority": 6,
-        "Complete Date": null
-    },
-    {
-        "Project": "21-minute 5k",
-        "Project Priority": 4,
-        "Type": "Life",
-        "Milestone": "21 minutes",
-        "Priority": 3,
-        "Complete Date": null
-    },
-    {
-        "Project": "21-minute 5k",
-        "Project Priority": 4,
-        "Type": "Life",
-        "Milestone": "26 minutes",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "21-minute 5k",
-        "Project Priority": 4,
-        "Type": "Life",
-        "Milestone": "31 minutes",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Headstand Pushup",
-        "Project Priority": 8,
-        "Type": "Life",
-        "Milestone": "1 Rep",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Write Something",
-        "Project Priority": 7,
-        "Type": "Life",
-        "Milestone": "1 Something",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 5 Jobs",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 10 Jobs",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 25 Jobs",
-        "Priority": 4,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 50 Jobs",
-        "Priority": 6,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 100 Jobs",
-        "Priority": 7,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Apply to 250 Jobs",
-        "Priority": 9,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Interview with 5 companies",
-        "Priority": 3,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Interview with 10 companies",
-        "Priority": 5,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Interview with 15 companies",
-        "Priority": 8,
-        "Complete Date": null
-    },
-    {
-        "Project": "Get a Job",
-        "Project Priority": 1,
-        "Type": "Career",
-        "Milestone": "Get and accept an offer",
-        "Priority": 0,
-        "Complete Date": null
-    },
-    {
-        "Project": "Coding",
-        "Project Priority": 5,
-        "Type": "Prof Dev",
-        "Milestone": "useState and useEffect",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Coding",
-        "Project Priority": 5,
-        "Type": "Prof Dev",
-        "Milestone": "Storage (MongoDB, GSheets)",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "Coding",
-        "Project Priority": 5,
-        "Type": "Prof Dev",
-        "Milestone": "Secure Storage & Authentication",
-        "Priority": 3,
-        "Complete Date": null
-    },
-    {
-        "Project": "Analytics",
-        "Project Priority": 3,
-        "Type": "Prof Dev",
-        "Milestone": "1 Course Complete",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Analytics",
-        "Project Priority": 3,
-        "Type": "Prof Dev",
-        "Milestone": "2 Courses Complete",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "Analytics",
-        "Project Priority": 3,
-        "Type": "Prof Dev",
-        "Milestone": "3 Courses Complete",
-        "Priority": 3,
-        "Complete Date": null
-    },
-    {
-        "Project": "Analytics",
-        "Project Priority": 3,
-        "Type": "Prof Dev",
-        "Milestone": "4 Courses Complete",
-        "Priority": 4,
-        "Complete Date": null
-    },
-    {
-        "Project": "Analytics",
-        "Project Priority": 3,
-        "Type": "Prof Dev",
-        "Milestone": "5 Courses Complete",
-        "Priority": 5,
-        "Complete Date": null
-    },
-    {
-        "Project": "Portfolio",
-        "Project Priority": 2,
-        "Type": "Prof Dev",
-        "Milestone": "GTM Overview",
-        "Priority": 1,
-        "Complete Date": null
-    },
-    {
-        "Project": "Portfolio",
-        "Project Priority": 2,
-        "Type": "Prof Dev",
-        "Milestone": "GTM Dash",
-        "Priority": 2,
-        "Complete Date": null
-    },
-    {
-        "Project": "Portfolio",
-        "Project Priority": 2,
-        "Type": "Prof Dev",
-        "Milestone": "ML Example",
-        "Priority": 2,
-        "Complete Date": null
-    }
-]
+{
+    "Projects": [
+        {
+            "Project Name": "Learn Piano",
+            "Project Priority": 6,
+            "Type": "Life",
+            "Milestones": {
+                "Learn notes by sound": {
+                    "Milestone Priority": 3,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Finish 3 courses": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Finish 6 courses": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Learn to read": {
+                    "Milestone Priority": 4,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Play a full song in real time with two hands": {
+                    "Milestone Priority": 5,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Able to improvise with intent": {
+                    "Milestone Priority": 6,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "21-minute 5k",
+            "Project Priority": 4,
+            "Type": "Life",
+            "Milestones": {
+                "21 minutes": {
+                    "Milestone Priority": 3,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "26 minutes": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "31 minutes": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Headstand Pushup",
+            "Project Priority": 8,
+            "Type": "Life",
+            "Milestones": {
+                "1 Rep": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Write Something",
+            "Project Priority": 7,
+            "Type": "Life",
+            "Milestones": {
+                "1 Something": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Get a Job",
+            "Project Priority": 1,
+            "Type": "Career",
+            "Milestones": {
+                "Apply to 5 Jobs": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Apply to 10 Jobs": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Apply to 25 Jobs": {
+                    "Milestone Priority": 4,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Apply to 50 Jobs": {
+                    "Milestone Priority": 6,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Apply to 100 Jobs": {
+                    "Milestone Priority": 7,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Apply to 250 Jobs": {
+                    "Milestone Priority": 9,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Interview with 5 companies": {
+                    "Milestone Priority": 3,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Interview with 10 companies": {
+                    "Milestone Priority": 5,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Interview with 15 companies": {
+                    "Milestone Priority": 8,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Get and accept an offer": {
+                    "Milestone Priority": 0,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Coding",
+            "Project Priority": 5,
+            "Type": "Prof Dev",
+            "Milestones": {
+                "useState and useEffect": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Storage (MongoDB, GSheets)": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "Secure Storage & Authentication": {
+                    "Milestone Priority": 3,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Analytics",
+            "Project Priority": 3,
+            "Type": "Prof Dev",
+            "Milestones": {
+                "1 Course Complete": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "2 Courses Complete": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "3 Courses Complete": {
+                    "Milestone Priority": 3,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "4 Courses Complete": {
+                    "Milestone Priority": 4,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "5 Courses Complete": {
+                    "Milestone Priority": 5,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        },
+        {
+            "Project Name": "Portfolio",
+            "Project Priority": 2,
+            "Type": "Prof Dev",
+            "Milestones": {
+                "GTM Overview": {
+                    "Milestone Priority": 1,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "GTM Dash": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                },
+                "ML Example": {
+                    "Milestone Priority": 2,
+                    "Start Date": null,
+                    "Due Date": null,
+                    "Complete Date": null,
+                    "Notes": null,
+                    "Tasks": {
+                        "Task Name": null,
+                        "Priority": null,
+                        "Start Date": null,
+                        "Due Date": null,
+                        "Complete Date": null,
+                        "Notes": null
+                    }
+                }
+            }
+        }
+    ]
+}

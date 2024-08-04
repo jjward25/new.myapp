@@ -65,8 +65,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4  p-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 rounded-lg cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
-      onClick={handleCardClick}
+      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4  p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-lg cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
+      onClick={handleCardClick} 
     >
       <div
         className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
@@ -74,10 +74,10 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       >
         {/* Front Face */}
         <div
-          className={`flip-card-face flip-card-front bg-white p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
+          className={`flip-card-face flip-card-front bg-gray-300 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-between items-center border-b border-cyan-600 text-black'>
+          <div className='flex flex-row justify-between items-center border-b border-cyan-600 text-black pb-1'>
             <p className='mb-2 mr-2 bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             <h2 className="font-bold text-md flex-1 mb-2 text-black">{isEditing ? 
               <input
@@ -90,7 +90,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               : editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:bg-slate-800 border border-cyan-200 text-white hover:text-cyan-700 rounded-lg"
+              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white rounded-lg"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -109,19 +109,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             </button>
           </div>
 
-          <div className='flex flex-col md:flex-row text-sm'>
-            <div className='flex flex-col pr-2 md:border-r md:border-cyan-600 md:w-45/100 pt-2 pb-1'>
-              <p className='text-left mb-1 text-black'>
-                <strong>Start Date:</strong> {isEditing ? 
-                  <input
-                    type="text"
-                    value={editableTask["Start Date"] || ''}
-                    onChange={(e) => handleInputChange(e, "Start Date")}
-                    className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  : editableTask["Start Date"]}
-              </p>
+          <div className='flex flex-col md:flex-row text-sm mb-2'>
+            <div className='flex flex-col pl-1 pr-3 md:border-r md:border-cyan-600 w-full pt-2 pb-1'>
               <p className='text-left text-black'>
                 <strong>Due Date:</strong> {isEditing ? 
                   <input
@@ -133,10 +122,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                   />
                   : editableTask["Due Date"]}
               </p>
-     
             </div>
 
-            <p className='text-left md:w-3/5 md:ml-3 pt-2 text-black'>
+            <p className='text-left md:w-full md:ml-3 pt-2 text-black'>
               <strong>Notes:</strong> {isEditing ? 
                 <textarea
                   value={editableTask["Notes"] || ''}
@@ -153,14 +141,14 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
         {/* Back Face */}
         <div
-          className={`flip-card-face flip-card-back bg-gray-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
+          className={`flip-card-face flip-card-back bg-gray-300 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className='flex flex-row justify-between items-center border-b border-cyan-600 mb-3 pb-3'>
             <h2 className="font-bold text-black text-md flex-1">{editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:bg-black border border-cyan-200 text-white hover:text-cyan-700 rounded-lg"
+              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white  rounded-lg"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

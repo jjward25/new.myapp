@@ -2,10 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskCard from '../TaskCard';
-import { getTomorrowDate } from '../../Date';
+import TaskCard from './TaskCard';
 
-const BacklogListTomorrow = ({ refreshTrigger, sortOrder, dateOrder, priorityOrder }) => {
+const GenericListTemplate = ({
+  refreshTrigger,
+  sortOrder,
+  dateOrder,
+  priorityOrder,
+  dueDateFilter,
+  priorityFilter = [],   // Default to an empty array if not provided
+  typeFilter = [],       // Default to an empty array if not provided
+  completeDateFilter,
+  dueDateFromFilter,
+}) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,19 +49,42 @@ const BacklogListTomorrow = ({ refreshTrigger, sortOrder, dateOrder, priorityOrd
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const tomorrow = getTomorrowDate();
-  const filteredBacklog = backlog.filter(item =>
-    item["Complete Date"] === null && item["Due Date"] === tomorrow && item["Type"] != "List" && item["Type"] != "Event"
-  );
+  const filteredBacklog = backlog.filter(item => {
+    const isCompleteDateMatch = completeDateFilter === null
+      ? item["Complete Date"] === null
+      : completeDateFilter === true
+      ? item["Complete Date"] !== null
+      : true;
+    
+      const isDueDateMatch = dueDateFilter
+      ? item["Due Date"] === dueDateFilter
+      : true;
 
-  // Sort filteredBacklog
+    const isDueDateFromMatch = dueDateFromFilter
+      ? new Date(item["Due Date"]) >= new Date(dueDateFromFilter)
+      : true;
+    
+    const isTypeMatch = typeFilter.length ? typeFilter.includes(item["Type"]) : true;
+    
+    const isPriorityMatch = priorityFilter.length 
+      ? priorityFilter.includes(item["Priority"])
+      : true;
+
+    return isCompleteDateMatch && 
+           (dueDateFilter ? item["Due Date"] === dueDateFilter : true) &&
+           isDueDateMatch && 
+           isTypeMatch &&
+           isDueDateFromMatch &&
+           isPriorityMatch;
+  });
+
   const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
   const sortedBacklog = [...filteredBacklog];
   
   if (sortOrder === 'date') {
     sortedBacklog.sort((a, b) => {
-      const dateA = new Date(a['Start Date']);
-      const dateB = new Date(b['Start Date']);
+      const dateA = new Date(a['Due Date']);
+      const dateB = new Date(b['Due Date']);
       return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
     });
   } else if (sortOrder === 'priority') {
@@ -77,4 +109,4 @@ const BacklogListTomorrow = ({ refreshTrigger, sortOrder, dateOrder, priorityOrd
   );
 };
 
-export default BacklogListTomorrow;
+export default GenericListTemplate;

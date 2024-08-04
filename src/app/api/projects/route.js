@@ -1,4 +1,4 @@
-// app/api/backlog/route.js
+// app/api/projects/route.js
 import { ObjectId } from 'mongodb';
 import { getBacklog, addItem, updateItem, deleteItem } from '../../../utils/mongoDB/prjCRUD';
 
