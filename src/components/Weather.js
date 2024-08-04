@@ -1,9 +1,12 @@
-import Image from "next/image";
+"use client"
+// components/WeatherClient.js
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 // Convert Celsius to Fahrenheit
 const celsiusToFahrenheit = (celsius) => (celsius * 9/5) + 32;
 
-// Fetch weather data server-side
+// Fetch weather data client-side
 const fetchWeatherData = async () => {
   const url = 'https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.0060&current_weather=true';
   
@@ -52,27 +55,37 @@ const getWeatherCondition = (code) => {
   }
 };
 
-// Server-side component
-const WeatherServer = async () => {
-  const { temperature, weatherCondition } = await fetchWeatherData();
+const WeatherClient = () => {
+  const [weatherData, setWeatherData] = useState({ temperature: null, weatherCondition: null });
+
+  useEffect(() => {
+    const getWeather = async () => {
+      const data = await fetchWeatherData();
+      setWeatherData(data);
+    };
+
+    getWeather();
+  }, []); // Empty dependency array to fetch data only on mount
+
+  const { temperature, weatherCondition } = weatherData;
 
   const renderWeatherIcon = () => {
     if (!weatherCondition) return null;
     const condition = weatherCondition;
     if (condition.includes('Clear sky') || condition.includes('Mainly clear')) {
-      return <Image src="/icoSunny.svg" width={15} height={10} alt="Sunny"/>;
+      return <Image src="/icoSunny.svg" width={15} height={10} alt="Sunny" />;
     } else if (condition.includes('Partly cloudy') || condition.includes('Overcast') || condition.includes('Fog')) {
-      return <Image src="/icoCloudy.svg" width={15} height={10} alt="Cloudy"/>;
+      return <Image src="/icoCloudy.svg" width={15} height={10} alt="Cloudy" />;
     } else if (condition.includes('Light rain')) {
-      return <Image src="/icoLightRain.svg" width={15} height={10} alt="Light Rain"/>;
+      return <Image src="/icoLightRain.svg" width={15} height={10} alt="Light Rain" />;
     } else if (condition.includes('Moderate rain')) {
-      return <Image src="/icoModerateRain.svg" width={15} height={10} alt="Rain"/>;
+      return <Image src="/icoModerateRain.svg" width={15} height={10} alt="Rain" />;
     } else if (condition.includes('Heavy rain')) {
-      return <Image src="/icoHeavyRain.svg" width={15} height={10} alt="Heavy Rain"/>;
+      return <Image src="/icoHeavyRain.svg" width={15} height={10} alt="Heavy Rain" />;
     } else if (condition.includes('Thunderstorms')) {
-      return <Image src="/icoThunderstorm.svg" width={15} height={10} alt="Thunderstorms"/>;
-    } else if (condition.includes('Light snow') || condition.includes('Moderate Snow') || condition.includes('Heavy Snow')  ) {
-      return <Image src="/icoSnowBlue.svg" width={15} height={10} alt="Snow"/>;
+      return <Image src="/icoThunderstorm.svg" width={15} height={10} alt="Thunderstorms" />;
+    } else if (condition.includes('Light snow') || condition.includes('Moderate Snow') || condition.includes('Heavy Snow')) {
+      return <Image src="/icoSnowBlue.svg" width={15} height={10} alt="Snow" />;
     }
     return null;
   };
@@ -104,4 +117,4 @@ const WeatherServer = async () => {
   );
 };
 
-export default WeatherServer;
+export default WeatherClient;
