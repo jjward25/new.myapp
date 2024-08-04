@@ -5,27 +5,27 @@ import ListTemplate from './TaskList';
 import AddNewTaskForm from './NewTaskButton';
 
 const ListWrap = ({
-  title,
-  refreshTrigger,
-  sortOrder,
-  dateOrder,
-  priorityOrder,
+  title = '',
+  refreshTrigger = () => {},
+  sortOrder = 'date',
+  dateOrder = 'asc',
+  priorityOrder = 'asc',
   dueDateFilter,
-  priorityFilter,
-  typeFilter,
+  priorityFilter = [],
+  typeFilter = [],
   completeDateFilter,
   dueDateFromFilter,
-  isOpen: initialIsOpen = false, // Default value for isOpen
+  isOpen: initialIsOpen = false,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
-  const [internalSortOrder, setInternalSortOrder] = useState(sortOrder || 'date');
-  const [internalDateOrder, setInternalDateOrder] = useState(dateOrder || 'asc');
-  const [internalPriorityOrder, setInternalPriorityOrder] = useState(priorityOrder || 'asc');
+  const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
+  const [internalDateOrder, setInternalDateOrder] = useState(dateOrder);
+  const [internalPriorityOrder, setInternalPriorityOrder] = useState(priorityOrder);
   const [isOpen, setIsOpen] = useState(initialIsOpen);
 
   const handleTaskAdded = () => {
     setInternalRefreshTrigger(prev => prev + 1);
-    if (refreshTrigger) refreshTrigger();
+    refreshTrigger(); // Ensure this is safe
   };
 
   const handleToggleSortOrder = (type) => {

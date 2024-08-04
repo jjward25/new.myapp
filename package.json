@@ -20,8 +20,6 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.233",
-    "@iconify/tailwind": "^1.1.2",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20",
     "@types/react": "^18",

@@ -15,6 +15,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('daisyui'),require('@iconify/tailwind')],
+  plugins: [require('daisyui')],
 };
 export default config;
