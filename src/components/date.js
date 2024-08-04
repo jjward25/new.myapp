@@ -18,7 +18,7 @@ export function getCurrentFormattedDate() {
 
 export function getCurrentDate() {
   const now = new Date();
-  const formatter = new Intl.DateTimeFormat('en-CA', {
+  const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone,
     year: 'numeric',
     month: '2-digit',
@@ -30,7 +30,7 @@ export function getCurrentDate() {
 export function getTomorrowDate() {
   const now = new Date();
   now.setDate(now.getDate() + 1);
-  const formatter = new Intl.DateTimeFormat('en-CA', {
+  const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone,
     year: 'numeric',
     month: '2-digit',

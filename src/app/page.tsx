@@ -1,13 +1,15 @@
+// src/pages/index.tsx
 import React from 'react';
-import { getCurrentFormattedDate, getCurrentDate, getTomorrowDate } from '../components/Date';
+import { getCurrentDate, getTomorrowDate, getCurrentFormattedDate } from '../components/Date';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrap from '../components/tasks/TaskClientWrap';
 
 export default function Home() {
-  const todayFormatted = getCurrentFormattedDate();
-  const today = new Date(getCurrentDate()); // Ensure it's a Date object
-  const tomorrow = new Date(getTomorrowDate()); // Ensure it's a Date object
+  const today = getCurrentDate(); // 'YYYY-MM-DD'
+  console.log(today)
+  const tomorrow = getTomorrowDate(); // 'YYYY-MM-DD'
+  const formattedDate = getCurrentFormattedDate()
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
@@ -15,9 +17,9 @@ export default function Home() {
         {`Joe's Life`}
       </h1>
 
-      <p className="text-neutral-400 mb-3">{todayFormatted}</p>
+      <p className="text-neutral-400 mb-3">{formattedDate}</p>
       <Weather/>
-      
+
       <div className="flex flex-col w-full h-full mb-10 justify-center">
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div>
 
@@ -31,7 +33,7 @@ export default function Home() {
             <TaskListWrap
               completeDateFilter={null}
               typeFilter={['Task']}
-              dueDateFilter={today}
+              dueDateFilter={'today'}
               isOpen={true}
               title="Today's Tasks"
             />

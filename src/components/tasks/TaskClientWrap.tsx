@@ -1,3 +1,4 @@
+// src/components/tasks/TaskListWrap.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -5,30 +6,30 @@ import ListTemplate from './TaskList';
 import AddNewTaskForm from './NewTaskButton';
 
 interface ListWrapProps {
-  title?: string;
-  refreshTrigger?: () => void;
-  sortOrder?: string;
-  dateOrder?: string;
-  priorityOrder?: string;
-  dueDateFilter?: Date | null;
-  priorityFilter?: string[];
-  typeFilter?: string[];
-  completeDateFilter?: Date | null;
-  dueDateFromFilter?: Date | null;
-  isOpen?: boolean;
+  title: string;
+  refreshTrigger?: () => void; // Optional
+  sortOrder?: string; // Optional
+  dateOrder?: string; // Optional
+  priorityOrder?: string; // Optional
+  dueDateFilter?: string | null; // Allow null
+  priorityFilter?: string[]; // Optional
+  typeFilter: string[]; // Required
+  completeDateFilter?: string | null; // Allow null
+  dueDateFromFilter?: string | null; // Allow null
+  isOpen?: boolean; // Optional
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
-  title = '',
-  refreshTrigger = () => {},
+  title,
+  refreshTrigger,
   sortOrder = 'date',
   dateOrder = 'asc',
   priorityOrder = 'asc',
-  dueDateFilter = null,
-  priorityFilter = [],
-  typeFilter = [],
-  completeDateFilter = null,
-  dueDateFromFilter = null,
+  dueDateFilter,
+  priorityFilter,
+  typeFilter,
+  completeDateFilter,
+  dueDateFromFilter,
   isOpen: initialIsOpen = false,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
@@ -39,7 +40,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   const handleTaskAdded = () => {
     setInternalRefreshTrigger(prev => prev + 1);
-    refreshTrigger();
+    if (refreshTrigger) refreshTrigger();
   };
 
   const handleToggleSortOrder = (type: 'date' | 'priority') => {
@@ -56,14 +57,18 @@ const ListWrap: React.FC<ListWrapProps> = ({
     setIsOpen(prev => !prev);
   };
 
+  // Convert date strings to Date objects if needed
+  const dueDateFilterDate = dueDateFilter ? new Date(dueDateFilter) : undefined;
+  const dueDateFromFilterDate = dueDateFromFilter ? new Date(dueDateFromFilter) : undefined;
+
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-600 to-fuchsia-300':'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-600 to-fuchsia-300' : 'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
         <p className={`${isOpen ? 'text-black' : 'text-neutral-800'} text-xl md:text-2xl font-semibold`}>
           {title}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -73,7 +78,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
         </svg>
       </div>
 
-      <div className={`px-3 ${isOpen ? 'bg-gradient-to-tr from-cyan-700 to-fuchsia-300 rounded-br-lg rounded-bl-lg mb-3':''}`}>
+      <div className={`px-3 ${isOpen ? 'bg-gradient-to-tr from-cyan-700 to-fuchsia-300 rounded-br-lg rounded-bl-lg mb-3' : ''}`}>
         {isOpen && (
           <div className='mt-3'>
             <AddNewTaskForm onTaskAdded={handleTaskAdded} />
@@ -97,11 +102,11 @@ const ListWrap: React.FC<ListWrapProps> = ({
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
               priorityOrder={internalPriorityOrder}
-              dueDateFilter={dueDateFilter}
+              dueDateFilter={dueDateFilterDate}
               priorityFilter={priorityFilter}
               typeFilter={typeFilter}
-              completeDateFilter={completeDateFilter}
-              dueDateFromFilter={dueDateFromFilter}
+              completeDateFilter={completeDateFilter ? new Date(completeDateFilter) : undefined}
+              dueDateFromFilter={dueDateFromFilterDate}
             />
           </div>
         )}
