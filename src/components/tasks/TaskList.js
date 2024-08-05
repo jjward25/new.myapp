@@ -1,3 +1,4 @@
+// src/components/tasks/TaskList.js
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -10,10 +11,11 @@ const GenericListTemplate = ({
   dateOrder,
   priorityOrder,
   dueDateFilter,
-  priorityFilter = [],   // Default to an empty array if not provided
-  typeFilter = [],       // Default to an empty array if not provided
+  priorityFilter = [],
+  typeFilter = [],
   completeDateFilter,
   dueDateFromFilter,
+  dueDateBeforeFilter,
 }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,33 +56,22 @@ const GenericListTemplate = ({
       ? item["Complete Date"] === null
       : completeDateFilter === true
       ? item["Complete Date"] !== null
+      : completeDateFilter === false
+      ? item["Complete Date"] === null
       : true;
-    
-    const isDueDateMatch = dueDateFilter
-    ? item["Due Date"] === dueDateFilter
-    : true;
 
-    const isDueDateFromMatch = dueDateFromFilter
-      ? new Date(item["Due Date"]) >= new Date(dueDateFromFilter)
-      : true;
-    
+    const isDueDateMatch = dueDateFilter ? item["Due Date"] === dueDateFilter : true;
+    const isDueDateFromMatch = dueDateFromFilter ? new Date(item["Due Date"]) >= new Date(dueDateFromFilter) : true;
+    const isDueDateBeforeMatch = dueDateBeforeFilter ? new Date(item["Due Date"]) < new Date(dueDateBeforeFilter) : true;
     const isTypeMatch = typeFilter.length ? typeFilter.includes(item["Type"]) : true;
-    
-    const isPriorityMatch = priorityFilter.length 
-      ? priorityFilter.includes(item["Priority"])
-      : true;
+    const isPriorityMatch = priorityFilter.length ? priorityFilter.includes(item["Priority"]) : true;
 
-    return isCompleteDateMatch && 
-           (dueDateFilter ? item["Due Date"] === dueDateFilter : true) &&
-           isDueDateMatch && 
-           isTypeMatch &&
-           isDueDateFromMatch &&
-           isPriorityMatch;
+    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch;
   });
 
   const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
   const sortedBacklog = [...filteredBacklog];
-  
+
   if (sortOrder === 'date') {
     sortedBacklog.sort((a, b) => {
       const dateA = new Date(a['Due Date']);
@@ -91,7 +82,6 @@ const GenericListTemplate = ({
     sortedBacklog.sort((a, b) => {
       const priorityA = priorityOrderMap[a['Priority']] ?? Infinity;
       const priorityB = priorityOrderMap[b['Priority']] ?? Infinity;
-      console.log(`Comparing priority ${a['Priority']} (${priorityA}) to ${b['Priority']} (${priorityB})`);
       return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
     });
   }

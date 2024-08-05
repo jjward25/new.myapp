@@ -15,8 +15,9 @@ interface ListWrapProps {
   dueDateFilter?: string | null; // Allow null
   priorityFilter?: string[]; // Optional
   typeFilter: string[]; // Required
-  completeDateFilter?: string | null; // Allow null
+  completeDateFilter?: boolean | null; // Allow null
   dueDateFromFilter?: string | null; // Allow null
+  dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
 }
 
@@ -31,6 +32,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   typeFilter,
   completeDateFilter = null,
   dueDateFromFilter = null,
+  dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
@@ -65,7 +67,8 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   const dueDateFilterDate = parseDate(dueDateFilter);
   const dueDateFromFilterDate = parseDate(dueDateFromFilter);
-  const completeDateFilterDate = parseDate(completeDateFilter);
+  const dueDateBeforeFilterDate = parseDate(dueDateBeforeFilter);
+  const completeDateFilterDate = completeDateFilter;
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
@@ -113,6 +116,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               typeFilter={typeFilter}
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
+              dueDateBeforeFilter={dueDateBeforeFilterDate}
             />
           </div>
         )}

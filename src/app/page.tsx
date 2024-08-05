@@ -1,3 +1,4 @@
+//src/app.page.tsx
 import React from 'react';
 import { getCurrentDate, getTomorrowDate } from '../utils/Date';
 import Routines from '../components/routines/Routines';
@@ -29,7 +30,7 @@ export default function Home() {
               title="Quick List"
             />
             <TaskListWrap
-              completeDateFilter={null}
+              completeDateFilter={false}
               typeFilter={['Task']}
               dueDateFilter={today}
               isOpen={true}
