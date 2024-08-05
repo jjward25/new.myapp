@@ -74,7 +74,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
           {title}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
