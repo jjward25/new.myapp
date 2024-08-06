@@ -10,18 +10,6 @@ const PrjCard = ({ milestone }) => {
   const estimatedSize = milestone["Estimated Size"];
   const actualHours = milestone["Actual Hours"];
   const notes = milestone["Notes"];
-  const tasks = milestone["Tasks"] || {};
-
-  console.log(tasks)
-  // Extract task properties safely
-  const taskName = tasks["Task Name"] || 'No Task Name';
-  const taskPriority = tasks["Priority"] || 'No Priority';
-  const taskDueDate = tasks["Due Date"] || 'No Due Date';
-  const taskCompleteDate = tasks["Complete Date"] || 'No Complete Date';
-  const taskNotes = tasks["Notes"] || 'No Notes';
-  const taskEstimatedHours = tasks["Estimated Size"];
-  const taskActualHours = tasks["Actual Hours"];
-
 
   return (
     <div className='w-[350px]'>
@@ -39,26 +27,6 @@ const PrjCard = ({ milestone }) => {
           <p className="text-sm">Actual Hours: {actualHours || 'N/A'}</p>
           <p className="text-sm">Notes: {notes || 'N/A'}</p>
         </div>
-      </div>
-
-      <div className="mx-auto mt-2 bg-gradient-to-tr hover:scale-95 from-cyan-500 via-slate-500 to-fuchsia-500 rounded-xl p-2">
-
-        <div className='bg-slate-300 rounded-xl py-3 px-2'>
-          
-          <div className='flex flex-row'>
-            <p className='max-w-[20px] text-left my-1 ml-0 mr-2 pl-2 pr-4 bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{taskPriority}</p>
-            <p className='font-semibold text-cyan-700 text-xl'>{taskName}</p>
-          </div>
-
-          <p className="text-sm text-black">Name: {taskName}</p>
-          <p className="text-sm text-black">Priority: {taskPriority}</p>
-          <p className="text-sm text-black">Estimated Hours: {taskEstimatedHours}</p>
-          <p className="text-sm text-black">Actual Hours: {taskActualHours}</p>
-          <p className="text-sm text-black">Due Date: {taskDueDate}</p>
-          <p className="text-sm text-black">Complete Date: {taskCompleteDate}</p>
-          <p className="text-sm text-black">Notes: {taskNotes}</p>
-        </div>
-
       </div>
 
     </div>

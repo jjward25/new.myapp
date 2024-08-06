@@ -20,7 +20,7 @@ const AddRoutineButton = () => {
     <>
       <button
         onClick={() => setFormVisible(true)}
-        className="btn px-6 border-cyan-700 hover:border-cyan-500 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 w-full max-w-[1000px]"
+        className="btn px-6 border-cyan-700 hover:border-cyan-500 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 hover:text-fuchsia-400  w-full max-w-[1000px]"
       >
         New Day
       </button>

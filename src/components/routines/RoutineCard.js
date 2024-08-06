@@ -13,10 +13,10 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
   };
 
   return (
-    <div className="routine-card bg-white p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px]">
+    <div className="routine-card bg-white p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px] border border-black drop-shadow-md">
       <button
         onClick={handleDelete}
-        className={`absolute top-4 right-5 rounded-lg ${isEditing ? 'text-white bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 border border-white' : 'text-cyan-700 bg-black border border-cyan-200'}`}
+        className={`absolute top-4 right-5 rounded-lg ${isEditing ? 'text-cyan-700 bg-slate-800 border-white hover:text-fuchsia-400' : 'text-cyan-700 bg-black border border-cyan-200 hover:text-fuchsia-400'}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -455,14 +455,14 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
       {isEditing ? (
         <button
           onClick={onSave}
-          className="btn px-6 border-black btn-secondary bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 hover:bg-black text-black w-auto"
+          className="btn px-6 border-black btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:border-black text-cyan-700 hover:text-fuchsia-400 w-auto hover:scale-95"
         >
           Save
         </button>
       ) : (
         <button
           onClick={onEditToggle}
-          className="btn px-6 border-cyan-500 hover:border-cyan-700 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 w-auto"
+          className="btn px-6 border-cyan-500 hover:border-cyan-700 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:scale-95 text-cyan-700 hover:text-fuchsia-400 w-auto"
         >
           Edit
         </button>
