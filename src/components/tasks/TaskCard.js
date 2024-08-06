@@ -1,7 +1,7 @@
-// src/components/tasks/TaskCard.js
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { getCurrentDate } from '../../utils/Date';
 
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,6 +9,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const cardRef = useRef(null);
+  const today = getCurrentDate(); // 'YYYY-MM-DD'
 
   const adjustHeight = () => {
     if (cardRef.current) {
@@ -63,11 +64,23 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     setIsFlipped(!isFlipped);
   };
 
+  const setCompleteDateToToday = async (e) => {
+    e.stopPropagation();
+    const updatedTask = { ...editableTask, "Complete Date": today };
+    setEditableTask(updatedTask);
+    try {
+      await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
+      onEdit(updatedTask);
+    } catch (err) {
+      console.error('Error setting complete date:', err);
+    }
+  };
+
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4  p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-lg cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
-      onClick={handleCardClick} 
+      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-lg cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
+      onClick={handleCardClick}
     >
       <div
         className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
@@ -75,12 +88,12 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       >
         {/* Front Face */}
         <div
-          className={`flip-card-face flip-card-front bg-gray-300 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
+          className={`flip-card-face flip-card-front bg-slate-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'}`}
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className='flex flex-row justify-between items-center border-b border-cyan-600 text-black pb-1'>
             <p className='mb-2 mr-2 bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
-            <h2 className="font-bold text-md flex-1 mb-2 text-black">{isEditing ? 
+            <h2 className="font-bold text-md flex-1 mb-2 text-black">{isEditing ?
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
@@ -110,10 +123,10 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             </button>
           </div>
 
-          <div className='flex flex-col md:flex-row text-sm mb-2'>
-            <div className='flex flex-col pl-1 pr-3 md:border-r md:border-cyan-600 w-full pt-2 pb-1'>
+          <div className='flex flex-col md:flex-row text-sm mb-2 md:mb-0 border-b border-cyan-600'>
+            <div className='flex flex-col pl-1 pr-3 md:border-r md:border-cyan-600 w-full pt-2 pb-2'>
               <p className='text-left text-black'>
-                <strong>Due Date:</strong> {isEditing ? 
+                <strong>Due Date:</strong> {isEditing ?
                   <input
                     type="text"
                     value={editableTask["Due Date"] || ''}
@@ -125,8 +138,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               </p>
             </div>
 
-            <p className='text-left md:w-full md:ml-3 pt-2 text-black'>
-              <strong>Notes:</strong> {isEditing ? 
+            <p className='text-left md:w-full md:ml-3 pt-2 pb-2 text-black'>
+              <strong>Notes:</strong> {isEditing ?
                 <textarea
                   value={editableTask["Notes"] || ''}
                   onChange={(e) => handleInputChange(e, "Notes")}
@@ -135,8 +148,14 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                 />
                 : editableTask["Notes"]}
             </p>
-            
           </div>
+
+          <button
+            onClick={setCompleteDateToToday}
+            className="mt-4 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800 w-full"
+          >
+            Complete
+          </button>
           <div className='h-5'></div>
         </div>
 
@@ -171,7 +190,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             {Object.keys(editableTask).map((key, index) => (
               key !== "Task Name" && key !== "_id" && (
                 <p className='text-left mb-2 text-black' key={index}>
-                  <strong>{key}:</strong> {isEditing ? 
+                  <strong>{key}:</strong> {isEditing ?
                     <input
                       type="text"
                       value={editableTask[key] || ''}
@@ -186,20 +205,20 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             {isEditing ? (
               <button
                 onClick={handleSave}
-                className="btn btn-primary mt-4 bg-cyan-700 hover:bg-cyan-800 text-neutral-100 w-full"
+                className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
               >
                 Save
               </button>
             ) : (
               <button
-                onClick={() => { setIsEditing(true); adjustHeight(); }}
-                className="btn btn-secondary mt-3 bg-neutral-400 hover:bg-neutral-500 text-cyan-700 w-full"
+                onClick={() => setIsEditing(true)}
+                className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
               >
                 Edit
               </button>
             )}
+            <div className='h-5'></div>
           </div>
-          <div className='h-7'></div>
         </div>
       </div>
     </div>

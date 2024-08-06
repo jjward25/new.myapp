@@ -13,10 +13,10 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
   };
 
   return (
-    <div className="routine-card bg-white p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px] border border-black drop-shadow-md">
+    <div className="routine-card bg-slate-100 p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px] border border-black drop-shadow-md">
       <button
         onClick={handleDelete}
-        className={`absolute top-4 right-5 rounded-lg ${isEditing ? 'text-cyan-700 bg-slate-800 border-white hover:text-fuchsia-400' : 'text-cyan-700 bg-black border border-cyan-200 hover:text-fuchsia-400'}`}
+        className={`absolute top-4 right-5 rounded-lg hover:scale-95 ${isEditing ? 'text-cyan-700 bg-slate-800 border-white hover:text-fuchsia-400' : 'text-cyan-700 bg-black border border-cyan-200 hover:text-fuchsia-400'}`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -52,12 +52,12 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
         </div>
         
         {/*** Split Section ***/}
-        <div className='flex flex-col md:grid md:grid-cols-2 mb-6 overflow-hidden rounded-lg text-xs'>
+        <div className='flex flex-col md:grid md:grid-cols-2 mb-2 overflow-hidden rounded-lg text-xs'>
           {/*** Daily Checklist Section ***/}
-          <div className='md:mr-5 md:ml-6 mb-8 md:mb-0'>
-            <p className='pl-1 mb-5 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Checklist:</p>
+          <div className='md:mr-5 md:ml-6 mb-4 md:mb-0'>
+            <p className='pl-1 mb-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Checklist:</p>
               {/* Daily Checklist Content Section */}
-              <div className='bg-neutral-100 rounded-lg p-2 h-full'>
+              <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
               {/* Sleep Score */}
               <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
@@ -94,7 +94,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Fab Morning</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Fab Morning"] ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine["Fab Morning"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Fab Morning"] ? 'True' : 'False'}
                     </p>
                   )}
@@ -102,7 +102,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               </div> 
 
               {/* Workout */}
-              <div className="flex items-center mb-2  p-1 rounded">
+              <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Workout:</label>
                 </div>
@@ -118,7 +118,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Workout</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Workout ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine.Workout ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine.Workout ? 'True' : 'False'}
                     </p>
                   )}
@@ -128,7 +128,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* Prof Dev */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">GTM Learning:</label>
+                  <label className="block text-sm text-black font-semibold">GTM:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -142,7 +142,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Prof Dev</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Prof Dev"] ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine["Prof Dev"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Prof Dev"] ? 'True' : 'False'}
                     </p>
                   )}
@@ -166,7 +166,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Prof Dev</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Project Work"] ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine["Project Work"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Project Work"] ? 'True' : 'False'}
                     </p>
                   )}
@@ -190,7 +190,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Piano</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Piano ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine.Piano ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine.Piano ? 'True' : 'False'}
                     </p>
                   )}
@@ -214,7 +214,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Spanish</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Spanish ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine.Spanish ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine.Spanish ? 'True' : 'False'}
                     </p>
                   )}
@@ -238,7 +238,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                       <span>Fab Evening</span>
                     </label>
                   ) : (
-                    <p className={` px-3 inline-block ${routine["Fab Evening"] ? 'text-cyan-500' : 'text-purple-600'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={` px-3 inline-block ${routine["Fab Evening"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Fab Evening"] ? 'True' : 'False'}
                     </p>
                   )}
@@ -251,11 +251,11 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
 
           {/*** Daily Review Section ***/}
           <div className='md:mr-6 md:ml-5 '> 
-            <p className='pl-1 mb-5 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Review:</p>
+            <p className='pl-1 mb-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Review:</p>
             {/* Daily Review List */}
-            <div className='bg-neutral-100 rounded-lg p-2 h-full'>
+            <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
               {/* Protein % */}
-              <div className="flex items-center mb-2  p-1 rounded">
+              <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Protein %:</label>
                 </div>
@@ -314,25 +314,6 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 </div>
               </div>
 
-              {/* Social Activities */}
-              <div className="flex items-center mb-2  p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Social Activities:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={routine["Social Activities"]}
-                      onChange={(e) => onInputChange(e, 'Social Activities')}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    />
-                  ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Social Activities"]}</p>
-                  )}
-                </div>
-              </div>
-
               {/* Mood Score */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
@@ -348,25 +329,6 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                     />
                   ) : (
                     <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Mood Score"]}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Mood Summary */}
-              <div className="flex items-center mb-2  p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Mood Summary:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={routine["Mood Summary"]}
-                      onChange={(e) => onInputChange(e, 'Mood Summary')}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    />
-                  ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Mood Summary"]}</p>
                   )}
                 </div>
               </div>
@@ -409,8 +371,54 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 </div>
               </div>
 
-              {/* Daily Summary */}
-              <div className="flex items-center mb-2  p-1 rounded">
+              
+            </div>
+          </div>
+        </div>
+
+        {/* Journal */}
+        <div className="flex flex-col justify-start mb-2 py-1 md:mx-6 pt-4 rounded text-sm border-t border-t-cyan-200">
+          
+          {/* Social Activities */}
+          <div className="flex items-center mb-2 p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Social Activities:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={routine["Social Activities"]}
+                      onChange={(e) => onInputChange(e, 'Social Activities')}
+                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    />
+                  ) : (
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Social Activities"]}</p>
+                  )}
+                </div>
+              </div>
+              
+          {/* Mood Summary */}
+          <div className="flex items-center mb-2 p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Mood Summary:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={routine["Mood Summary"]}
+                      onChange={(e) => onInputChange(e, 'Mood Summary')}
+                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    />
+                  ) : (
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Mood Summary"]}</p>
+                  )}
+                </div>
+              </div>
+
+          {/* Daily Summary */}
+          <div className="flex items-center mb-2 p-1 pb-4 rounded border-b border-b-cyan-200">
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Daily Summary:</label>
                 </div>
@@ -427,14 +435,10 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   )}
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Journal */}
-        <div className="flex flex-col justify-start mb-2 py-1 md:px-6 rounded text-sm">
+          
+          {/* Journal */}
           <div className="w-full">
-            <label className="block border-b border-cyan-200 font-bold text-black text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Journal:</label>
+            <label className="block border-b border-cyan-200 font-bold text-black text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700 pb-2">Journal:</label>
           </div>
           <div className="w-full">
             {isEditing ? (

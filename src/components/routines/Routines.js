@@ -13,13 +13,13 @@ const Routines = () => {
   };
 
   return (
-    <div className='w-full'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-600 to-fuchsia-300':'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-black' : 'text-neutral-800'} text-xl md:text-2xl font-semibold`}>
+    <div className='w-full max-w-[500px]'>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-700 to-fuchsia-300':'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+        <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-xl md:text-2xl font-semibold drop-shadow-lg`}>
         {`Daily Check-In`}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
