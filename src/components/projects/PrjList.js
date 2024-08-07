@@ -73,25 +73,25 @@ const PrjList = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="container mx-auto md:px-0 h-0 md:h-auto">
+    <div className="container mx-auto md:px-0 md:h-auto">
      
       {sortedProjects.map(({ projectName, projectPriority, milestones }) => {
         // Sort milestones based on selected criteria
         const sortedMilestones = sortMilestones(milestones);
 
         return (
-          <div key={projectName} className="mb-6">
+          <div key={projectName} className="flex flex-col mb-6 max-w-[750px] mx-auto w-full h-full">
             <h1 className="text-xl md:text-3xl font-semibold mb-3 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
               {projectName}
             </h1>
             <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
 
-            <div className="flex flex-row w-auto justify-start overflow-auto space-0">
+            <div className="flex flex-row w-auto justify-start overflow-auto space-0 disable-scrollbars">
 
               {/* Render the milestones */}
               {sortedMilestones.map((milestone, index) => (
-                <div key={index} className="flex flex-col w-full max-w-[350px] mr-6 mb-4">                 
-                  <div className="flex flex-row flex-wrap space-4">
+                <div key={index} className="flex flex-col w-full max-w-[350px] mr-6 mb-4 h-full">                 
+                  <div className="flex flex-row flex-wrap space-4 h-full">
                     <PrjCard key={index} milestone={milestone} />
                   </div>
                 </div>
