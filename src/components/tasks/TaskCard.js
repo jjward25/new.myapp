@@ -1,3 +1,5 @@
+//src/components/TaskCard.js
+
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -33,7 +35,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   }, []);
 
   const handleInputChange = (e, key) => {
-    setEditableTask({ ...editableTask, [key]: e.target.value });
+    const value = e.target.value;
+    // Set to null if the input value is empty
+    setEditableTask({ ...editableTask, [key]: value === '' ? null : value });
   };
 
   const handleSave = async () => {
@@ -138,7 +142,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               </p>
             </div>
 
-            <p className='text-left md:w-full md:ml-3 pt-2 pb-2 text-black'>
+            <p className='text-left md:w-full ml-1 md:ml-3 pt-2 pb-2 text-black'>
               <strong>Notes:</strong> {isEditing ?
                 <textarea
                   value={editableTask["Notes"] || ''}
