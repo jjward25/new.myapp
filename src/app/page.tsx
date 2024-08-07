@@ -12,7 +12,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
-      <h1 className="hover:animate-spin text-5xl font-semibold text-cyan-700 mt-6 md:mt-2 mb-10 drop-shadow-md">
+      <h1 className="hover:animate-spin text-5xl font-semibold text-cyan-700 mt-6 md:mt-4 mb-10 md:mb-14 drop-shadow-md">
         {`Joe's Life`}
       </h1>
 

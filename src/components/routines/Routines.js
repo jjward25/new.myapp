@@ -13,7 +13,7 @@ const Routines = () => {
   };
 
   return (
-    <div className='w-full max-w-[500px]'>
+    <div className='w-full'>
       <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-700 to-fuchsia-300':'rounded-lg bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
         <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-xl md:text-2xl font-semibold drop-shadow-lg`}>
         {`Daily Check-In`}
