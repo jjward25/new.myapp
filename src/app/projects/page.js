@@ -7,7 +7,7 @@ import { getCurrentFormattedDate } from '../../utils/Date';
 const Milestones = () => {
   const today = getCurrentFormattedDate();
   const [showForm, setShowForm] = useState(false);
-  const [newProject, setNewProject] = useState({ projectName: '', projectPriority: '' });
+  const [newProject, setNewProject] = useState({ projectName: '', projectPriority: '', projectType:'', projectNotes:'' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +26,8 @@ const Milestones = () => {
         body: JSON.stringify({
           projectName: newProject.projectName,
           projectPriority: newProject.projectPriority,
+          projectType: newProject.projectType || null,
+          projectNotes: newProject.projectNotes || null,
         }),
       });
 
@@ -35,7 +37,7 @@ const Milestones = () => {
 
       // Optionally, refetch projects or update the state if needed
       // For now, you can just reset the form
-      setNewProject({ projectName: '', projectPriority: '' });
+      setNewProject({ projectName: '', projectPriority: '',projectType:'',projectNotes:'' });
       setShowForm(false);
     } catch (error) {
       console.error('Error adding project:', error);
@@ -48,17 +50,13 @@ const Milestones = () => {
         Project Milestones
       </h1>
       <p className='text-white py-4 mb-14 border-t border-b border-cyan-700 w-full max-w-[750px] text-center'>
-        {getCurrentFormattedDate()}
-      </p>
-
-      <button
-        onClick={() => setShowForm((prev) => !prev)}
-        className="px-4 py-2 bg-green-500 text-white rounded-lg mb-4"
-      >
-        {showForm ? 'Cancel' : 'Add New Project'}
-      </button>
-
-      {showForm && (
+        <button
+          onClick={() => setShowForm((prev) => !prev)}
+          className="px-4 py-2 bg-green-500 text-white rounded-lg"
+        >
+          {showForm ? 'Cancel' : 'Add New Project'}
+        </button>
+        {showForm && (
         <form onSubmit={handleSubmit} className="mb-4">
           <div className="flex flex-col max-w-[500px] mx-auto">
             <input
@@ -67,7 +65,7 @@ const Milestones = () => {
               value={newProject.projectName}
               onChange={handleInputChange}
               placeholder="Project Name"
-              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg"
+              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
               required
             />
             <input
@@ -76,8 +74,24 @@ const Milestones = () => {
               value={newProject.projectPriority}
               onChange={handleInputChange}
               placeholder="Project Priority"
-              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg"
+              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
               required
+            />
+            <input
+              type="text"
+              name="projectType"
+              value={newProject.projectType}
+              onChange={handleInputChange}
+              placeholder="Project Type"
+              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
+            />
+            <input
+              type="text"
+              name="projectNotes"
+              value={newProject.newProject}
+              onChange={handleInputChange}
+              placeholder="Project Notes"
+              className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
             />
             <button
               type="submit"
@@ -88,6 +102,7 @@ const Milestones = () => {
           </div>
         </form>
       )}
+      </p>
 
       <div className="flex flex-col w-full h-full mb-10">
         <div className="flex flex-col w-full h-full m-auto">
