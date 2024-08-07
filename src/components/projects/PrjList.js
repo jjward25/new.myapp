@@ -267,10 +267,10 @@ const PrjList = () => {
         const sortedMilestones = sortMilestones(project.milestones);
 
         return (
-          <div key={project._id} className="flex flex-col mb-1 max-w-[750px] mx-auto w-full h-full cursor-pointer" onClick={() => toggleOpen(project._id)}>
+          <div key={project._id} className="flex flex-col mb-1 max-w-[750px] mx-auto w-full h-full">
             <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px]"></div>
 
-            <div className="flex justify-between items-center flex-col md:flex-row mb-3 md:mb-0">
+            <div className="flex justify-between items-center flex-col md:flex-row mb-3 md:mb-0 cursor-pointer" onClick={() => toggleOpen(project._id)}>
               <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700" >
                 {project.projectName}
               </h1>
