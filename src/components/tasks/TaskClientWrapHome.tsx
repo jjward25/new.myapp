@@ -72,7 +72,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-cyan-800 border border-neutral-200' : 'border border-cyan-200 rounded-lg bg-gradient-to-tr from-cyan-200 via-neutral-300 to-cyan-200'} drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-lg bg-cyan-800 border border-neutral-200' : 'border border-cyan-200 rounded-lg bg-gradient-to-tr from-cyan-200 via-neutral-300 to-cyan-200'} drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
         <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-xl md:text-2xl font-semibold hover:text-cyan-700`}>
           {title}
         </p>
@@ -91,7 +91,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
         {isOpen && (
           <div className='mt-3'>
             <AddNewTaskForm onTaskAdded={handleTaskAdded} />
-            <div className="flex space-x-1 md:space-x-5 mb-4 border-t border-b border-black py-2 w-full justify-evenly">
+            <div className="flex space-x-1 md:space-x-5 mb-4 border-t border-b border-black py-2 w-full justify-evenly mt-4">
               <button
                 onClick={() => handleToggleSortOrder('date')}
                 className="btn btn-sm btn-outline btn-default text-black hover:text-neutral-400 hover:underline"

@@ -3,7 +3,8 @@ import React from 'react';
 import { getCurrentDate, getTomorrowDate } from '../utils/Date';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
-import TaskListWrap from '../components/tasks/TaskClientWrap';
+import TaskListWrap from '../components/tasks/TaskClientWrapHome';
+import TaskListWrap2 from '../components/tasks/TaskClientWrapHome2';
 import DateUpdater from '../components/Date'
 import TaskTrendChart from '../components/d3/TaskTrendChart'
 
@@ -33,19 +34,19 @@ export default function Home() {
               <TaskTrendChart/>
             </div>
 
-            <TaskListWrap
+            <TaskListWrap2
               completeDateFilter={null}
               typeFilter={['Event']}
               dueDateFromFilter={today}
               title="Upcoming Events"
             />
-            <TaskListWrap
+            <TaskListWrap2
               completeDateFilter={null}
               typeFilter={['Task']}
               dueDateFilter={tomorrow}
               title="Tomorrow's Tasks"
             />
-            <TaskListWrap
+            <TaskListWrap2
               completeDateFilter={null}
               typeFilter={['List']}
               title="Quick List"
@@ -53,7 +54,7 @@ export default function Home() {
           </div>
           <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
           <Routines/>
-            <TaskListWrap
+            <TaskListWrap2
                 completeDateFilter={false}
                 typeFilter={['Task']}
                 dueDateFilter={today}
