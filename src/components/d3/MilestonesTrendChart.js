@@ -18,31 +18,32 @@ const MilestoneTrendChart = ({ data }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // Clear the SVG before redrawing
 
-    const width = 350;
-    const height = 200;
-    const margin = { top: 20, right: 20, bottom: 30, left: 20 };
+    const containerWidth = svgRef.current.clientWidth;
+    const margin = { top: 20, right: 20, bottom: 25, left: 40 }; // Adjusted margins
+    const width = containerWidth - margin.left - margin.right;
+    const height = 200 - margin.top - margin.bottom; // Adjusted height for better view
 
     const x = d3.scaleTime()
       .domain(d3.extent(parsedData, d => d.date))
-      .range([margin.left, width - margin.right]);
+      .range([0, width]); // Ensure x range starts at 0 and ends at width
 
     const y = d3.scaleLinear()
       .domain([0, d3.max(parsedData, d => d.completed)]).nice()
-      .range([height - margin.bottom, margin.top]);
+      .range([height, 0]); // Ensure y range starts at height and ends at 0
 
     const xAxis = g => g
-      .attr('transform', `translate(0,${height - margin.bottom})`)
+      .attr('transform', `translate(${margin.left},${height + margin.top})`)
       .call(d3.axisBottom(x).ticks(width / 80).tickFormat(d3.timeFormat('%m-%d-%y')).tickSizeOuter(0))
       .call(g => g.selectAll('.tick line').attr('stroke', 'fuchsia'))
       .call(g => g.selectAll('.tick text').attr('fill', 'cyan'))
       .call(g => g.select('.domain').attr('stroke', 'fuchsia'));
 
     const yAxis = g => g
-      .attr('transform', `translate(${margin.left},0)`)
+      .attr('transform', `translate(${margin.left},${margin.top})`)
       .call(d3.axisLeft(y).ticks(d3.max(parsedData, d => d.completed)).tickFormat(d3.format('d')))
       .call(g => g.select('.domain').remove())
       .call(g => g.selectAll('.tick line').attr('stroke', 'fuchsia').clone()
-        .attr('x2', width - margin.left - margin.right)
+        .attr('x2', width)
         .attr('stroke-opacity', 0.1))
       .call(g => g.selectAll('.tick text').attr('fill', 'fuchsia'));
 
@@ -51,8 +52,8 @@ const MilestoneTrendChart = ({ data }) => {
       .selectAll('circle')
       .data(parsedData)
       .join('circle')
-        .attr('cx', d => x(d.date))
-        .attr('cy', d => y(d.completed))
+        .attr('cx', d => x(d.date) + margin.left)
+        .attr('cy', d => y(d.completed) + margin.top)
         .attr('r', 3);
 
     svg.append('g').call(xAxis);
@@ -60,7 +61,9 @@ const MilestoneTrendChart = ({ data }) => {
   }, [data]);
 
   return (
-    <svg ref={svgRef} width="350" height="200"></svg>
+    <div style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
+      <svg ref={svgRef} width="100%" height="100%" viewBox={`0 0 ${svgRef.current?.clientWidth || 730} ${200}`} />
+    </div>
   );
 };
 

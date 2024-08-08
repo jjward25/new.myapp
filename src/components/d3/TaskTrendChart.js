@@ -131,8 +131,8 @@ const CompletedMissedTasksChart = () => {
   }, [data]);
 
   return (
-    <div style={{ overflowX: 'auto', padding: '0 10px', maxWidth: '100%' }}>
-      <svg ref={svgRef} width="100%" height="240" viewBox="0 0 730 230" style={{ maxWidth: '100%' }}></svg>
+    <div style={{ overflowX: 'auto', padding: '10px 10px', maxWidth: '100%' }}>
+      <svg ref={svgRef} width="100%" height="100%" viewBox="0 0 730 230" style={{ maxWidth: '100%' }}></svg>
     </div>
   );
 };
