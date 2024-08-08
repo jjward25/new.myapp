@@ -1,8 +1,16 @@
-"use client"
+"use client";
 // src/components/CompletedMissedTasksChart.js
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { processTaskData } from './TaskTrendData';
+
+// Convert date to EST
+const normalizeDate = (dateStr) => {
+  const date = new Date(dateStr);
+  // Convert to EST
+  const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  return estDate.toISOString().split('T')[0];
+};
 
 const CompletedMissedTasksChart = () => {
   const [data, setData] = useState({ completed: {}, missed: {} });
@@ -15,7 +23,7 @@ const CompletedMissedTasksChart = () => {
         const tasks = await response.json();
 
         // Filter out tasks with null or undefined Due Dates
-        const filteredTasks = tasks.filter(task => task.DueDate !== null);
+        const filteredTasks = tasks.filter(task => task['Due Date'] !== null && task['Due Date'] !== '');
 
         const processedData = processTaskData(filteredTasks);
         setData(processedData);
@@ -34,17 +42,26 @@ const CompletedMissedTasksChart = () => {
     svg.selectAll('*').remove(); // Clear previous content
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 100, left: 30 }; // Adjusted margins
+    const margin = { top: 10, right: 15, bottom: 100, left: 40 };
     const width = containerWidth - margin.left - margin.right;
-    const height = 200 - margin.top - margin.bottom; // Increased height for better view
+    const height = 200 - margin.top - margin.bottom;
 
-    // Ensure dates are in ascending order
-    const xDomain = Object.keys(data.completed).sort((a, b) => new Date(a) - new Date(b));
+    // Normalize and process dates
+    const allDates = [
+      ...Object.keys(data.completed),
+      ...Object.keys(data.missed)
+    ]
+    .map(dateStr => new Date(dateStr)) // Create Date objects from date strings
+    .sort((a, b) => a - b); // Sort dates
 
-    const x = d3.scalePoint()
-      .domain(xDomain)
-      .range([0, width])
-      .padding(0.2);
+    // Generate a continuous date range from min to max date
+    const minDate = d3.min(allDates);
+    const maxDate = d3.max(allDates);
+    const xDomainDates = d3.timeDays(minDate, d3.timeDay.offset(maxDate, 1)); // Include end date in range
+
+    const x = d3.scaleTime()
+      .domain([d3.min(xDomainDates), d3.max(xDomainDates)])
+      .range([0, width]);
 
     const yMax = Math.max(d3.max(Object.values(data.completed)), d3.max(Object.values(data.missed))) + 1;
     const y = d3.scaleLinear()
@@ -54,16 +71,18 @@ const CompletedMissedTasksChart = () => {
 
     // Ensure y-axis only has whole-number ticks
     const yAxis = d3.axisLeft(y)
-      .ticks(yMax) // Explicitly set the number of ticks
-      .tickFormat(d => d); // Format as whole numbers
+      .ticks(yMax)
+      .tickFormat(d => d);
 
-    // Draw X-axis
+    // Draw X-axis with specific ticks
     svg.append('g')
       .attr('transform', `translate(${margin.left},${height + margin.top})`)
-      .call(d3.axisBottom(x))
+      .call(d3.axisBottom(x)
+        .tickValues(xDomainDates) // Set ticks to specific dates
+        .tickFormat(d3.timeFormat('%b %d'))) // Format tick labels
       .selectAll('text')
-      .style('fill', 'white') // Set x-axis text color to white
-      .style('font-size', '9px') // Increase font size for legibility
+      .style('fill', 'white')
+      .style('font-size', '9px')
       .attr('transform', 'rotate(-45)')
       .attr('text-anchor', 'end');
 
@@ -72,66 +91,65 @@ const CompletedMissedTasksChart = () => {
       .attr('transform', `translate(${margin.left},${margin.top})`)
       .call(yAxis);
 
-    // Style Y-axis text
     yAxisGroup.selectAll('text')
-      .style('fill', 'white') // Set y-axis text color to white
-      .style('font-size', '12px'); // Increase font size for legibility
+      .style('fill', 'white')
+      .style('font-size', '12px');
 
-    // Style Y-axis line
     yAxisGroup.select('path')
-      .style('stroke', 'slategray'); // Y-axis line color
+      .style('stroke', 'slategray');
 
     // Add horizontal grid lines for Y-axis tick marks
     svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
       .call(d3.axisLeft(y)
-        .tickSize(-width) // Extend the ticks across the chart width
-        .tickFormat(() => '') // Remove tick labels
-        .ticks(yMax)) // Explicitly set the number of ticks
+        .tickSize(-width)
+        .tickFormat(() => '')
+        .ticks(yMax))
       .selectAll('line')
-      .style('stroke', 'slategray') // Set the color of the lines
-      .style('stroke-width', '1px'); // Set the width of the lines
+      .style('stroke', 'slategray')
+      .style('stroke-width', '1px');
+
+    // Combine data for proper line rendering
+    const combinedData = xDomainDates.map(date => ({
+      date,
+      completed: data.completed[normalizeDate(date)] || 0,
+      missed: data.missed[normalizeDate(date)] || 0
+    }));
 
     // Line generator for Completed Tasks
     const lineCompleted = d3.line()
-      .x(d => x(d.date) + x.bandwidth() / 2)
+      .x(d => x(d.date))
       .y(d => y(d.completed));
 
     // Line generator for Missed Tasks
     const lineMissed = d3.line()
-      .x(d => x(d.date) + x.bandwidth() / 2)
+      .x(d => x(d.date))
       .y(d => y(d.missed));
-
-    // Combine data for proper line rendering
-    const combinedData = xDomain.map(date => ({
-      date,
-      completed: data.completed[date] || 0,
-      missed: data.missed[date] || 0
-    }));
 
     // Draw lines for Completed Tasks
     svg.append('path')
       .data([combinedData])
       .attr('class', 'line completed')
-      .attr('d', d => lineCompleted(d.map(d => ({ date: d.date, completed: d.completed }))))
+      .attr('d', d => lineCompleted(d))
       .attr('fill', 'none')
       .attr('stroke', 'cyan')
-      .attr('stroke-width', 2);
+      .attr('stroke-width', 2)
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Draw lines for Missed Tasks
     svg.append('path')
       .data([combinedData])
       .attr('class', 'line missed')
-      .attr('d', d => lineMissed(d.map(d => ({ date: d.date, missed: d.missed }))))
+      .attr('d', d => lineMissed(d))
       .attr('fill', 'none')
       .attr('stroke', 'fuchsia')
-      .attr('stroke-width', 2);
-
+      .attr('stroke-width', 2)
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
   }, [data]);
 
   return (
-    <div style={{ overflowX: 'auto', padding: '10px 10px', maxWidth: '100%' }}>
+    <div style={{ overflowX: 'none', padding: '10px 10px', maxWidth: '100%' }}>
       <svg ref={svgRef} width="100%" height="100%" style={{ maxWidth: '100%' }}></svg>
     </div>
   );
