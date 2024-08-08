@@ -1,6 +1,6 @@
 // app/api/projects/route.js
 import { ObjectId } from 'mongodb';
-import { getBacklog, addItem, updateMilestone, deleteItem, deleteProject, updateProject, addProject, getProjectById } from '../../../utils/mongoDB/prjCRUD';
+import { getBacklog, addItem, updateMilestone, deleteItem, deleteProject, updateProject, addProject } from '../../../utils/mongoDB/prjCRUD';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,10 +74,7 @@ export async function PUT(req, res) {
           throw new Error('Invalid project ID');
         }
 
-        const currentProject = await getProjectById(projectId);
-        if (!currentProject) {
-          throw new Error('Project not found');
-        }
+      
 
         // Only include fields that are part of the updatedProject
         const validFields = ['Project Name', 'Project Priority', 'Type', 'Notes'];
