@@ -20,26 +20,24 @@ export default function Home() {
       <DateUpdater/>
       <Weather/>
 
-      <div className='w-full bg-gradient-to-tr from-cyan-950 via-fuchsia-950 to-cyan-950 max-w-[750px] rounded-xl mb-8 border border-cyan-300'>
-        <TaskTrendChart/>
-      </div>
+      
 
       <div className="flex flex-col w-full h-full mb-10 justify-center">
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div>
 
         <div className='w-full md:grid md:grid-cols-2'>
           <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
+            
+            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300'>
+              <p className='ml-5 mt-3 text-white text-md'>Personal History</p>
+              <TaskTrendChart/>
+            </div>
+
             <TaskListWrap
               completeDateFilter={null}
-              typeFilter={['List']}
-              title="Quick List"
-            />
-            <TaskListWrap
-              completeDateFilter={false}
-              typeFilter={['Task']}
-              dueDateFilter={today}
-              isOpen={true}
-              title="Today's Tasks"
+              typeFilter={['Event']}
+              dueDateFromFilter={today}
+              title="Upcoming Events"
             />
             <TaskListWrap
               completeDateFilter={null}
@@ -47,15 +45,22 @@ export default function Home() {
               dueDateFilter={tomorrow}
               title="Tomorrow's Tasks"
             />
-          </div>
-          <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
             <TaskListWrap
               completeDateFilter={null}
-              typeFilter={['Event']}
-              dueDateFromFilter={today}
-              title="Upcoming Events"
+              typeFilter={['List']}
+              title="Quick List"
             />
-            <Routines/>
+          </div>
+          <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
+          <Routines/>
+            <TaskListWrap
+                completeDateFilter={false}
+                typeFilter={['Task']}
+                dueDateFilter={today}
+                isOpen={true}
+                title="Today's Tasks"
+            />
+            
           </div>
         </div>
       </div>

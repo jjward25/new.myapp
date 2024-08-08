@@ -34,14 +34,14 @@ const CompletedMissedTasksChart = () => {
     svg.selectAll('*').remove(); // Clear previous content
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 }; // Adjusted margins
+    const margin = { top: 10, right: 15, bottom: 100, left: 30 }; // Adjusted margins
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom; // Increased height for better view
 
     // Ensure dates are in ascending order
     const xDomain = Object.keys(data.completed).sort((a, b) => new Date(a) - new Date(b));
 
-    const x = d3.scaleBand()
+    const x = d3.scalePoint()
       .domain(xDomain)
       .range([0, width])
       .padding(0.2);
@@ -63,7 +63,7 @@ const CompletedMissedTasksChart = () => {
       .call(d3.axisBottom(x))
       .selectAll('text')
       .style('fill', 'white') // Set x-axis text color to white
-      .style('font-size', '12px') // Increase font size for legibility
+      .style('font-size', '9px') // Increase font size for legibility
       .attr('transform', 'rotate(-45)')
       .attr('text-anchor', 'end');
 
@@ -132,7 +132,7 @@ const CompletedMissedTasksChart = () => {
 
   return (
     <div style={{ overflowX: 'auto', padding: '10px 10px', maxWidth: '100%' }}>
-      <svg ref={svgRef} width="100%" height="100%" viewBox="0 0 730 230" style={{ maxWidth: '100%' }}></svg>
+      <svg ref={svgRef} width="100%" height="100%" style={{ maxWidth: '100%' }}></svg>
     </div>
   );
 };
