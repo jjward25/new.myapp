@@ -5,6 +5,7 @@ import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrap from '../components/tasks/TaskClientWrap';
 import DateUpdater from '../components/Date'
+import TaskTrendChart from '../components/d3/TaskTrendChart'
 
 export default function Home() {
   const today = getCurrentDate(); // 'YYYY-MM-DD'
@@ -18,6 +19,10 @@ export default function Home() {
 
       <DateUpdater/>
       <Weather/>
+
+      <div className='w-full bg-gradient-to-tr from-cyan-950 via-fuchsia-950 to-cyan-950 max-w-[750px] rounded-xl mb-8 border border-cyan-300'>
+        <TaskTrendChart/>
+      </div>
 
       <div className="flex flex-col w-full h-full mb-10 justify-center">
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div>

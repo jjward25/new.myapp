@@ -217,7 +217,7 @@ const Milestones = () => {
         )}
       </p>
 
-      <div className='w-full bg-black max-w-[750px] rounded-xl mb-8'>
+      <div className='w-full bg-gradient-to-tr from-black to-slate-800 rounded-xl mb-8 border border-white max-w-[750px]'>
         <MilestoneTrendComponent/>
       </div>
 
