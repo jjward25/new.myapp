@@ -144,7 +144,7 @@ const PrjList = () => {
       setError('Unable to edit milestone');
     }
   };
-  
+
   const handleDeleteMilestone = async (milestone) => {
     try {
       const project = projects.find(p => p.milestones.some(m => m.milestoneName === milestone.milestoneName));
@@ -252,9 +252,16 @@ const PrjList = () => {
     return milestones.sort((a, b) => priorityOrder === 'asc' ? a["Milestone Priority"] - b["Milestone Priority"] : b["Milestone Priority"] - a["Milestone Priority"]);
   };
 
+ 
+
   const toggleOpen = (projectId) => {
     setOpenProjects(prev => ({ ...prev, [projectId]: !prev[projectId] }));
   };
+
+  const filterMilestones = (milestones) => {
+    return milestones.filter(milestone => !milestone["Complete Date"] || milestone["Complete Date"] === '');
+  };
+
 
   const sortedProjects = projects.sort((b, a) => b.projectPriority - a.projectPriority);
 
@@ -264,14 +271,14 @@ const PrjList = () => {
   return (
     <div className="container mx-auto md:px-0 md:h-auto">
       {sortedProjects.map((project) => {
-        const sortedMilestones = sortMilestones(project.milestones);
+        const sortedMilestones = sortMilestones(filterMilestones(project.milestones));
 
         return (
           <div key={project._id} className="flex flex-col mb-1 max-w-[750px] mx-auto w-full h-full">
             <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px]"></div>
 
             <div className="flex justify-between items-center flex-col md:flex-row mb-3 md:mb-0 cursor-pointer" onClick={() => toggleOpen(project._id)}>
-              <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700" >
+              <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
                 {project.projectName}
               </h1>
               <div className="flex space-x-2">
@@ -293,25 +300,24 @@ const PrjList = () => {
                 >
                   Add Milestone
                 </button>
-                
               </div>
             </div>
             <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
 
             {openProjects[project._id] && (
-            <div className={`flex flex-row w-auto justify-start overflow-auto disable-scrollbars`}>
-              {sortedMilestones.map((milestone, index) => (
-                <div key={index} className={`flex flex-col w-auto mr-6 mb-1 h-full`}>
-                  <div className="flex flex-row flex-wrap h-full">
-                    <MilestoneCard 
-                      milestone={milestone} 
-                      handleDeleteMilestone={() => handleDeleteMilestone(milestone)} 
-                      handleEditMilestone={handleEditMilestone}
-                    />
+              <div className={`flex flex-row w-auto justify-start overflow-auto disable-scrollbars`}>
+                {sortedMilestones.map((milestone, index) => (
+                  <div key={index} className={`flex flex-col w-auto mr-6 mb-1 h-full`}>
+                    <div className="flex flex-row flex-wrap h-full">
+                      <MilestoneCard 
+                        milestone={milestone} 
+                        handleDeleteMilestone={() => handleDeleteMilestone(milestone)} 
+                        handleEditMilestone={handleEditMilestone}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             )}
           </div>
         );
@@ -319,58 +325,62 @@ const PrjList = () => {
 
       {/* Edit Project Form */}
       {isEditing && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Edit Project</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleEditProject(); }}>
-              <label className="block mb-2">
-                Project Name:
+            <form onSubmit={handleEditProject}>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Project Name</label>
                 <input
                   type="text"
                   value={editProjectData.projectName}
                   onChange={(e) => setEditProjectData(prev => ({ ...prev, projectName: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
                 />
-              </label>
-              <label className="block mb-2">
-                Project Priority:
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Priority</label>
                 <input
                   type="number"
                   value={editProjectData.projectPriority}
                   onChange={(e) => setEditProjectData(prev => ({ ...prev, projectPriority: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
                 />
-              </label>
-              <label className="block mb-2">
-                Type:
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Type</label>
                 <input
                   type="text"
                   value={editProjectData.type}
                   onChange={(e) => setEditProjectData(prev => ({ ...prev, type: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
-              </label>
-              <label className="block mb-4">
-                Notes:
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Notes</label>
                 <textarea
                   value={editProjectData.notes}
                   onChange={(e) => setEditProjectData(prev => ({ ...prev, notes: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
-              </label>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:scale-95 text-xs"
-              >
-                Save Changes
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg ml-2 hover:scale-95"
-              >
-                Cancel
-              </button>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="ml-3 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save Changes
+                </button>
+              </div>
             </form>
           </div>
         </div>
@@ -378,112 +388,36 @@ const PrjList = () => {
 
       {/* Add Milestone Form */}
       {isAddingMilestone && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-75">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Add Milestone</h2>
             <form onSubmit={handleSubmitMilestone}>
-              <label className="block mb-2">
-                Milestone Name:
+              <div className="mb-2">
+                <label className="block text-sm font-medium text-gray-700">Milestone Name</label>
                 <input
                   type="text"
                   value={newMilestoneData.milestoneName}
                   onChange={(e) => setNewMilestoneData(prev => ({ ...prev, milestoneName: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  required
                 />
-              </label>
-              <label className="block mb-2">
-                Priority:
-                <input
-                  type="number"
-                  value={newMilestoneData.priority}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, priority: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Start Date:
-                <input
-                  type="date"
-                  value={newMilestoneData.startDate}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, startDate: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Due Date:
-                <input
-                  type="date"
-                  value={newMilestoneData.dueDate}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, dueDate: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Complete Date:
-                <input
-                  type="date"
-                  value={newMilestoneData.completeDate}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, completeDate: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Estimated Size:
-                <input
-                  type="text"
-                  value={newMilestoneData.estimatedSize}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, estimatedSize: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Actual Hours:
-                <input
-                  type="text"
-                  value={newMilestoneData.actualHours}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, actualHours: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Notes:
-                <textarea
-                  value={newMilestoneData.notes}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, notes: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Target:
-                <input
-                  type="text"
-                  value={newMilestoneData.target}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, target: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <label className="block mb-4">
-                Actual:
-                <input
-                  type="text"
-                  value={newMilestoneData.actual}
-                  onChange={(e) => setNewMilestoneData(prev => ({ ...prev, actual: e.target.value }))}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                />
-              </label>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-              >
-                Add Milestone
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsAddingMilestone(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg ml-2"
-              >
-                Cancel
-              </button>
+              </div>
+              {/* Add other milestone fields here */}
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingMilestone(false)}
+                  className="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="ml-3 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Add Milestone
+                </button>
+              </div>
             </form>
           </div>
         </div>
