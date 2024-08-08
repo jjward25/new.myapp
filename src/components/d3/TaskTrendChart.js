@@ -33,9 +33,10 @@ const CompletedMissedTasksChart = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // Clear previous content
 
-    const margin = { top: 10, right: 10, bottom: 30, left: 30 }; // Increased bottom margin
-    const width = 700 - margin.left - margin.right;
-    const height = 140 - margin.top - margin.bottom;
+    const containerWidth = svgRef.current.clientWidth;
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 }; // Adjusted margins
+    const width = containerWidth - margin.left - margin.right;
+    const height = 200 - margin.top - margin.bottom; // Increased height for better view
 
     // Ensure dates are in ascending order
     const xDomain = Object.keys(data.completed).sort((a, b) => new Date(a) - new Date(b));
@@ -93,13 +94,13 @@ const CompletedMissedTasksChart = () => {
 
     // Line generator for Completed Tasks
     const lineCompleted = d3.line()
-      .x(d => x(d.date) + x.bandwidth() / 2 + margin.left)
-      .y(d => y(d.completed) + margin.top);
+      .x(d => x(d.date) + x.bandwidth() / 2)
+      .y(d => y(d.completed));
 
     // Line generator for Missed Tasks
     const lineMissed = d3.line()
-      .x(d => x(d.date) + x.bandwidth() / 2 + margin.left)
-      .y(d => y(d.missed) + margin.top);
+      .x(d => x(d.date) + x.bandwidth() / 2)
+      .y(d => y(d.missed));
 
     // Combine data for proper line rendering
     const combinedData = xDomain.map(date => ({
@@ -126,40 +127,13 @@ const CompletedMissedTasksChart = () => {
       .attr('stroke', 'fuchsia')
       .attr('stroke-width', 2);
 
-    // Add legend at the bottom
-    const legend = svg.append('g')
-      .attr('transform', `translate(${margin.left},${height + margin.top + 80})`); // Increased bottom translation
-
-    legend.append('circle')
-      .attr('cx', 10)
-      .attr('cy', 10)
-      .attr('r', 6)
-      .attr('fill', 'cyan');
-
-    legend.append('text')
-      .attr('x', 30)
-      .attr('y', 15)
-      .attr('fill', 'white')
-      .style('font-size', '10px') // Smaller font size
-      .text('Completed Tasks');
-
-    legend.append('circle')
-      .attr('cx', 10)
-      .attr('cy', 30)
-      .attr('r', 6)
-      .attr('fill', 'fuchsia');
-
-    legend.append('text')
-      .attr('x', 30)
-      .attr('y', 35)
-      .attr('fill', 'white')
-      .style('font-size', '10px') // Smaller font size
-      .text('Missed Tasks');
 
   }, [data]);
 
   return (
-    <svg ref={svgRef} width="800" height="165" style={{ margin: '20px' }}></svg>
+    <div style={{ overflowX: 'auto', padding: '0 10px', maxWidth: '100%' }}>
+      <svg ref={svgRef} width="100%" height="240" viewBox="0 0 730 230" style={{ maxWidth: '100%' }}></svg>
+    </div>
   );
 };
 
