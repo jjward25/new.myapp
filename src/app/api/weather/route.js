@@ -1,4 +1,6 @@
 // src/app/api/weather/route.js
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     const url = 'https://wttr.in/New+York?format=%t %C'; // Fetch temperature and weather condition
   

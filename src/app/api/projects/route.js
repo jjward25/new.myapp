@@ -2,6 +2,8 @@
 import { ObjectId } from 'mongodb';
 import { getBacklog, addItem, updateMilestone, deleteItem, deleteProject, updateProject, addProject, getProjectById } from '../../../utils/mongoDB/prjCRUD';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req, res) {
   try {
     const backlog = await getBacklog();

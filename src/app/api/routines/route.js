@@ -3,6 +3,7 @@
 import { ObjectId } from 'mongodb';
 import { getBacklog, addRoutine , updateItem, deleteItem } from '../../../utils/mongoDB/routinesCRUD';
 
+export const dynamic = 'force-dynamic';
 
 export async function PUT(req) {
   try {

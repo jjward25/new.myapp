@@ -2,6 +2,8 @@
 import { ObjectId } from 'mongodb';
 import { getBacklog, addItem, updateItem, deleteItem } from '../../../utils/mongoDB/taskCRUD';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
   try {
     const backlog = await getBacklog();
