@@ -3,7 +3,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { getCurrentDate } from '../../utils/Date';
 
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -11,7 +10,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const cardRef = useRef(null);
-  const today = getCurrentDate(); // 'YYYY-MM-DD'
+  const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
   const adjustHeight = () => {
     if (cardRef.current) {

@@ -3,18 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentFormattedDate } from '../../utils/Date';
 import TaskListWrap from '../../components/tasks/TaskClientWrapStyle2'
-import { getCurrentDate, getTomorrowDate } from '../../utils/Date'
 
 const Backlog = () => {
-  const today = getCurrentDate();
-  const tomorrow = getTomorrowDate();
-
+  const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [sortOrder, setSortOrder] = useState('date');
-  const [dateOrder, setDateOrder] = useState('asc');
-  const [priorityOrder, setPriorityOrder] = useState('asc');
-  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
 
   useEffect(() => {
     setLoading(false);

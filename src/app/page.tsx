@@ -1,6 +1,5 @@
 //src/app.page.tsx
 import React from 'react';
-import { getCurrentDate, getTomorrowDate } from '../utils/Date';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrap from '../components/tasks/TaskClientWrapHome';
@@ -9,8 +8,9 @@ import DateUpdater from '../components/Date'
 import TaskTrendChart from '../components/d3/TaskTrendChart'
 
 export default function Home() {
-  const today = getCurrentDate(); // 'YYYY-MM-DD'
-  const tomorrow = getTomorrowDate(); // 'YYYY-MM-DD'
+  const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
