@@ -103,7 +103,7 @@ const WeatherClient = () => {
   const textColorClass = temperature ? getTextColorClass(temperature) : '';
 
   return (
-    <div className="flex items-center space-x-2 mb-12">
+    <div className="flex items-center space-x-2 mb-14">
       <div className={`${textColorClass}`}>
         {temperature ? `${temperature}°F` : 'Data not available'}
       </div>

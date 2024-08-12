@@ -4,6 +4,7 @@ import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrap2 from '../components/tasks/TaskClientWrapHome2';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
+import DateUpdater from '../components/Date'
 
 export default async function Home() {
   // Fetch dates on the server side
@@ -20,10 +21,11 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
-      <h1 className="text-5xl font-semibold bg-clip-text text-transparent bg-cyan-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-4 mb-10 md:mb-14">
+      <h1 className="text-5xl font-semibold bg-clip-text text-transparent bg-cyan-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-4 mb-10 md:mb-10">
         {`Joe's Life`}
       </h1>
-
+      
+      <DateUpdater/>
       <Weather/>
 
       <div className="flex flex-col w-full h-full mb-10 justify-center">
