@@ -16,6 +16,7 @@ const GenericListTemplate = ({
   completeDateFilter,
   dueDateFromFilter,
   dueDateBeforeFilter,
+  sessionFilter
 }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,8 +66,9 @@ const GenericListTemplate = ({
     const isDueDateBeforeMatch = dueDateBeforeFilter ? new Date(item["Due Date"]) < new Date(dueDateBeforeFilter) : true;
     const isTypeMatch = typeFilter.length ? typeFilter.includes(item["Type"]) : true;
     const isPriorityMatch = priorityFilter.length ? priorityFilter.includes(item["Priority"]) : true;
+    const isSessionMatch = sessionFilter.length ? sessionFilter.includes(item["Session"]) : true;
 
-    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch;
+    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSessionMatch;
   });
 
   const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };

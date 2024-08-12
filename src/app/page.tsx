@@ -2,7 +2,8 @@
 import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
-import TaskListWrap2 from '../components/tasks/TaskClientWrapHome2';
+import TaskListWrap2 from '../components/tasks/TaskClientWrapHome';
+import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import DateUpdater from '../components/Date'
 import {getToday,getTomorrow} from '../utils/Date'
@@ -51,7 +52,7 @@ export default async function Home() {
           </div>
           <div className='flex flex-col md:ml-5 items-center max-w-[1000px]'>
             <Routines/>
-            <TaskListWrap2
+            <TaskListWrapToday
                 completeDateFilter={false}
                 typeFilter={['Task']}
                 dueDateFilter={today}

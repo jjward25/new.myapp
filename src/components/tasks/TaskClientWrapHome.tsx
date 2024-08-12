@@ -19,6 +19,7 @@ interface ListWrapProps {
   dueDateFromFilter?: string | null; // Allow null
   dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
+  sessionFilter?: string[] | null;
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
@@ -34,6 +35,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   dueDateFromFilter = null,
   dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
+  sessionFilter = [],
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
@@ -72,12 +74,12 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-lg bg-cyan-800 border border-neutral-200' : 'border border-cyan-200 rounded-lg bg-gradient-to-tr from-cyan-200 via-neutral-300 to-cyan-200'} drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-xl md:text-2xl font-semibold hover:text-cyan-700`}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg border border-black' : 'text-white hover:text-cyan-600 border border-cyan-200 rounded-lg'} bg-gradient-to-br from-cyan-950 via-black to-fuchsia-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+        <p className={`${isOpen ? 'text-cyan-500' : ''} text-lg md:text-xl font-semibold hover:text-cyan-500 pl-1`}>
           {title}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -87,20 +89,22 @@ const ListWrap: React.FC<ListWrapProps> = ({
         </svg>
       </div>
 
-      <div className={`px-3 ${isOpen ? 'bg-slate-300 rounded-br-lg rounded-bl-lg mb-3' : ''}`}>
+      <div className={`px-5 ${isOpen ? 'bg-slate-300 dark:bg-transparent rounded-br-lg border border-black dark:border-white rounded-bl-lg mb-5 pb-3' : ''}`}>
         {isOpen && (
-          <div className='mt-3'>
+          <div className='mt-5'>
+            
             <AddNewTaskForm onTaskAdded={handleTaskAdded} />
-            <div className="flex space-x-1 md:space-x-5 mb-4 border-t border-b border-black py-2 w-full justify-evenly mt-4">
+            
+            <div className="flex space-x-1 md:space-x-5 mb-4 mt-3  border-white py-2 w-full justify-evenly">
               <button
                 onClick={() => handleToggleSortOrder('date')}
-                className="btn btn-sm btn-outline btn-default text-black hover:text-neutral-400 hover:underline"
+                className="btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Due Date {internalSortOrder === 'date' && internalDateOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
               <button
                 onClick={() => handleToggleSortOrder('priority')}
-                className="btn btn-sm btn-outline btn-default text-black hover:text-neutral-400 hover:underline"
+                className="btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Priority {internalSortOrder === 'priority' && internalPriorityOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
@@ -117,6 +121,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
               dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sessionFilter={sessionFilter}
             />
           </div>
         )}

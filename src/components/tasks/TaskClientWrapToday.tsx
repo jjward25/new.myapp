@@ -19,6 +19,7 @@ interface ListWrapProps {
   dueDateFromFilter?: string | null; // Allow null
   dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
+  sessionFilter?: string[] | null;
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
@@ -34,6 +35,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   dueDateFromFilter = null,
   dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
+  sessionFilter = [],
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
@@ -108,6 +110,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               </button>
             </div>
 
+            <p className='text-xl font-semibold mb-4 text-slate-800'>Next Up</p>
             <ListTemplate
               refreshTrigger={internalRefreshTrigger}
               sortOrder={internalSortOrder}
@@ -119,6 +122,38 @@ const ListWrap: React.FC<ListWrapProps> = ({
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
               dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sessionFilter={["Next"]}
+            />
+            
+            
+            <p className='text-xl font-semibold mb-4 text-slate-800'>Big Rocks</p>
+            <ListTemplate
+              refreshTrigger={internalRefreshTrigger}
+              sortOrder={internalSortOrder}
+              dateOrder={internalDateOrder}
+              priorityOrder={internalPriorityOrder}
+              dueDateFilter={dueDateFilterDate}
+              priorityFilter={priorityFilter}
+              typeFilter={typeFilter}
+              completeDateFilter={completeDateFilterDate}
+              dueDateFromFilter={dueDateFromFilterDate}
+              dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sessionFilter={["Big"]}
+            />
+
+            <p className='text-xl font-semibold mb-4 text-slate-800'>Small Rocks</p>
+            <ListTemplate
+              refreshTrigger={internalRefreshTrigger}
+              sortOrder={internalSortOrder}
+              dateOrder={internalDateOrder}
+              priorityOrder={internalPriorityOrder}
+              dueDateFilter={dueDateFilterDate}
+              priorityFilter={priorityFilter}
+              typeFilter={typeFilter}
+              completeDateFilter={completeDateFilterDate}
+              dueDateFromFilter={dueDateFromFilterDate}
+              dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sessionFilter={["Small"]}
             />
           </div>
         )}
