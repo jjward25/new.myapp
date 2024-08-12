@@ -17,7 +17,8 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
     "Project": '',
     "Notes": '',
     "Links": '',
-    "Complete Date": ''
+    "Complete Date": '',
+    "Session": 'Small'
   });
 
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -52,12 +53,13 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
           "Task Name": '',
           "Start Date": '',
           "Due Date": '',
-          "Priority": 'P1',
+          "Priority": 'P2',
           "Type": 'Task',
           "Project": '',
           "Notes": '',
           "Links": '',
-          "Complete Date": ''
+          "Complete Date": '',
+          "Session":'Small'
         });
         setIsFormVisible(false);
         if (onTaskAdded) onTaskAdded(); // Trigger refresh in the parent component
@@ -133,11 +135,28 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
               >
-                <option value="">Select priority</option>
+                <option value="">Select Priority</option>
                 <option value="P0">P0 - Top Priority</option>
                 <option value="P1">P1 - Action Items</option>
                 <option value="P2">P2 - Next Up</option>
                 <option value="P3">P3 - Time Permitting</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label htmlFor="session" className="block mb-2 text-cyan-500">
+              Session:
+              <select
+                id="session"
+                name="Session"
+                value={formData["Session"]}
+                onChange={handleInputChange}
+                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+              >
+                <option value="">Select Session</option>
+                <option value="Next">Next</option>
+                <option value="Big">Big</option>
+                <option value="Small">Small</option>
               </select>
             </label>
           </div>

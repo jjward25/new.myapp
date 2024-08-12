@@ -16,7 +16,7 @@ const GenericListTemplate = ({
   completeDateFilter,
   dueDateFromFilter,
   dueDateBeforeFilter,
-  sessionFilter
+  sessionFilter =[]
 }) => {
   const [backlog, setBacklog] = useState([]);
   const [loading, setLoading] = useState(true);
