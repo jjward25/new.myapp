@@ -5,9 +5,13 @@ import Weather from '../components/Weather';
 import TaskListWrap2 from '../components/tasks/TaskClientWrapHome2';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import DateUpdater from '../components/Date'
+import {getToday,getTomorrow} from '../utils/Date'
 
 export default async function Home() {
   // Fetch dates on the server side
+  const today = await getToday();
+  const tomorrow = await getTomorrow();
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `https://${process.env.VERCEL_URL}` || 'http://localhost:3000';
 
   const todayResponse = await fetch(`${baseUrl}/api/dates/today`);
@@ -16,8 +20,8 @@ export default async function Home() {
   const todayData = await todayResponse.json();
   const tomorrowData = await tomorrowResponse.json();
 
-  const today = todayData.today;
-  const tomorrow = tomorrowData.tomorrow;
+  const today2 = todayData.today;
+  const tomorrow2 = tomorrowData.tomorrow;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
