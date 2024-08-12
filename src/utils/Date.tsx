@@ -17,3 +17,11 @@ export function getCurrentFormattedDate() {
   return formattedDate;
 }
 
+
+export function getToday() {
+  return new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}
+
+export function getTomorrow() {
+  return new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}

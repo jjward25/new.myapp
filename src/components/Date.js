@@ -1,4 +1,4 @@
-// components/DateUpdater.js
+// src/components/Date.js
 "use client"
 import React, { useState, useEffect } from 'react';
 
@@ -34,3 +34,5 @@ const DateUpdater = () => {
 };
 
 export default DateUpdater;
+
+
