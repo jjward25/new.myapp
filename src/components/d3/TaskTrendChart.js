@@ -1,5 +1,5 @@
 "use client";
-// src/components/CompletedMissedTasksChart.js
+// src/components/d3/TaskTrendChart.js
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { processTaskData } from './TaskTrendData';
@@ -42,7 +42,7 @@ const CompletedMissedTasksChart = () => {
     svg.selectAll('*').remove(); // Clear previous content
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 100, left: 40 };
+    const margin = { top: 10, right: 15, bottom: 100, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 

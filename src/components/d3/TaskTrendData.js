@@ -1,4 +1,4 @@
-// src/utils/taskDataProcessor.js
+// src/component/d3/TaskTrendData.js
 
 export function processTaskData(tasks) {
   const completedTasks = {};
@@ -32,8 +32,8 @@ export function processTaskData(tasks) {
       }
 
       // Log the entire objects
-      console.log("Completed Tasks:", completedTasks);
-      console.log("Missed Tasks:", missedTasks);
+      //console.log("Completed Tasks:", completedTasks);
+      //console.log("Missed Tasks:", missedTasks);
   });
 
   return {

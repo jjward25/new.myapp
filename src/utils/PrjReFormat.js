@@ -40,7 +40,7 @@ export async function fetchAndReformatData() {
       return milestones;
     }).flat(); // Flatten the array of arrays
 
-    console.log(reformattedData)
+    //console.log(reformattedData)
 
     return reformattedData;
   } catch (error) {

@@ -1,5 +1,5 @@
-"use client"
-import React, { useEffect, useState } from 'react';
+"use client";
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 const TrueValuesBarChart = () => {
@@ -24,14 +24,14 @@ const TrueValuesBarChart = () => {
   const processAndSetData = (data) => {
     const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
 
-    // Group by Date and count true values for each field
+    // Parse date strings and group by Date
     const groupedData = d3.rollup(
       data,
       v => fields.reduce((acc, field) => {
         acc[field] = v.filter(d => d[field] === true).length;
         return acc;
       }, {}),
-      d => d.Date
+      d => d3.isoParse(d.Date) // Parse date strings into Date objects
     );
 
     // Transform groupedData into an array of objects for stacking
@@ -43,18 +43,21 @@ const TrueValuesBarChart = () => {
     setData(processedData);
   };
 
+  const svgRef = useRef(null);
+
   // Draw chart
   useEffect(() => {
     if (data.length === 0) return;
 
     const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 }; // Adjusted margins
-    const width = 800 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom; // Adjusted height for better view
+    const containerWidth = svgRef.current.clientWidth;
+    const margin = { top: 10, right: 15, bottom: 50, left: 30 }; // Increased bottom margin for legend
+    const width = containerWidth - margin.left - margin.right;
+    const height = 150 - margin.top - margin.bottom;
 
     const svg = d3.select('#barchart')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', containerWidth)
+      .attr('height', 150) // Fixed height for SVG
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -75,7 +78,7 @@ const TrueValuesBarChart = () => {
     // Define color scale
     const color = d3.scaleOrdinal()
       .domain(fields)
-      .range(['#ff6f61', '#6b5b95', '#88b04b', '#f7cac9', '#92a8d1']); // Updated color scheme
+      .range(d3.schemeSet2); // Use a D3 color scheme for modern colors
 
     // Add bars
     svg.selectAll('.layer')
@@ -89,56 +92,67 @@ const TrueValuesBarChart = () => {
       .attr('x', d => x(d.data.Date))
       .attr('y', d => y(d[1]))
       .attr('height', d => y(d[0]) - y(d[1]))
-      .attr('width', x.bandwidth());
+      .attr('width', x.bandwidth())
+      .attr('stroke', 'white') // Add stroke for better separation
+      .attr('stroke-width', 0.5); // Thin stroke width for a clean look
 
     // Add X-axis
     svg.append('g')
       .attr('class', 'x-axis')
       .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x).tickFormat(d => d))
-      .call(g => g.selectAll('.tick line').attr('stroke', '#f7cac9'))
-      .call(g => g.selectAll('.tick text').attr('fill', '#92a8d1'))
-      .call(g => g.select('.domain').attr('stroke', '#f7cac9'));
+      .call(d3.axisBottom(x)
+        .tickFormat(d => d3.timeFormat("%b %d")(d))) // Format X-axis ticks as "Month Day"
+      .call(g => g.selectAll('.tick line').attr('stroke', '#ddd'))
+      .call(g => g.selectAll('.tick text').attr('fill', 'white'))
+      .call(g => g.select('.domain').attr('stroke', '#ddd'));
 
-    // Add Y-axis
+// Add Y-axis
+const yAxis = d3.axisLeft(y)
+  .tickValues(d3.range(0, Math.ceil(y.domain()[1]) + 1)) // Generate tick values from 0 to max Y value
+  .tickFormat(d => d); // Ensure tick values are formatted as integers
+
+
     svg.append('g')
       .attr('class', 'y-axis')
-      .call(d3.axisLeft(y))
+      .call(yAxis)
       .call(g => g.select('.domain').remove())
-      .call(g => g.selectAll('.tick line').attr('stroke', '#f7cac9').clone()
-        .attr('x2', width)
-        .attr('stroke-opacity', 0.1))
-      .call(g => g.selectAll('.tick text').attr('fill', '#f7cac9'));
+      .call(g => g.selectAll('.tick line').attr('stroke', '#ddd'))
+      .call(g => g.selectAll('.tick text').attr('fill', 'white'));
 
     // Add legend
-    const legend = svg.append('g')
-      .attr('transform', `translate(${width + 30}, 0)`);
+    const legend = d3.select(svgRef.current)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${150 - margin.bottom +30})`);
 
     legend.selectAll('.legend-item')
       .data(fields)
       .enter().append('g')
       .attr('class', 'legend-item')
-      .attr('transform', (d, i) => `translate(0, ${i * 25})`)
+      .attr('transform', (d, i) => `translate(${i * 80}, 0)`) // Adjust spacing as needed
       .each(function(d) {
         const item = d3.select(this);
 
         item.append('rect')
           .attr('x', 0)
-          .attr('width', 20)
-          .attr('height', 20)
-          .attr('fill', color(d));
+          .attr('width', 12)
+          .attr('height', 12)
+          .attr('fill', color(d))
+          .attr('stroke', 'white') // Add stroke for better visibility
+          .attr('stroke-width', 1); // Thin stroke width for a clean look
 
         item.append('text')
-          .attr('x', 30)
-          .attr('y', 15)
+          .attr('x', 20)
+          .attr('y', 10)
+          .style('font-size', '8px')
+          .style('fill',"white")
           .text(d);
       });
 
   }, [data]);
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%', height: '100%' }}>
-      <svg id="barchart" />
+    <div style={{ overflowX: 'none', padding: '10px 10px', maxWidth: '100%' }}>
+      <svg id='barchart' ref={svgRef} width="100%" height="100%" style={{ maxWidth: '100%' }}></svg>
     </div>
   );
 };

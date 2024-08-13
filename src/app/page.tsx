@@ -5,6 +5,7 @@ import Weather from '../components/Weather';
 import TaskListWrap2 from '../components/tasks/TaskClientWrapHome';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
+import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/Date'
 import {getToday,getTomorrow} from '../utils/Date'
 
@@ -24,13 +25,20 @@ export default async function Home() {
       <DateUpdater/>
       <Weather/>
 
+
       <div className="flex flex-col w-full h-full mb-10 justify-center">
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div>
 
         <div className='w-full md:grid md:grid-cols-2'>
           <div className='flex flex-col md:mr-5 items-center max-w-[1000px]'>
+            
             <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300'>
-              <p className='ml-5 mt-3 text-white text-md'>Personal History</p>
+              <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
+              <RoutinesBooleanBar/>
+            </div>
+
+            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300'>
+              <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
               <TaskTrendChart/>
             </div>
 

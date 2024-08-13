@@ -1,4 +1,4 @@
-// app/api/backlog/route.js
+// app/api/routines/route.js
 
 import { ObjectId } from 'mongodb';
 import { getBacklog, addRoutine , updateItem, deleteItem } from '../../../utils/mongoDB/routinesCRUD';
