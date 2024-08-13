@@ -3,6 +3,8 @@ import React from 'react';
 import TaskListWrap from '../../components/tasks/TaskClientWrapStyle2';
 import { getToday, getTomorrow } from '../../utils/Date';
 
+export const revalidate = 60 * 60; // Regenerate the page every hour
+
 export default async function Backlog() {
   // Fetch dates on the server side
   const today = await getToday();

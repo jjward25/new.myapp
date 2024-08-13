@@ -8,6 +8,8 @@ import TaskTrendChart from '../components/d3/TaskTrendChart';
 import DateUpdater from '../components/Date'
 import {getToday,getTomorrow} from '../utils/Date'
 
+export const revalidate = 60 * 60; // Regenerate the page every hour
+
 export default async function Home() {
   // Fetch dates on the server side
   const today = await getToday();
