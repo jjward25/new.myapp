@@ -20,10 +20,9 @@ const TrueValuesBarChart = () => {
     fetchData();
   }, []);
 
-  // Process data
   const processAndSetData = (data) => {
     const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
-
+  
     // Parse date strings and group by Date
     const groupedData = d3.rollup(
       data,
@@ -33,15 +32,19 @@ const TrueValuesBarChart = () => {
       }, {}),
       d => d3.isoParse(d.Date) // Parse date strings into Date objects
     );
-
+  
     // Transform groupedData into an array of objects for stacking
-    const processedData = Array.from(groupedData, ([Date, values]) => ({
+    let processedData = Array.from(groupedData, ([Date, values]) => ({
       Date,
       ...values
     }));
-
+  
+    // Sort processedData by Date in ascending order
+    processedData.sort((a, b) => a.Date - b.Date);
+  
     setData(processedData);
   };
+  
 
   const svgRef = useRef(null);
 
