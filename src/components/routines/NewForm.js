@@ -2,9 +2,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const today = new Date();
+  // Convert to EST/EDT timezone
+  const estToday = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const offset = estToday.getTimezoneOffset() * 60000; // Offset in milliseconds
+  const adjustedToday = new Date(estToday.getTime() - offset);
+
 const NewDailyForm = ({ onRoutineAdded, onClose }) => {
   const [routine, setRoutine] = useState({
-    Date: new Date().toISOString().split('T')[0],
+    Date: adjustedToday.toISOString().split('T')[0],
     "Sleep Score": 0,
     "Fab Morning": false,
     "Work Score": 0,

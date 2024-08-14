@@ -163,7 +163,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                         onChange={(e) => onInputChange(e, 'Project Work')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>Prof Dev</span>
+                      <span>Project Work</span>
                     </label>
                   ) : (
                     <p className={`px-3 inline-block ${routine["Project Work"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>

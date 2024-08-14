@@ -16,7 +16,6 @@ export default async function Home() {
   const today = await getToday();
   const tomorrow = await getTomorrow();
 
-
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
       <h1 className="text-5xl font-semibold bg-clip-text text-transparent bg-cyan-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-4 mb-10 md:mb-10">

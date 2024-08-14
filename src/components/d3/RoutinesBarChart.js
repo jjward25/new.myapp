@@ -21,29 +21,34 @@ const TrueValuesBarChart = () => {
   }, []);
 
   const processAndSetData = (data) => {
-    const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
+  const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
   
-    // Parse date strings and group by Date
-    const groupedData = d3.rollup(
-      data,
-      v => fields.reduce((acc, field) => {
-        acc[field] = v.filter(d => d[field] === true).length;
-        return acc;
-      }, {}),
-      d => d3.isoParse(d.Date) // Parse date strings into Date objects
-    );
-  
-    // Transform groupedData into an array of objects for stacking
-    let processedData = Array.from(groupedData, ([Date, values]) => ({
-      Date,
-      ...values
-    }));
-  
-    // Sort processedData by Date in ascending order
-    processedData.sort((a, b) => a.Date - b.Date);
-  
-    setData(processedData);
-  };
+  // Parse date strings and group by Date in EST timezone
+  const groupedData = d3.rollup(
+    data,
+    v => fields.reduce((acc, field) => {
+      acc[field] = v.filter(d => d[field] === true).length;
+      return acc;
+    }, {}),
+    d => {
+      const date = new Date(d.Date);
+      const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+      return estDate;
+    }
+  );
+
+  // Transform groupedData into an array of objects for stacking
+  let processedData = Array.from(groupedData, ([Date, values]) => ({
+    Date,
+    ...values
+  }));
+
+  // Sort processedData by Date in ascending order
+  processedData.sort((a, b) => a.Date - b.Date);
+
+  setData(processedData);
+};
+
   
 
   const svgRef = useRef(null);
@@ -100,14 +105,18 @@ const TrueValuesBarChart = () => {
       .attr('stroke-width', 0.5); // Thin stroke width for a clean look
 
     // Add X-axis
-    svg.append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x)
-        .tickFormat(d => d3.timeFormat("%b %d")(d))) // Format X-axis ticks as "Month Day"
-      .call(g => g.selectAll('.tick line').attr('stroke', '#ddd'))
-      .call(g => g.selectAll('.tick text').attr('fill', 'white'))
-      .call(g => g.select('.domain').attr('stroke', '#ddd'));
+svg.append('g')
+.attr('class', 'x-axis')
+.attr('transform', `translate(0,${height})`)
+.call(d3.axisBottom(x)
+  .tickFormat(d => {
+    const newDate = new Date(d); // Create a new date object
+    newDate.setDate(newDate.getDate() + 1); // Add 1 day
+    return d3.timeFormat("%b %d")(newDate); // Format the new date
+  }))
+.call(g => g.selectAll('.tick line').attr('stroke', '#ddd'))
+.call(g => g.selectAll('.tick text').attr('fill', 'white'))
+.call(g => g.select('.domain').attr('stroke', '#ddd'));
 
 // Add Y-axis
 const yAxis = d3.axisLeft(y)
