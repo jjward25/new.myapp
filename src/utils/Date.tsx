@@ -17,11 +17,23 @@ export function getCurrentFormattedDate() {
   return formattedDate;
 }
 
-
 export function getToday() {
-  return new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  const today = new Date();
+  // Convert to EST/EDT timezone
+  const estToday = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const offset = estToday.getTimezoneOffset() * 60000; // Offset in milliseconds
+  const adjustedToday = new Date(estToday.getTime() - offset);
+  return adjustedToday.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 }
 
 export function getTomorrow() {
-  return new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  const today = new Date();
+  // Convert to EST/EDT timezone
+  const estTomorrow = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  estTomorrow.setDate(estTomorrow.getDate() + 1);
+  const offset = estTomorrow.getTimezoneOffset() * 60000; // Offset in milliseconds
+  const adjustedTomorrow = new Date(estTomorrow.getTime() - offset);
+  return adjustedTomorrow.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 }
+
+
