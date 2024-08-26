@@ -3,7 +3,7 @@ import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrapHome from '../components/tasks/TaskClientWrapHome';
-import TaskListWrapText from '../components/tasks/TaskClientWrapTextBox';
+import TaskListWrapText from '../components/tasks/textbox/TaskClientWrapTextBox';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';

@@ -1,6 +1,6 @@
 // src/app/backlog/page.tsx or src/app/backlog.tsx
 import React from 'react';
-import TaskListWrap from '../../components/tasks/TaskClientWrapStyle2';
+import TaskListWrap from '../../components/tasks/TaskClientWrapBacklog';
 import { getToday, getTomorrow } from '../../utils/Date';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour

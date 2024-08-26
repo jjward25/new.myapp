@@ -94,7 +94,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
+      className="flip-card relative w-full max-w-[1000px] mx-auto border border-neutral-600 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden mb-2"
       onClick={handleCardClick}
     >
       <div
@@ -106,7 +106,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-front bg-slate-100 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-start items-center text-black pb-4'>
+          <div className='flex flex-row justify-start items-center text-black pb-2'>
 
             <p className='mr-2 ml-1 mt-2 mb-auto bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             
@@ -136,7 +136,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="mt-2 mb-auto mr-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white rounded-lg cursor-not-allowed"
+              className="mt-2 mb-auto mr-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white rounded-lg cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

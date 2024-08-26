@@ -71,7 +71,8 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full min-h-[100px] max-w-[1000px] mx-auto border border-neutral-600 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden"
+      className="flip-card relative w-full min-h-[100px] max-w-[1000px] mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
+
       onClick={handleCardClick}
     >
       <div
