@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskCard from './TaskCard';
+import TextCard from './TextCard';
 
 const GenericListTemplate = ({
   sortOrder,
@@ -90,7 +90,7 @@ const GenericListTemplate = ({
   return (
     <div className="w-full">
       {sortedBacklog.map(item => (
-        <TaskCard
+        <TextCard
           key={item._id}
           task={item}
           onEdit={handleEdit}

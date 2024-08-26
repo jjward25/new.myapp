@@ -49,7 +49,7 @@ export async function getMostRecentRoutine() {
     .collection('Routines')
     .find({})
     .sort({ Date: -1 }) // Sort by Date in descending order
-    .limit(2)
+    .limit(1)
     .toArray();
   return mostRecentRoutine;
 }

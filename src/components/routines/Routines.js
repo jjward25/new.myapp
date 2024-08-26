@@ -14,8 +14,8 @@ const Routines = () => {
 
   return (
     <div className='w-full mb-1'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-700 to-fuchsia-300':'rounded-lg bg-gradient-to-tr from-cyan-700 via-neutral-300 to-cyan-700'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-white' : 'text-neutral-800'} text-lg md:text-xl font-semibold drop-shadow-lg pl-1`}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-700 to-fuchsia-300':' border border-fuchsia-950 rounded-lg bg-gradient-to-br from-white via-neutral-300 to-fuchsia-950'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+        <p className={`${isOpen ? 'text-white' : 'text-black'} my-0 text-md font-semibold drop-shadow-lg pl-1`}>
         {`Daily Check-In`}
         </p>
         <svg

@@ -67,92 +67,35 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     setIsFlipped(!isFlipped);
   };
 
-  const setCompleteDateToToday = async (e) => {
-    e.stopPropagation();
-    const updatedTask = { ...editableTask, "Complete Date": today };
-    setEditableTask(updatedTask);
-    try {
-      await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
-      onEdit(updatedTask);
-    } catch (err) {
-      console.error('Error setting complete date:', err);
-    }
-  };
-
-  const setDueDateToTomorrow = async (e) => {
-    e.stopPropagation();
-    const updatedTask = { ...editableTask, "Due Date": tomorrow };
-    setEditableTask(updatedTask);
-    try {
-      await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
-      onEdit(updatedTask);
-    } catch (err) {
-      console.error('Error setting complete date:', err);
-    }
-  };
 
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto mb-4 p-1 bg-gradient-to-br from-purple-500 via-cyan-500 to-fuchsia-400 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden "
+      className="flip-card relative w-full min-h-[100px] max-w-[1000px] mx-auto border border-neutral-600 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden"
       onClick={handleCardClick}
     >
       <div
-        className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
+        className={`flip-card-inner text-black transition-transform duration-700 h-full relative ${isFlipped ? 'rotate-x-180' : ''}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Front Face */}
         <div
-          className={`flip-card-face flip-card-front bg-slate-100 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
+          className={`flip-card-face flip-card-front bg-slate-100 rounded-xl shadow-lg absolute inset-0 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className='flex flex-row justify-start items-center text-black pb-4'>
 
-            <p className='mr-2 ml-1 mt-2 mb-auto bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
-            
-            <input
-            type="checkbox"
-            checked={editableTask["Complete Date"] === today}
-            onChange={setCompleteDateToToday}
-            className="bg-cyan-700 text-white rounded-lg  hover:bg-cyan-800 w-auto mr-2 text-sm transform scale-150 cursor-grab mt-3 mb-auto"
-          />
-
-          <button
-              onClick={setDueDateToTomorrow}
-              className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
-            >
-              +1
-            </button>
-
-            <h2 className="font-bold text-md flex-1 text-black mr-2 mt-[6px]">{isEditing ?
+            <h2 className="font-bold text-md flex-1 text-black mx-2 mt-[6px]">{isEditing ?
               <input
                 type="text"
-                value={editableTask["Task Name"] || ''}
-                onChange={(e) => handleInputChange(e, "Task Name")}
+                value={editableTask["Notes"] || ''}
+                onChange={(e) => handleInputChange(e, "Notes")}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-auto "
                 onClick={(e) => e.stopPropagation()}
               />
-              : editableTask["Task Name"]}</h2>
+              : editableTask["Notes"]}</h2>
 
-            <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="mt-2 mb-auto mr-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white rounded-lg cursor-not-allowed"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+            
           </div>
 
         </div>

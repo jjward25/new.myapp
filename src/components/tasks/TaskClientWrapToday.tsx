@@ -8,7 +8,6 @@ import AddNewTaskForm from './NewTaskButton';
 // Define the props interface
 interface ListWrapProps {
   title: string;
-  refreshTrigger?: () => void; // Optional
   sortOrder?: string; // Optional
   dateOrder?: string; // Optional
   priorityOrder?: string; // Optional
@@ -24,7 +23,6 @@ interface ListWrapProps {
 
 const ListWrap: React.FC<ListWrapProps> = ({
   title,
-  refreshTrigger,
   sortOrder = 'date',
   dateOrder = 'asc',
   priorityOrder = 'asc',
@@ -37,16 +35,10 @@ const ListWrap: React.FC<ListWrapProps> = ({
   isOpen: initialIsOpen = false,
   sessionFilter = [],
 }) => {
-  const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
   const [internalDateOrder, setInternalDateOrder] = useState(dateOrder);
   const [internalPriorityOrder, setInternalPriorityOrder] = useState(priorityOrder);
   const [isOpen, setIsOpen] = useState(initialIsOpen);
-
-  const handleTaskAdded = () => {
-    setInternalRefreshTrigger(prev => prev + 1);
-    if (refreshTrigger) refreshTrigger();
-  };
 
   const handleToggleSortOrder = (type: 'date' | 'priority') => {
     if (type === 'date') {
@@ -73,13 +65,13 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const completeDateFilterDate = completeDateFilter;
 
   return (
-    <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg border border-black' : 'text-white hover:text-cyan-600 border border-cyan-200 rounded-lg'} bg-gradient-to-br from-cyan-950 via-black to-fuchsia-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-cyan-500' : ''} text-lg md:text-xl font-semibold hover:text-cyan-500 pl-1`}>
+    <div className='flex flex-col w-full justify-start mb-2'>
+      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-fuchsia-800 rounded-lg'} bg-gradient-to-br from-white via-neutral-300 to-fuchsia-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+      <p className={`${isOpen ? 'text-black' : ''} text-md font-semibold pl-1 my-0 `}>
           {title}
         </p>
         <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
+          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -89,30 +81,29 @@ const ListWrap: React.FC<ListWrapProps> = ({
         </svg>
       </div>
 
-      <div className={`px-5 ${isOpen ? 'bg-slate-300 dark:bg-transparent rounded-br-lg border border-black dark:border-white rounded-bl-lg mb-5 pb-3' : ''}`}>
+      <div className={`px-5 ${isOpen ? 'bg-transparent rounded-br-lg dark:border-white rounded-bl-lg pb-3' : ''}`}>
         {isOpen && (
           <div className='mt-5'>
             
-            <AddNewTaskForm onTaskAdded={handleTaskAdded} />
-            
-            <div className="flex space-x-1 md:space-x-5 mb-4 mt-3  border-white py-2 w-full justify-evenly">
+            <div className="flex space-x-1 mb-3 mt-0 border-white pb-2 w-full justify-between">
               <button
                 onClick={() => handleToggleSortOrder('date')}
-                className="btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
+                className="w-1/2 mr-1 md:mr-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Due Date {internalSortOrder === 'date' && internalDateOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
               <button
                 onClick={() => handleToggleSortOrder('priority')}
-                className="btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
+                className="w-1/2 ml-1 md:ml-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Priority {internalSortOrder === 'priority' && internalPriorityOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
             </div>
+            <div className="bg-gradient-to-r from-fuchsia-900 to-fuchsia-300 h-[2px] mb-3"></div> 
+
 
             <p className='text-xl font-semibold mb-4 text-slate-800'>Next Up</p>
             <ListTemplate
-              refreshTrigger={internalRefreshTrigger}
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
               priorityOrder={internalPriorityOrder}
@@ -128,7 +119,6 @@ const ListWrap: React.FC<ListWrapProps> = ({
             
             <p className='text-xl font-semibold mb-4 text-slate-800'>Big Rocks</p>
             <ListTemplate
-              refreshTrigger={internalRefreshTrigger}
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
               priorityOrder={internalPriorityOrder}
@@ -143,7 +133,6 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
             <p className='text-xl font-semibold mb-4 text-slate-800'>Small Rocks</p>
             <ListTemplate
-              refreshTrigger={internalRefreshTrigger}
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
               priorityOrder={internalPriorityOrder}
