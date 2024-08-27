@@ -294,26 +294,6 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 </div>
               </div>
 
-              {/* Joints % */}
-              <div className="flex items-center mb-2  p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-black text-sm font-semibold">Js:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={routine["J Counter"]}
-                      onChange={(e) => onInputChange(e, 'J Counter')}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    />
-                  ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["J Counter"]}</p>
-                  )}
-                </div>
-              </div>
-
               {/* Mood Score */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
