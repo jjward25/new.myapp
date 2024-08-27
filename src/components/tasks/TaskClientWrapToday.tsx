@@ -66,7 +66,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-2'>
-      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-fuchsia-800 rounded-lg'} bg-gradient-to-br from-white via-neutral-300 to-fuchsia-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-fuchsia-800 rounded-lg'} bg-gradient-to-br from-neutral-300 via-neutral-200 to-fuchsia-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
       <p className={`${isOpen ? 'text-black' : ''} text-md font-semibold pl-1 my-0 `}>
           {title}
         </p>
@@ -86,15 +86,10 @@ const ListWrap: React.FC<ListWrapProps> = ({
           <div className='mt-5'>
             
             <div className="flex space-x-1 mb-3 mt-0 border-white pb-2 w-full justify-between">
-              <button
-                onClick={() => handleToggleSortOrder('date')}
-                className="w-1/2 mr-1 md:mr-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
-              >
-                Due Date {internalSortOrder === 'date' && internalDateOrder === 'asc' ? 'Descending' : 'Ascending'}
-              </button>
+             
               <button
                 onClick={() => handleToggleSortOrder('priority')}
-                className="w-1/2 ml-1 md:ml-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
+                className="w-full ml-1 md:ml-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Priority {internalSortOrder === 'priority' && internalPriorityOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>

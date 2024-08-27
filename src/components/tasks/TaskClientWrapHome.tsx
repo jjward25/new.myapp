@@ -66,7 +66,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-black rounded-lg'} bg-gradient-to-br from-white via-neutral-300 to-cyan-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
+      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-black rounded-lg'} bg-gradient-to-br from-neutral-300 via-neutral-200 to-cyan-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
         <p className={`${isOpen ? 'text-black' : ''} text-md font-semibold my-0 pl-1`}>
           {title}
         </p>

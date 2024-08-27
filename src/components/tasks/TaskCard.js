@@ -94,7 +94,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   return (
     <div
       ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto border border-neutral-600 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden mb-2"
+      className="flip-card relative w-full max-w-[1000px] mx-auto border border-neutral-200 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden mb-2"
       onClick={handleCardClick}
     >
       <div
@@ -108,7 +108,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
         >
           <div className='flex flex-row justify-start items-center text-black pb-2'>
 
-            <p className='mr-2 ml-1 mt-2 mb-auto bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
+            <p className='mr-2 ml-2 mt-2 mb-auto bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             
             <input
             type="checkbox"
@@ -124,7 +124,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               +1
             </button>
 
-            <h2 className="font-bold text-md flex-1 text-black mr-2 mt-[6px]">{isEditing ?
+            <h2 className="font-bold text-sm flex-1 text-black mr-2 mt-[6px]">{isEditing ?
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
