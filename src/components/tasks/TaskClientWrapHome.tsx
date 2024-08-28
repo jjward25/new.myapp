@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import ListTemplate from './TaskList';
-import AddNewTaskForm from './NewTaskButton';
 
 // Define the props interface
 interface ListWrapProps {
@@ -66,19 +65,25 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-3'>
-      <div className={`${isOpen ? 'rounded-lg border border-black' : 'text-black hover:text-fuchsia-800 border border-black rounded-lg'} bg-gradient-to-br from-neutral-300 via-neutral-200 to-cyan-950 drop-shadow-lg cursor-pointer flex items-center justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-black' : ''} text-md font-semibold my-0 pl-1`}>
-          {title}
-        </p>
-        <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-1' : ''}`}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-        >
-          <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-black' : 'fill-black'}`} />
-          <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+      <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 h-full" onClick={toggleOpen}>
+        <div className="absolute -inset-3  bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300 dark:bg-black blur opacity-90"></div>
+        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800">
+          
+          <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
+            {title}
+          </p>
+          
+          <svg
+            className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+          >
+            <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-black' : 'fill-black'}`} />
+            <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+       
+        </div>
       </div>
 
       <div className={`px-5 ${isOpen ? 'bg-transparent rounded-br-lg dark:border-white rounded-bl-lg pb-3' : ''}`}>

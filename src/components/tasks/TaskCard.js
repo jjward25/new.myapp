@@ -108,7 +108,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
         >
           <div className='flex flex-row justify-start items-center text-black pb-2'>
 
-            <p className='mr-2 ml-2 mt-2 mb-auto bg-gradient-to-r from-purple-500 via-red-500 to-pink-500 rounded-lg px-1 font-semibold text-white text-sm border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
+            <p className='mr-2 ml-2 mt-[9px] mb-auto bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 rounded-lg px-1 font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             
             <input
             type="checkbox"
@@ -136,7 +136,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="mt-2 mb-auto mr-2 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white rounded-lg cursor-pointer"
+              className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-fuchsia-300 border border-cyan-200 text-white rounded-lg cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

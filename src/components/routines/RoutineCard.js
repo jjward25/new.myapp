@@ -13,7 +13,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
   };
 
   return (
-    <div className="routine-card bg-slate-100 p-4 rounded-lg shadow-lg relative my-4 max-w-[1000px] border border-black drop-shadow-md">
+    <div className="routine-card bg-slate-100 p-4 rounded-lg shadow-lg relative my-4 w-full border border-black drop-shadow-md">
       <button
         onClick={handleDelete}
         className={`absolute top-4 right-5 rounded-lg hover:scale-95 ${isEditing ? 'text-cyan-700 bg-slate-800 border-white hover:text-fuchsia-400' : 'text-cyan-700 bg-black border border-cyan-200 hover:text-fuchsia-400'}`}

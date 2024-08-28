@@ -13,27 +13,40 @@ const Routines = () => {
   };
 
   return (
-    <div className='w-full mb-1'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg bg-gradient-to-br from-cyan-700 to-fuchsia-300':' border border-fuchsia-950 rounded-lg bg-gradient-to-br from-white via-neutral-300 to-fuchsia-950'} cursor-pointer flex items-center drop-shadow-lg justify-between p-2 dark:bg-black opacity-90`} onClick={toggleOpen}>
-        <p className={`${isOpen ? 'text-white' : 'text-black'} my-0 text-md font-semibold drop-shadow-lg pl-1`}>
-        {`Daily Check-In`}
-        </p>
-        <svg
-          className={`w-6 h-6 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-0' : ''}`}
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-        >
-          <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-fuchsia-700' : 'fill-black'}`} />
-          <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-      <div className={`px-2 ${isOpen ? 'bg-gradient-to-tr from-cyan-700 to-fuchsia-300 rounded-br-lg rounded-bl-lg':''} pt-2`}>
-      {isOpen && (
-        <div className='flex flex-col items-center max-w-[750px] mx-auto'>
-          <AddRoutineButton />
-          <RoutineCardList />
+    <div className='flex flex-col w-full justify-start mb-2'>
+
+      <div className={`${isOpen ? '':''} cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 h-full`} onClick={toggleOpen}>
+        <div className="absolute -inset-3  bg-gradient-to-tr from-yellow-300 via-neutral-300 to-yellow-300 dark:bg-black blur opacity-90"></div>
+        <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-yellow-800`}>
+          
+          <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
+            Daily Check-In
+          </p>
+          
+          <svg
+            className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+          >
+            <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-black' : 'fill-black'}`} />
+            <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+       
         </div>
+      </div>
+      
+      <div className={`${isOpen ? 'rounded-br-lg rounded-bl-lg':''}`}>
+      {isOpen && (
+
+        <div className="relative rounded-bl-md rounded-br-md h-full">
+          <div className="absolute -inset-0  bg-gradient-to-tr from-yellow-50 via-neutral-200 to-yellow-50 dark:bg-black blur opacity-90"></div>
+          <div className="flex flex-col relative  mx-auto justify-around max-w-[750px] pt-4">
+            <AddRoutineButton />
+            <RoutineCardList />
+          </div>
+        </div>
+          
       )}
       </div>
     </div>

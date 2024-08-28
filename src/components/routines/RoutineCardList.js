@@ -60,7 +60,7 @@ const RoutineCardList = () => {
   };
 
   return (
-    <div className='mb-4'>
+    <div className='mb-4 w-full '>
       {routines.map((routine, index) => (
         <RoutineCard
           key={routine._id}
