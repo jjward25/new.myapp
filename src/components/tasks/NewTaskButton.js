@@ -76,7 +76,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
     <div className="flex flex-col w-full max-w-[1000px] ">
       <button
         onClick={() => setIsFormVisible(!isFormVisible)}
-        className={`btn text-md mx-0 border-cyan-700 hover:border-cyan-500 hover:bg-cyan-950 hover:text-white btn-secondary bg-transparent text-black hover:scale-95  w-auto max-w-[1000px]`}
+        className={`btn text-sm mx-0 border-cyan-700 hover:border-cyan-500 hover:bg-cyan-950 hover:text-white btn-secondary bg-transparent text-black  w-auto max-w-[1000px]`}
       >
         {isFormVisible ? 'Hide Form' : 'Add New'}
       </button>

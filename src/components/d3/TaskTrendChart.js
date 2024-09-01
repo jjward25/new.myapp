@@ -7,7 +7,6 @@ import { processTaskData } from './TaskTrendData';
 // Convert date to EST
 const normalizeDate = (dateStr) => {
   const date = new Date(dateStr);
-  // Convert to EST
   const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
   return estDate.toISOString().split('T')[0];
 };
@@ -22,7 +21,6 @@ const CompletedMissedTasksChart = () => {
         const response = await fetch('/api/backlog');
         const tasks = await response.json();
 
-        // Filter out tasks with null or undefined Due Dates
         const filteredTasks = tasks.filter(task => task['Due Date'] !== null && task['Due Date'] !== '');
 
         const processedData = processTaskData(filteredTasks);
@@ -51,13 +49,16 @@ const CompletedMissedTasksChart = () => {
       ...Object.keys(data.completed),
       ...Object.keys(data.missed)
     ]
-    .map(dateStr => new Date(dateStr)) // Create Date objects from date strings
-    .sort((a, b) => a - b); // Sort dates
+    .map(dateStr => new Date(dateStr)) 
+    .sort((a, b) => a - b); 
 
-    // Generate a continuous date range from min to max date
-    const minDate = d3.min(allDates);
-    const maxDate = d3.max(allDates);
-    const xDomainDates = d3.timeDays(minDate, d3.timeDay.offset(maxDate, 1)); // Include end date in range
+    // Filter to only include dates within the last 30 days
+    const now = new Date();
+    const last30Days = d3.timeDay.offset(now, -30);
+    const filteredDates = allDates.filter(date => date >= last30Days && date <= now);
+
+    // Generate a continuous date range for the last 30 days
+    const xDomainDates = d3.timeDays(d3.min(filteredDates), d3.max(filteredDates));
 
     const x = d3.scaleTime()
       .domain([d3.min(xDomainDates), d3.max(xDomainDates)])
@@ -78,8 +79,8 @@ const CompletedMissedTasksChart = () => {
     svg.append('g')
       .attr('transform', `translate(${margin.left},${height + margin.top})`)
       .call(d3.axisBottom(x)
-        .tickValues(xDomainDates) // Set ticks to specific dates
-        .tickFormat(d3.timeFormat('%b %d'))) // Format tick labels
+        .tickValues(xDomainDates) 
+        .tickFormat(d3.timeFormat('%b %d')))
       .selectAll('text')
       .style('fill', 'white')
       .style('font-size', '9px')

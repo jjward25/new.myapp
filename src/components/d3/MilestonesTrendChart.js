@@ -15,6 +15,13 @@ const MilestoneTrendChart = ({ data }) => {
       date: d3.timeParse('%Y-%m-%d')(d.date.toISOString().split('T')[0])
     }));
 
+    // Get today's date and calculate the date 30 days ago
+    const today = new Date();
+    const thirtyDaysAgo = d3.timeDay.offset(today, -30);
+
+    // Filter the data to include only the last 30 days
+    const filteredData = parsedData.filter(d => d.date >= thirtyDaysAgo && d.date <= today);
+
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // Clear the SVG before redrawing
 
@@ -24,11 +31,11 @@ const MilestoneTrendChart = ({ data }) => {
     const height = 200 - margin.top - margin.bottom; // Adjusted height for better view
 
     const x = d3.scaleTime()
-      .domain(d3.extent(parsedData, d => d.date))
+      .domain([thirtyDaysAgo, today]) // Set domain from 30 days ago to today
       .range([0, width]); // Ensure x range starts at 0 and ends at width
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(parsedData, d => d.completed)]).nice()
+      .domain([0, d3.max(filteredData, d => d.completed)]).nice()
       .range([height, 0]); // Ensure y range starts at height and ends at 0
 
     const xAxis = g => g
@@ -40,7 +47,7 @@ const MilestoneTrendChart = ({ data }) => {
 
     const yAxis = g => g
       .attr('transform', `translate(${margin.left},${margin.top})`)
-      .call(d3.axisLeft(y).ticks(d3.max(parsedData, d => d.completed)).tickFormat(d3.format('d')))
+      .call(d3.axisLeft(y).ticks(d3.max(filteredData, d => d.completed)).tickFormat(d3.format('d')))
       .call(g => g.select('.domain').remove())
       .call(g => g.selectAll('.tick line').attr('stroke', 'fuchsia').clone()
         .attr('x2', width)
@@ -50,7 +57,7 @@ const MilestoneTrendChart = ({ data }) => {
     svg.append('g')
       .attr('fill', 'cyan')
       .selectAll('circle')
-      .data(parsedData)
+      .data(filteredData)
       .join('circle')
         .attr('cx', d => x(d.date) + margin.left)
         .attr('cy', d => y(d.completed) + margin.top)

@@ -20,34 +20,43 @@ const TrueValuesBarChart = () => {
     fetchData();
   }, []);
 
+
   const processAndSetData = (data) => {
-  const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
+    const fields = ["Workout", "Prof Dev", "Project Work", "Spanish", "Piano"];
+    
+    // Calculate the cutoff date (30 days ago)
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - 30);
   
-  // Parse date strings and group by Date in EST timezone
-  const groupedData = d3.rollup(
-    data,
-    v => fields.reduce((acc, field) => {
-      acc[field] = v.filter(d => d[field] === true).length;
-      return acc;
-    }, {}),
-    d => {
-      const date = new Date(d.Date);
-      const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-      return estDate;
-    }
-  );
-
-  // Transform groupedData into an array of objects for stacking
-  let processedData = Array.from(groupedData, ([Date, values]) => ({
-    Date,
-    ...values
-  }));
-
-  // Sort processedData by Date in ascending order
-  processedData.sort((a, b) => a.Date - b.Date);
-
-  setData(processedData);
-};
+    // Parse date strings and group by Date in EST timezone
+    const groupedData = d3.rollup(
+      data,
+      v => fields.reduce((acc, field) => {
+        acc[field] = v.filter(d => d[field] === true).length;
+        return acc;
+      }, {}),
+      d => {
+        const date = new Date(d.Date);
+        const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        return estDate;
+      }
+    );
+  
+    // Transform groupedData into an array of objects for stacking
+    let processedData = Array.from(groupedData, ([Date, values]) => ({
+      Date,
+      ...values
+    }));
+  
+    // Filter out data older than 30 days
+    processedData = processedData.filter(d => d.Date >= cutoffDate);
+  
+    // Sort processedData by Date in ascending order
+    processedData.sort((a, b) => a.Date - b.Date);
+  
+    setData(processedData);
+  };
+  
 
   
 
