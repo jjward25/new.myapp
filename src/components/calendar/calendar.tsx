@@ -1,39 +1,37 @@
-// src/components/calendar/Calendar.tsx
-'use client'
-
-import React, { useState, useEffect } from 'react'
+"use client"
+import React, { useState, useEffect } from 'react';
 
 export default function Calendar() {
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [events, setEvents] = useState([])
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState<any[]>([]);
   const [newEvent, setNewEvent] = useState({
     title: '',
     date: '',
     description: '',
-    location: ''
-  })
-  const [selectedEvent, setSelectedEvent] = useState(null)
+    location: '',
+  });
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
   // Fetch events from MongoDB on component mount
   useEffect(() => {
     const fetchEvents = async () => {
-      const response = await fetch('/api/calendar', { method: 'GET' })
+      const response = await fetch('/api/calendar', { method: 'GET' });
       if (response.ok) {
-        const data = await response.json()
-        setEvents(data)
+        const data = await response.json();
+        setEvents(data);
       } else {
-        console.error('Failed to fetch events')
+        console.error('Failed to fetch events');
       }
-    }
-    fetchEvents()
-  }, [])
+    };
+    fetchEvents();
+  }, []);
 
-  const handlePrevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
-  const handleNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+  const handlePrevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  const handleNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
-  const handleAddEvent = async (e) => {
+  const handleAddEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     if (newEvent.title && newEvent.date) {
       try {
         // Adjust the newEvent date to remove timezone offset
@@ -43,18 +41,18 @@ export default function Calendar() {
           selectedDate.getUTCMonth(),
           selectedDate.getUTCDate()
         );
-  
+
         const eventToAdd = {
           ...newEvent,
           date: adjustedDate.toISOString(), // Store date as ISO string
         };
-  
+
         const response = await fetch('/api/calendar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eventToAdd),
         });
-  
+
         if (response.ok) {
           const addedEvent = await response.json();
           setEvents([...events, addedEvent]);
@@ -66,8 +64,7 @@ export default function Calendar() {
         console.error('Error adding event:', error);
       }
     }
-  }
-  
+  };
 
   const handleDeleteEvent = async () => {
     if (selectedEvent && selectedEvent._id) {
@@ -75,9 +72,9 @@ export default function Calendar() {
         const response = await fetch('/api/calendar', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: selectedEvent._id })
+          body: JSON.stringify({ id: selectedEvent._id }),
         });
-  
+
         if (response.ok) {
           // Remove the event from the local state after successful deletion
           setEvents(events.filter((event) => event._id !== selectedEvent._id));
@@ -90,9 +87,8 @@ export default function Calendar() {
       }
     }
   };
-  
 
-  const getEventsForDate = (date) => {
+  const getEventsForDate = (date: Date) => {
     return events.filter(
       (event) => {
         const eventDate = new Date(event.date);
@@ -104,7 +100,6 @@ export default function Calendar() {
       }
     );
   };
-  
 
   return (
     <div className="max-w-4xl mx-auto mt-6 md:mt-4">
@@ -122,8 +117,8 @@ export default function Calendar() {
             <div key={`prev-${i}`} className="text-center py-2 text-gray-400"></div>
           ))}
           {Array.from({ length: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() }, (_, i) => i + 1).map((day) => {
-            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-            const dayEvents = getEventsForDate(date)
+            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+            const dayEvents = getEventsForDate(date);
             return (
               <div key={day} className="text-center py-2">
                 <span>{day}</span>
@@ -138,7 +133,7 @@ export default function Calendar() {
                   </div>
                 ))}
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -157,11 +152,11 @@ export default function Calendar() {
           <p>{selectedEvent.description}</p>
           <p>Location: {selectedEvent.location}</p>
           <div className="flex justify-center mt-4">
-              <button className='mr-4 text-neutral-500 text-sm text-center hover:text-white cursor-pointer' onClick={() => setSelectedEvent(null)}>Close</button>
-              <button className='text-red-500 text-sm hover:text-white cursor-pointer' onClick={() => handleDeleteEvent(selectedEvent._id)}>Delete Event</button>
+            <button className='mr-4 text-neutral-500 text-sm text-center hover:text-white cursor-pointer' onClick={() => setSelectedEvent(null)}>Close</button>
+            <button className='text-red-500 text-sm hover:text-white cursor-pointer' onClick={() => handleDeleteEvent()}>Delete Event</button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
