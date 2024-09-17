@@ -40,7 +40,6 @@ const Routines = () => {
       {isOpen && (
 
         <div className="relative rounded-bl-md rounded-br-md h-full">
-          <div className="absolute -inset-0  bg-gradient-to-tr from-yellow-50 via-neutral-200 to-yellow-50 dark:bg-black blur opacity-90"></div>
           <div className="flex flex-col relative  mx-auto justify-around max-w-[750px] pt-4">
             <AddRoutineButton />
             <RoutineCardList />

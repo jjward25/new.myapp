@@ -7,11 +7,13 @@ const formatDate = (dateString) => {
   return isNaN(date.getTime()) ? null : date.toISOString().split('T')[0];
 };
 
+const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
 const AddNewTaskForm = ({ onTaskAdded }) => {
   const [formData, setFormData] = useState({
     "Task Name": '',
     "Start Date": '',
-    "Due Date": '',
+    "Due Date": today,
     "Priority": 'P1',
     "Type": 'Task',
     "Project": '',
@@ -76,7 +78,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
     <div className="flex flex-col w-full max-w-[1000px] ">
       <button
         onClick={() => setIsFormVisible(!isFormVisible)}
-        className={`btn text-sm mx-0 border-cyan-700 hover:border-cyan-500 hover:bg-cyan-950 hover:text-white btn-secondary bg-transparent text-black  w-auto max-w-[1000px]`}
+        className={`btn text-sm mx-0 border-cyan-700 hover:border-cyan-500 bg-cyan-950 text-white btn-secondary bg-transparent hover:bg-white hover:text-black  w-auto max-w-[1000px]`}
       >
         {isFormVisible ? 'Hide Form' : 'Add New'}
       </button>
@@ -98,19 +100,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
               />
             </label>
           </div>
-          <div>
-            <label htmlFor="start-date" className="block mb-2 text-cyan-500">
-              Start Date:
-              <input
-                id="start-date"
-                name="Start Date"
-                type="date"
-                value={formData["Start Date"]}
-                onChange={handleInputChange}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-              />
-            </label>
-          </div>
+          
           <div>
             <label htmlFor="due-date" className="block mb-2 text-cyan-500">
               Due Date:
@@ -177,19 +167,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
               </select>
             </label>
           </div>
-          <div>
-            <label htmlFor="project" className="block mb-2 text-cyan-500">
-              Project:
-              <input
-                id="project"
-                name="Project"
-                type="text"
-                value={formData["Project"]}
-                onChange={handleInputChange}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-              />
-            </label>
-          </div>
+ 
           <div>
             <label htmlFor="notes" className="block mb-2 text-cyan-500">
               Notes:
@@ -202,19 +180,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
               />
             </label>
           </div>
-          <div>
-            <label htmlFor="links" className="block mb-2 text-cyan-500">
-              Links:
-              <input
-                id="links"
-                name="Links"
-                type="text"
-                value={formData["Links"]}
-                onChange={handleInputChange}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-              />
-            </label>
-          </div>
+      
           <div>
             <label htmlFor="complete-date" className="block mb-2 text-cyan-500">
               Complete Date:

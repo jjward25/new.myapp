@@ -101,7 +101,6 @@ const ListWrap: React.FC<ListWrapProps> = ({
                 Priority {internalSortOrder === 'priority' && internalPriorityOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
             </div>
-            <div className="bg-gradient-to-r from-fuchsia-900 to-fuchsia-300 h-[2px] mb-3"></div> 
 
 
             <p className='text-lg font-semibold my-4 text-slate-800'>Next Up</p>

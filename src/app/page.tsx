@@ -49,8 +49,8 @@ export default async function Home() {
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div> 
 
 
-        <div className='w-full md:grid md:grid-cols-2'>
-          <div className='flex flex-col md:mr-3 items-center max-w-[1000px]'>
+        <div className='w-full'>
+          <div className='flex flex-col items-center max-w-[500px] mx-auto mt-4'>
             
             <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
 
@@ -61,15 +61,6 @@ export default async function Home() {
                 isOpen={true}
                 title="Today's Tasks"
             />
-            <TaskListWrapHome
-              completeDateFilter={null}
-              typeFilter={['Task']}
-              dueDateFromFilter={tomorrow}              
-              title="Backlog"
-            />
-          </div>
-
-          <div className='flex flex-col md:ml-3 items-center max-w-[1000px]'>
             <Routines/>
             <TaskListWrapText
               completeDateFilter={null}
@@ -88,6 +79,7 @@ export default async function Home() {
               title="Quick List"
             />
           </div>
+
         </div>
 
       </div>

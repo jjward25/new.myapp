@@ -48,8 +48,6 @@ export const updateMilestone = async (projectId, milestoneName, updates) => {
 
 
 
-
-
 export const deleteItem = async (projectId, milestoneName) => {
   const client = await clientPromise;
   const db = client.db('Personal');
