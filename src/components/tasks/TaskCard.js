@@ -186,7 +186,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           </div>
           <div className="flex flex-col flex-1 overflow-auto text-sm">
             {Object.keys(editableTask).map((key, index) => (
-              key !== "Task Name" && key !== "_id" && (
+              key !== "Task Name" && key !== "_id" && key !== 'Project' && key !== 'Start Date' && (
                 <p className='text-left mb-2 text-black' key={index}>
                   <strong>{key}:</strong> {isEditing ?
                     <input

@@ -64,7 +64,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const completeDateFilterDate = completeDateFilter;
 
   return (
-    <div className='flex flex-col w-full justify-start mb-3'>
+    <div className='flex flex-col w-full justify-start mb-2'>
       <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 h-full" onClick={toggleOpen}>
         <div className="absolute -inset-3  bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300 dark:bg-black blur opacity-90"></div>
         <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800">

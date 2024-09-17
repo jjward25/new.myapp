@@ -10,6 +10,7 @@ import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/dates/HomeDate'
 import {getToday,getTomorrow} from '../utils/Date'
 import AddNewTaskForm from '../components/tasks/NewTaskButton';
+import Calendar from '@/components/calendar/calendar';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -33,7 +34,7 @@ export default async function Home() {
       <div className="flex flex-col w-full h-full mb-10 justify-center">
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px]"></div> 
 
-        <div className='flex flex-col md:flex-row bg-neutral-200 pt-3'>
+        <div className='flex flex-col md:flex-row pt-3'>
           <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
             <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
             <RoutinesBooleanBar/>
@@ -49,11 +50,10 @@ export default async function Home() {
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div> 
 
 
-        <div className='w-full'>
-          <div className='flex flex-col items-center max-w-[500px] mx-auto mt-4'>
-            
-            <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
+        <div className='w-full md:grid md:grid-cols-2'>
 
+          <div className='flex flex-col items-center mx-auto mt-4 col-span-1 w-full px-4'>
+            <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
             <TaskListWrapToday
                 completeDateFilter={false}
                 typeFilter={['Task']}
@@ -62,24 +62,19 @@ export default async function Home() {
                 title="Today's Tasks"
             />
             <Routines/>
-            <TaskListWrapText
-              completeDateFilter={null}
-              typeFilter={['Text']}
-              title="Scratch Pad"
-            />
-            <TaskListWrapHome
-              completeDateFilter={null}
-              typeFilter={['Event']}
-              dueDateFromFilter={today}
-              title="Upcoming Events"
-            />
+            
+            
             <TaskListWrapHome
               completeDateFilter={null}
               typeFilter={['List']}
-              title="Quick List"
+              title="List Notes"
             />
           </div>
 
+          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 mt-4 md:mt-0 md:border-t-0'>
+            <Calendar/>
+            
+          </div>
         </div>
 
       </div>
