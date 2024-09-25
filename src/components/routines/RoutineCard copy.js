@@ -58,6 +58,48 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
             <p className='pl-1 mb-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Checklist:</p>
               {/* Daily Checklist Content Section */}
               <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
+              {/* Sleep Score */}
+              <div className="flex items-center mb-2 p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Sleep Score:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={routine["Sleep Score"]}
+                      onChange={(e) => onInputChange(e, 'Sleep Score')}
+                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    />
+                  ) : (
+                    <p className="px-3 inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white">{routine["Sleep Score"]}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Fab Morning */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Fab Morning:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine["Fab Morning"]}
+                        onChange={(e) => onInputChange(e, 'Fab Morning')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>Fab Morning</span>
+                    </label>
+                  ) : (
+                    <p className={`px-3 inline-block ${routine["Fab Morning"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Fab Morning"] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
+              </div> 
 
               {/* Workout */}
               <div className="flex items-center mb-2 p-1 rounded">
@@ -83,102 +125,125 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 </div>
               </div>
               
-              {/* Creative */}
+              {/* Prof Dev */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Creative:</label>
+                  <label className="block text-sm text-black font-semibold">GTM:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <label className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        checked={routine["Creative"]}
-                        onChange={(e) => onInputChange(e, 'Creative')}
+                        checked={routine["Prof Dev"]}
+                        onChange={(e) => onInputChange(e, 'Prof Dev')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>Creative</span>
+                      <span>Prof Dev</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Creative"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Creative"] ? 'True' : 'False'}
+                    <p className={`px-3 inline-block ${routine["Prof Dev"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Prof Dev"] ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Skill Dev */}
+              {/* Project Work */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Skill Dev:</label>
+                  <label className="block text-sm text-black font-semibold">Project Work:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <label className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        checked={routine["Skill Dev"]}
-                        onChange={(e) => onInputChange(e, 'Skill Dev')}
+                        checked={routine["Project Work"]}
+                        onChange={(e) => onInputChange(e, 'Project Work')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>Skill Dev</span>
+                      <span>Project Work</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Skill Dev"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Skill Dev"] ? 'True' : 'False'}
+                    <p className={`px-3 inline-block ${routine["Project Work"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Project Work"] ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Social Activities */}
+              {/* Piano */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Social Activities:</label>
+                  <label className="block text-sm text-black font-semibold">Piano:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <label className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        checked={routine["Social Activities"]}
-                        onChange={(e) => onInputChange(e, 'Social Activities')}
+                        checked={routine.Piano}
+                        onChange={(e) => onInputChange(e, 'Piano')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>Social Activities</span>
+                      <span>Piano</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Social Activities"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Social Activities"] ? 'True' : 'False'}
+                    <p className={`px-3 inline-block ${routine.Piano ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine.Piano ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* Job Search */}
+              {/* Spanish */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Job Search:</label>
+                  <label className="block text-sm text-black font-semibold">Spanish:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <label className="flex items-center space-x-2">
                       <input
                         type="checkbox"
-                        checked={routine["Job Search"]}
-                        onChange={(e) => onInputChange(e, 'Job Search')}
+                        checked={routine.Spanish}
+                        onChange={(e) => onInputChange(e, 'Spanish')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>Job Search</span>
+                      <span>Spanish</span>
                     </label>
                   ) : (
-                    <p className={`px-3 inline-block ${routine["Job Search"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Job Search"] ? 'True' : 'False'}
+                    <p className={`px-3 inline-block ${routine.Spanish ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine.Spanish ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
               </div>
 
+              {/* Fab Evening */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Fab Evening:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine["Fab Evening"]}
+                        onChange={(e) => onInputChange(e, 'Fab Evening')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>Fab Evening</span>
+                    </label>
+                  ) : (
+                    <p className={` px-3 inline-block ${routine["Fab Evening"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Fab Evening"] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           {/* End Daily Checklist Content Section */}
           </div>
@@ -187,63 +252,82 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
           {/*** Daily Review Section ***/}
           <div className='md:mr-6 md:ml-5 '> 
             <p className='pl-1 mb-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Review:</p>
-            
             {/* Daily Review List */}
             <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
-            
-              {/* Sleep Score */}
+              {/* Protein % */}
               <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Sleep Score:</label>
+                  <label className="block text-sm text-black font-semibold">Protein %:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <input
                       type="number"
-                      value={routine["Sleep Score"]}
-                      onChange={(e) => onInputChange(e, 'Sleep Score')}
+                      step="0.1"
+                      value={routine["Protein %"]}
+                      onChange={(e) => onInputChange(e, 'Protein %')}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                     />
                   ) : (
-                    <p className="px-3 inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white">{routine["Sleep Score"]}</p>
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Protein %"]}</p>
                   )}
                 </div>
               </div>
 
-              {/* Diet Score */}
-              <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Diet Score:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <input
-                      type="number"
-                      value={routine["Diet Score"]}
-                      onChange={(e) => onInputChange(e, 'Diet Score')}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    />
-                  ) : (
-                    <p className="px-3 inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white">{routine["Diet Score"]}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Discipline Score */}
+              {/* Calories % */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Discipline Score:</label>
+                  <label className="block text-black text-sm font-semibold">Calories %:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <input
                       type="number"
-                      value={routine["Discipline Score"]}
-                      onChange={(e) => onInputChange(e, 'Discipline Score')}
+                      step="0.1"
+                      value={routine["Calories %"]}
+                      onChange={(e) => onInputChange(e, 'Calories %')}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                     />
                   ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Discipline Score"]}</p>
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Calories %"]}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Mood Score */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Mood Score:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={routine["Mood Score"]}
+                      onChange={(e) => onInputChange(e, 'Mood Score')}
+                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    />
+                  ) : (
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Mood Score"]}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Work Score */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Work Score:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <input
+                      type="number"
+                      value={routine["Work Score"]}
+                      onChange={(e) => onInputChange(e, 'Work Score')}
+                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                    />
+                  ) : (
+                    <p className="px-3 inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white">{routine["Work Score"]}</p>
                   )}
                 </div>
               </div>
@@ -284,17 +368,17 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   {isEditing ? (
                     <input
                       type="text"
-                      value={routine["Social Desc"]}
-                      onChange={(e) => onInputChange(e, 'Social Desc')}
+                      value={routine["Social Activities"]}
+                      onChange={(e) => onInputChange(e, 'Social Activities')}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                     />
                   ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Social Desc"]}</p>
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Social Activities"]}</p>
                   )}
                 </div>
               </div>
               
-          {/* Creative Summary */}
+          {/* Mood Summary */}
           <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Mood Summary:</label>
@@ -303,50 +387,31 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   {isEditing ? (
                     <input
                       type="text"
-                      value={routine["Creative Desc"]}
-                      onChange={(e) => onInputChange(e, 'Creative Desc')}
+                      value={routine["Mood Summary"]}
+                      onChange={(e) => onInputChange(e, 'Mood Summary')}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                     />
                   ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Creative Desc"]}</p>
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["Mood Summary"]}</p>
                   )}
                 </div>
               </div>
 
-          {/* Skill Summary */}
-          <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Skill Summary:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={routine["Skill Desc"]}
-                      onChange={(e) => onInputChange(e, 'Skill Desc')}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                    />
-                  ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white px-3">{routine["Skill Desc"]}</p>
-                  )}
-                </div>
-              </div>
-
-          {/* Job Search Summary */}
+          {/* Daily Summary */}
           <div className="flex items-center mb-2 p-1 pb-4 rounded border-b border-b-cyan-200">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Search Summary:</label>
+                  <label className="block text-sm text-black font-semibold">Daily Summary:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
                     <input
                       type="text"
-                      value={routine["Job Search Desc"]}
-                      onChange={(e) => onInputChange(e, 'Job Search Desc')}
+                      value={routine["Daily Summary"]}
+                      onChange={(e) => onInputChange(e, 'Daily Summary')}
                       className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
                     />
                   ) : (
-                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white px-3">{routine["Job Search Desc"]}</p>
+                    <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white px-3">{routine["Daily Summary"]}</p>
                   )}
                 </div>
               </div>
