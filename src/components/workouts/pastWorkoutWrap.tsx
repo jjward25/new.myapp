@@ -5,7 +5,7 @@ import PastWorkout from './pastWorkout';
 
 interface Exercise {
     "Starting Max": number | null;
-    Type: string | null;
+    Type: string;
     Set1Reps: number | null;
     Set2Reps: number | null;
     Set3Reps: number | null;
