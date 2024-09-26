@@ -67,11 +67,11 @@ export default function NewWorkoutBtn() {
                     // Create new exercise with null reps
                     const newExercise: Exercise = {
                         "Starting Max": endingMax,
-                        "Ending Max": null,
+                        "Ending Max": 0,
                         "Type": exerciseType,
-                        "Set 1 Reps": null,  // Set reps to null
-                        "Set 2 Reps": null,  // Set reps to null
-                        "Set 3 Reps": null,  // Set reps to null
+                        "Set 1 Reps": 0,  // Set reps to null
+                        "Set 2 Reps": 0,  // Set reps to null
+                        "Set 3 Reps": 0,  // Set reps to null
                         "Set 1 Weight": null,
                         "Set 2 Weight": null,
                         "Set 3 Weight": null,
@@ -80,8 +80,8 @@ export default function NewWorkoutBtn() {
 
                     // Assign weights based on existing reps, with limitations
                     if (exerciseType === "Compound") {
-                        newExercise["Set 4 Reps"] = null; // Set 4 Reps is null for Compound
-                        newExercise["Set 4 Weight"] = null; // Set 4 Weight is null for Compound
+                        newExercise["Set 4 Reps"] = 0; // Set 4 Reps is null for Compound
+                        newExercise["Set 4 Weight"] = 0; // Set 4 Weight is null for Compound
                         if (exerciseData["Set 1 Reps"] !== null) {
                             newExercise["Set 1 Weight"] = endingMax * 0.9;  
                         }

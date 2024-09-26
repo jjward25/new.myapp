@@ -44,8 +44,11 @@ export default async function WorkoutHome() {
         <p className="mb-2 text-xs text-neutral-400">
           {`Strength sets are done for max reps, targeting about 2-4 reps per set. The hypertrophy sets for compounds are done as a Myo-Match set (max reps then match that total). Isos are done for 8 reps each set.`}
         </p>
+        <p className="mb-2 text-xs text-neutral-400">
+          New Maxes for compounds are based on the reps done in the first strength set. New Maxes for isos are based on reps performed in the 3rd set assuming no failed sets. 
+        </p>
         <p className="pb-3 mb-4 border-b border-white text-xs text-neutral-400">
-          New Maxes for compounds are based on the reps done in the first strength set. New Maxes for isos are based on reps performed in the 3rd set assuming no failed sets. Also, work in some military press on Upper Compound days between Incline and BB Row sets.
+          For full marks, work in some military press on Upper Compound days between Incline and BB Row sets and do Pull Ups throughout your Lower Compound days.
         </p>
 
         {/* Button to trigger today's workout creation */}

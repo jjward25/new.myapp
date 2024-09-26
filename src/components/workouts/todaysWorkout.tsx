@@ -7,11 +7,11 @@ interface Exercise {
     "Set 1 Reps": number | null;
     "Set 2 Reps": number | null;
     "Set 3 Reps": number | null;
-    "Set 4 Reps"?: number | null;
+    "Set 4 Reps"?: number | null; // Optional
     "Set 1 Weight": number | null;
     "Set 2 Weight": number | null;
     "Set 3 Weight": number | null;
-    "Set 4 Weight"?: number | null;
+    "Set 4 Weight"?: number | null; // Optional
     "Ending Max": number | null;
     "Type": string; 
 }
@@ -37,79 +37,51 @@ const Workout: React.FC = () => {
         fetchWorkout();
     }, []);
 
-    const replaceNullsWithZero = (obj: Record<string, any>) => {
-        if (obj && typeof obj === 'object') {
-            for (const key in obj) {
-                if (obj[key] === null) {
-                    obj[key] = 0;
-                } else {
-                    replaceNullsWithZero(obj[key]);
-                }
-            }
-        }
-        return obj;
-    };
+    const handleInputChange = async (exerciseName: string, set: 'Set 1' | 'Set 2' | 'Set 3' | 'Set 4', value: string) => {
+        if (!todaysWorkout) return;
     
-    const handleInputChange = async (exerciseName: string, set: string, value: string) => {
-    if (!todaysWorkout) return;
+        const updatedExercises: Record<string, Exercise> = { ...todaysWorkout.Exercises };
+        const exercise = updatedExercises[exerciseName];
 
-    const sanitizedWorkout = replaceNullsWithZero(todaysWorkout);
-    const updatedExercises: Record<string, Exercise> = { ...sanitizedWorkout.Exercises };
+        if (exercise) {
+            const newValue: number | null = value !== '' ? parseInt(value) : null;
 
-    const setRepsKey = `${set} Reps` as keyof Exercise;
-
-    if (updatedExercises[exerciseName]) {
-        const newValue: number | null = value !== '' ? parseInt(value) : null;
-
-        // Validate newValue
-        
-        updatedExercises[exerciseName][setRepsKey as keyof Exercise] = newValue;
-
-        // Update the state with the new exercises
-        setTodaysWorkout({ ...todaysWorkout, Exercises: updatedExercises });
-        console.log("Updating workout with data:", updatedExercises);
-
-        // Prepare the PUT request
-        try {
-            // Replace nulls with 0 before sending
-            const sanitizedExercises = Object.fromEntries(
-                Object.entries(updatedExercises).map(([name, exercise]) => [
-                    name,
-                    replaceNullsWithZero(exercise),
-                ])
-            );
-
-            console.log("Request Body:", {
-                date: todaysWorkout.Date,
-                Exercises: sanitizedExercises,
-            });
-
-            const response = await fetch(`/api/workouts/today`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    date: todaysWorkout.Date,
-                    Exercises: sanitizedExercises,
-                }),
-            });
-
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                console.error('Failed to update workout:', errorMessage);
-            } else {
-                console.log('Workout updated successfully');
+            // Ensure the type is valid before assignment
+            if (exercise.hasOwnProperty(`${set} Reps`)) {
+                exercise[`${set} Reps`] = newValue; 
             }
-        } catch (error) {
-            console.error('Error updating workout:', error);
-        }
-    } else {
-        console.error(`Exercise ${exerciseName} not found in updatedExercises.`);
-    }
-};
 
-       
+            setTodaysWorkout({ ...todaysWorkout, Exercises: updatedExercises });
+    
+            try {
+                const sanitizedExercises = Object.fromEntries(
+                    Object.entries(updatedExercises).map(([name, exercise]) => [name, exercise])
+                );
+
+                const response = await fetch(`/api/workouts/today`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        date: todaysWorkout.Date,
+                        Exercises: sanitizedExercises,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    console.error('Failed to update workout:', errorMessage);
+                } else {
+                    console.log('Workout updated successfully');
+                }
+            } catch (error) {
+                console.error('Error updating workout:', error);
+            }
+        } else {
+            console.error(`Exercise ${exerciseName} not found in updatedExercises.`);
+        }
+    };
 
     if (!todaysWorkout) return <p className='text-sm text-neutral-400'>No Workout Found</p>;
 
@@ -125,17 +97,17 @@ const Workout: React.FC = () => {
                                 {exerciseName} <em className='not-italic text-fuchsia-500'>{exercise['Starting Max']}lbs</em> <em className='not-italic text-cyan-500'>{exercise['Ending Max']}lbs</em>
                             </p>
 
-                            {['Set 1', 'Set 2', 'Set 3', 'Set 4'].map((set, index) => {
-                                const setRepsKey = `${set} Reps` as keyof Exercise; 
+                            {['Set 1', 'Set 2', 'Set 3', exercise.Type === "Compound" ? 'Set 4' : null].map((set) => {
+                                if (!set) return null;
+
+                                const setRepsKey = `${set} Reps` as keyof Exercise;
                                 const setWeightKey = `${set} Weight` as keyof Exercise;
 
-                                const setReps = exercise[setRepsKey];
-                                const setWeight = exercise[setWeightKey];
+                                const setReps = exercise[setRepsKey] ?? null;
+                                const setWeight = exercise[setWeightKey] ?? null;
 
-                                const hasReps = setReps !== null;
-                                const hasWeight = setWeight !== null;
-
-                                if ((index < 3 || (exercise['Set 4 Reps'] !== undefined || exercise['Set 4 Weight'] !== undefined)) && (hasReps || hasWeight)) {
+                                // Ensure we only render if reps or weight is available
+                                if (setReps !== null || setWeight !== null) {
                                     const exerciseType = exercise['Type'];
                                     let percentage = '0%';
                                     if (exerciseType === "Compound") {
@@ -147,12 +119,12 @@ const Workout: React.FC = () => {
                                     return (
                                         <div className='flex flex-row mb-1' key={`${exerciseName}-${set}`}>
                                             <p className='non-italic text-xs align-middle my-auto mr-2'>
-                                                {`${set} (${percentage} = ${setWeight || '0'}lbs): `}
+                                                {`${set} (${percentage} = ${setWeight || '0'}lbs): `} 
                                             </p>
                                             <input
                                                 className='max-w-[40px] text-xs rounded-sm text-black px-1'
                                                 value={setReps !== null ? setReps : ''} 
-                                                onChange={(e) => handleInputChange(exerciseName, set, e.target.value)}
+                                                onChange={(e) => handleInputChange(exerciseName, set as 'Set 1' | 'Set 2' | 'Set 3' | 'Set 4', e.target.value)}
                                             />
                                         </div>
                                     );
