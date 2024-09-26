@@ -140,7 +140,7 @@ export default function NewWorkoutBtn() {
             className="max-w-[200px] text-sm bg-cyan-950 border border-amber-500 p-1 rounded-lg text-cyan-500 cursor-pointer mb-2 hover:bg-fuchsia-950 hover:text-white"
             onClick={handleCreateWorkout}
         >
-            Today's Workout
+            {`Today's Workout`} 
         </button>
     );
 }
