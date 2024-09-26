@@ -80,7 +80,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
         onClick={() => setIsFormVisible(!isFormVisible)}
         className={`btn text-sm mx-0 border-cyan-700 hover:border-cyan-500 bg-cyan-950 text-white btn-secondary hover:bg-white hover:text-black  w-auto max-w-[1000px]`}
       >
-        {isFormVisible ? 'Hide Form' : 'Add New'}
+        {isFormVisible ? 'Hide Form' : 'Add New Task'}
       </button>
 
       {isFormVisible && (

@@ -45,13 +45,27 @@ export default async function Home() {
           
         </div>
 
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-3"></div> 
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
 
 
         <div className='w-full md:grid md:grid-cols-2'>
 
-          <div className='flex flex-col items-center mx-auto mt-4 col-span-1 w-full px-4'>
-            <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
+          <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
+            
+            
+            <div className='mb-3 w-full overflow-hidden'>
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 h-full">
+                <div className="absolute pb-2 -inset-1  rounded-lg bg-gradient-to-tr from-fuchsia-400 via-neutral-300 to-fuchsia-400 dark:bg-black blur opacity-90 overflow-hidden"></div>
+                <div className="relative md:-mb-1 rounded-lg flex justify-around border-2 border-fuchsia-950  font-semibold overflow-hidden">
+                    <a href="/workouts" title="Workout">Workout</a>
+                </div>
+              </div>
+            </div>
+
+            <div className='mb-4 w-full pb-4 border-b-2 border-cyan-600'><AddNewTaskForm onTaskAdded={''}/></div>
+            
+            
+
             <TaskListWrapToday
                 completeDateFilter={false}
                 typeFilter={['Task']}
@@ -59,9 +73,13 @@ export default async function Home() {
                 isOpen={true}
                 title="Today's Tasks"
             />
-            <Routines/>
-            
-            
+            <TaskListWrapToday
+                completeDateFilter={false}
+                typeFilter={['Task']}
+                dueDateFilter={tomorrow}
+                isOpen={false}
+                title="Tomorrow's Tasks"
+            />
             <TaskListWrapHome
               completeDateFilter={null}
               typeFilter={['List']}
@@ -69,9 +87,10 @@ export default async function Home() {
             />
           </div>
 
-          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 mt-4 md:mt-0 md:border-t-0'>
-            <Calendar/>
+          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
             
+            <Routines/>
+            <Calendar/>
           </div>
         </div>
 
