@@ -297,7 +297,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
           {/* Creative Summary */}
           <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Mood Summary:</label>
+                  <label className="block text-sm text-black font-semibold">Creative Summary:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (

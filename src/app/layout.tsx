@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-full mx-auto justify-evenly min-h-screen bg-slate-100 dark:bg-gradient-to-br dark:from-slate-200 dark:via-slate-100 dark:to-slate-100">
+        <div className="w-full mx-auto justify-evenly min-h-screen bg-slate-100 dark:bg-gradient-to-br dark:from-slate-200 dark:via-slate-100 dark:to-slate-100 max-w-[1400px] drop-shadow-md">
           <Navbar/>
           {children}
         </div>
