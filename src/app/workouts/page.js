@@ -48,7 +48,7 @@ export default async function WorkoutHome() {
           New Maxes for compounds are based on the reps done in the first strength set. New Maxes for isos are based on reps performed in the 3rd set assuming no failed sets. 
         </p>
         <p className="pb-3 mb-4 border-b border-white text-xs text-neutral-400">
-          For full marks, work in some military press on Upper Compound days between Incline and BB Row sets and do Pull Ups throughout your Lower Compound days.
+          For full marks, work in some military press on Upper Compound days between Incline and BB Row sets and do Pull Ups throughout your Lower Compound days.  Add Bis and Tris when feeling frisky.
         </p>
 
         {/* Button to trigger today's workout creation */}
