@@ -52,7 +52,9 @@ export default async function WorkoutHome() {
         </p>
 
         {/* Button to trigger today's workout creation */}
-        <NewWorkoutBtn/>
+        <div className='flex justify-center'>
+          <NewWorkoutBtn/>
+        </div>
 
         <div className=''>
           <TodaysWorkout/>
