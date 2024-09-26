@@ -62,13 +62,8 @@ const Workout: React.FC = () => {
         const newValue: number | null = value !== '' ? parseInt(value) : null;
 
         // Validate newValue
-        if (newValue === null || !isNaN(newValue)) {
-            // Assert that the type is correct
-            updatedExercises[exerciseName][setRepsKey as keyof Exercise] = newValue;
-        } else {
-            console.error(`Invalid input: ${value} for ${exerciseName} ${set}`);
-            return; // Do not proceed with invalid input
-        }
+        
+        updatedExercises[exerciseName][setRepsKey as keyof Exercise] = newValue;
 
         // Update the state with the new exercises
         setTodaysWorkout({ ...todaysWorkout, Exercises: updatedExercises });
