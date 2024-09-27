@@ -24,10 +24,10 @@ interface WorkoutProps {
 export default function PastWorkout({ exercises, date }: WorkoutProps) {
     return (
         <div className='flex flex-col w-full justify-start mb-2'>
-            <div className='w-full md:flex flex-wrap'>
+            <div className='w-full md:flex flex-wrap justify-center md:justify-normal'>
                 {Object.keys(exercises).map((exerciseName) => (
                     <div key={`${exerciseName}-${date}`} className='m-4'>
-                        <p className='text-sm mb-2'>
+                        <p className='text-sm mb-2 text-center md:text-left'>
                             {exerciseName} <em className='not-italic text-fuchsia-500'>{exercises[exerciseName]['Starting Max']}lbs</em> <em className='not-italic text-cyan-500'>{exercises[exerciseName]['Ending Max']}lbs</em>
                         </p>
 
@@ -49,7 +49,7 @@ export default function PastWorkout({ exercises, date }: WorkoutProps) {
                                 }
 
                                 return (
-                                    <div className='flex flex-row mb-1' key={`${exerciseName}-${set}-${date}`}>
+                                    <div className='flex flex-row mb-1 justify-center md:justify-start' key={`${exerciseName}-${set}-${date}`}>
                                         <p className='non-italic text-xs align-middle my-auto mr-2'>
                                             {`${set} (${percentage} = ${setWeight || '0'}lbs): `}
                                         </p>

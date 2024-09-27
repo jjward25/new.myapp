@@ -4,6 +4,8 @@ import { getWorkout } from '../../utils/mongoDB/workoutsCRUD'; // Renamed functi
 import { PastWorkoutWrap } from '@/components/workouts/pastWorkoutWrap';
 import NewWorkoutBtn from '@/components/workouts/newWorkout';
 import TodaysWorkout from '@/components/workouts/todaysWorkout';
+import UpperTrend from '@/components/d3/workoutUpperTrend'
+import LowerTrend from '@/components/d3/workoutLowerTrend'
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -33,6 +35,13 @@ export default async function WorkoutHome() {
       >
         1RM Chart
       </a>
+
+      <div className='bg-neutral-200 rounded-md border-2 border-amber-500 drop-shadow-sm w-full mt-6'>
+        <UpperTrend/>
+      </div>
+      <div className='bg-neutral-200 rounded-md border-2 border-amber-500 drop-shadow-sm w-full mt-6'>
+        <LowerTrend/>
+      </div>
 
       <div className="bg-black text-white rounded-lg my-8 border-2 border-black drop-shadow-sm flex flex-col p-4 w-full">
         <h3 className="text-sm font-semibold mb-2">
