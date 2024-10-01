@@ -66,8 +66,8 @@ const ListWrap: React.FC<ListWrapProps> = ({
     <div className='flex flex-col w-full justify-start mb-2 rounded-md'>
 
       <div className="cursor-pointer relative rounded-lg w-full overflow-hidden  h-full" onClick={toggleOpen}>
-        <div className="absolute -inset-3  bg-cyan-400 blur opacity-40"></div>
-        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800 hover:text-cyan-950">
+        <div className="absolute -inset-3  bg-cyan-700 blur opacity-20"></div>
+        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 hover:text-cyan-600">
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
             {title}

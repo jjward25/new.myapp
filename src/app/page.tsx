@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
-      <h1 className="text-4xl font-semibold bg-clip-text text-transparent bg-cyan-500 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-0 mb-10 md:mb-10 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat  transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms] text-center">
+      <h1 className="text-4xl font-semibold bg-clip-text text-transparent bg-cyan-700 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-0 mb-10 md:mb-10 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat  transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms] text-center">
         {`Joe's Life`}
       </h1>
       
@@ -44,20 +44,36 @@ export default async function Home() {
           
         </div>
 
+        {/** Main Components List */}
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
-
-
         <div className='w-full md:grid md:grid-cols-2'>
-
+          
+          {/** Column 1 */}
           <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
+          <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
+                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
+                      Workout
+                  </div>
+                </a>
+              </div>
+              <Routines/>
+            </div>
+            <Calendar/>
 
-            <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
+            
+          </div>
 
+          {/** Column 2 */}
+          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+          <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
             <TaskListWrapToday
                 completeDateFilter={false}
                 typeFilter={['Task']}
                 dueDateFilter={today}
-                isOpen={false}
+                isOpen={true}
                 title="Today's Tasks"
             />
             <TaskListWrapToday
@@ -72,28 +88,11 @@ export default async function Home() {
               typeFilter={['List']}
               title="List Notes"
             />
+            
+
           </div>
 
-          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
-
-            <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
-
-              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2 h-full">
-                <div className="absolute -inset-1 rounded-lg bg-yellow-500 blur opacity-50 overflow-hidden"></div>
-                <a href="/workouts" title="Workout">
-                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-950">
-                      Workout
-                  </div>
-                </a>
-              </div>
-              
-              <Routines/>
-            </div>
-
-            <Calendar/>
-          </div>
         </div>
-
       </div>
 
     </main>
