@@ -16,7 +16,7 @@ const Routines = () => {
     <div className='flex flex-col w-full justify-start mb-2'>
 
       <div className={`${isOpen ? '':''} cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 h-full`} onClick={toggleOpen}>
-        <div className="absolute -inset-3  bg-gradient-to-tr from-yellow-300 via-neutral-300 to-yellow-300 dark:bg-black blur opacity-90"></div>
+        <div className="absolute -inset-3  bg-yellow-500 dark:bg-black blur opacity-50"></div>
         <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-yellow-800`}>
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>

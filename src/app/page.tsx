@@ -55,10 +55,12 @@ export default async function Home() {
             
             <div className='mb-3 w-full overflow-hidden'>
               <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 h-full">
-                <div className="absolute pb-2 -inset-1  rounded-lg bg-gradient-to-tr from-fuchsia-400 via-neutral-300 to-fuchsia-400 dark:bg-black blur opacity-90 overflow-hidden"></div>
-                <div className="relative md:-mb-1 rounded-lg flex justify-around border-2 border-fuchsia-950  font-semibold overflow-hidden">
-                    <a href="/workouts" title="Workout">Workout</a>
-                </div>
+                <div className="absolute pb-2 -inset-1  rounded-lg dark:bg-black blur opacity-90 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative md:-mb-1 rounded-lg flex justify-around border-2 border-fuchsia-950 font-semibold overflow-hidden bg-fuchsia-950 text-white text-sm hover:bg-fuchsia-300 hover:text-fuchsia-950">
+                      Workout
+                  </div>
+                </a>
               </div>
             </div>
 

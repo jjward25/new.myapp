@@ -1,7 +1,9 @@
 // src/app/backlog/page.tsx or src/app/backlog.tsx
 import React from 'react';
 import TaskListWrap from '../../components/tasks/TaskClientWrapBacklog';
+import TaskListWrapMissed from '../../components/tasks/missed/TaskClientWrapMissed';
 import { getToday, getTomorrow } from '../../utils/Date';
+import AddNewTaskForm from '../../components/tasks/NewTaskButton'
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -16,6 +18,8 @@ export default async function Backlog() {
         Task Backlog
       </h1>
 
+      <div className='mb-4 w-full max-w-[750px] pb-4 border-b-2 border-cyan-600'><AddNewTaskForm onTaskAdded={''}/></div>
+
       <div className="flex flex-col w-full h-full mb-10">
         <TaskListWrap completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" />
       </div>
@@ -25,7 +29,7 @@ export default async function Backlog() {
       </div>
 
       <div className="flex flex-col w-full h-full mb-10">
-        <TaskListWrap completeDateFilter={null} typeFilter={['Task']} dueDateBeforeFilter={today} title="Missed Tasks" />
+        <TaskListWrapMissed completeDateFilter={null} typeFilter={['Task']} dueDateBeforeFilter={today} title="Missed Tasks" />
       </div>
     </main>
   );

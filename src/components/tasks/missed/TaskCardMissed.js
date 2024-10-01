@@ -92,7 +92,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
   const duplicateTask = async (e) => {
     e.stopPropagation();
-    const newTask = { ...editableTask, "Due Date": tomorrow, _id: undefined }; // Set Due Date to tomorrow and remove the ID
+    const newTask = { ...editableTask, "Due Date": today, _id: undefined }; // Set Due Date to tomorrow and remove the ID
     try {
       const response = await axios.post('/api/backlog', newTask);
       // Optionally, you can also call onEdit here to update the state, or fetch the new tasks list

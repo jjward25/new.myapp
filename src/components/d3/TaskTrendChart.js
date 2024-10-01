@@ -1,10 +1,8 @@
 "use client";
-// src/components/d3/TaskTrendChart.js
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { processTaskData } from './TaskTrendData';
 
-// Convert date to EST
 const normalizeDate = (dateStr) => {
   const date = new Date(dateStr);
   const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
@@ -14,6 +12,7 @@ const normalizeDate = (dateStr) => {
 const CompletedMissedTasksChart = () => {
   const [data, setData] = useState({ completed: {}, missed: {} });
   const svgRef = useRef(null);
+  const tooltipRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +21,6 @@ const CompletedMissedTasksChart = () => {
         const tasks = await response.json();
 
         const filteredTasks = tasks.filter(task => task['Due Date'] !== null && task['Due Date'] !== '');
-
         const processedData = processTaskData(filteredTasks);
         setData(processedData);
       } catch (error) {
@@ -37,49 +35,37 @@ const CompletedMissedTasksChart = () => {
     if (Object.keys(data.completed).length === 0) return;
 
     const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove(); // Clear previous content
+    svg.selectAll('*').remove();
 
     const containerWidth = svgRef.current.clientWidth;
     const margin = { top: 10, right: 15, bottom: 100, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 
-    // Normalize and process dates
-    const allDates = [
-      ...Object.keys(data.completed),
-      ...Object.keys(data.missed)
-    ]
-    .map(dateStr => new Date(dateStr)) 
-    .sort((a, b) => a - b); 
-
-    // Filter to only include dates within the last 30 days
     const now = new Date();
     const last30Days = d3.timeDay.offset(now, -30);
-    const filteredDates = allDates.filter(date => date >= last30Days && date <= now);
+    const xDomainDates = d3.timeDays(last30Days, now);
 
-    // Generate a continuous date range for the last 30 days
-    const xDomainDates = d3.timeDays(d3.min(filteredDates), d3.max(filteredDates));
+    const combinedData = xDomainDates.map(date => ({
+      date,
+      completed: data.completed[normalizeDate(date)] || 0,
+      missed: data.missed[normalizeDate(date)] || 0,
+    }));
 
     const x = d3.scaleTime()
-      .domain([d3.min(xDomainDates), d3.max(xDomainDates)])
+      .domain(d3.extent(combinedData, d => d.date))
       .range([0, width]);
 
-    const yMax = Math.max(d3.max(Object.values(data.completed)), d3.max(Object.values(data.missed))) + 1;
+    const yMax = Math.max(d3.max(combinedData, d => d.completed), d3.max(combinedData, d => d.missed)) + 1;
     const y = d3.scaleLinear()
       .domain([0, yMax])
       .nice()
       .range([height, 0]);
 
-    // Ensure y-axis only has whole-number ticks
-    const yAxis = d3.axisLeft(y)
-      .ticks(yMax)
-      .tickFormat(d => d);
-
-    // Draw X-axis with specific ticks
     svg.append('g')
       .attr('transform', `translate(${margin.left},${height + margin.top})`)
       .call(d3.axisBottom(x)
-        .tickValues(xDomainDates) 
+        .ticks(d3.timeDay.every(1))
         .tickFormat(d3.timeFormat('%b %d')))
       .selectAll('text')
       .style('fill', 'white')
@@ -87,10 +73,9 @@ const CompletedMissedTasksChart = () => {
       .attr('transform', 'rotate(-45)')
       .attr('text-anchor', 'end');
 
-    // Draw Y-axis
     const yAxisGroup = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
-      .call(yAxis);
+      .call(d3.axisLeft(y));
 
     yAxisGroup.selectAll('text')
       .style('fill', 'white')
@@ -99,7 +84,6 @@ const CompletedMissedTasksChart = () => {
     yAxisGroup.select('path')
       .style('stroke', 'slategray');
 
-    // Add horizontal grid lines for Y-axis tick marks
     svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
       .call(d3.axisLeft(y)
@@ -110,42 +94,97 @@ const CompletedMissedTasksChart = () => {
       .style('stroke', 'slategray')
       .style('stroke-width', '1px');
 
-    // Combine data for proper line rendering
-    const combinedData = xDomainDates.map(date => ({
-      date,
-      completed: data.completed[normalizeDate(date)] || 0,
-      missed: data.missed[normalizeDate(date)] || 0
-    }));
-
-    // Line generator for Completed Tasks
     const lineCompleted = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.completed));
 
-    // Line generator for Missed Tasks
     const lineMissed = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.missed));
 
-    // Draw lines for Completed Tasks
+    // Draw lines for Missed Tasks first
+    svg.append('path')
+      .data([combinedData])
+      .attr('class', 'line missed')
+      .attr('d', lineMissed)
+      .attr('fill', 'none')
+      .attr('stroke', 'purple')
+      .attr('stroke-width', 2)
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Draw lines for Completed Tasks above Missed Tasks
     svg.append('path')
       .data([combinedData])
       .attr('class', 'line completed')
-      .attr('d', d => lineCompleted(d))
+      .attr('d', lineCompleted)
       .attr('fill', 'none')
       .attr('stroke', 'cyan')
       .attr('stroke-width', 2)
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    // Draw lines for Missed Tasks
-    svg.append('path')
-      .data([combinedData])
-      .attr('class', 'line missed')
-      .attr('d', d => lineMissed(d))
-      .attr('fill', 'none')
-      .attr('stroke', 'fuchsia')
-      .attr('stroke-width', 2)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    const tooltip = d3.select('body').append('div')
+      .style('opacity', 0)
+      .style('position', 'absolute')
+      .style('background-color', 'rgba(0,0,0,0.7)')
+      .style('color', 'white')
+      .style('padding', '5px')
+      .style('border-radius', '5px')
+      .style('pointer-events', 'none')
+      .attr('class', 'tooltip');
+
+    // Draw dots for missed tasks
+    svg.selectAll('.dot-missed')
+      .data(combinedData)
+      .enter().append('circle')
+      .attr('class', 'dot-missed')
+      .attr('cx', d => x(d.date) + margin.left)
+      .attr('cy', d => y(d.missed) + margin.top)
+      .attr('r', 5) // Increase dot size for visibility
+      .attr('fill', 'purple')
+      .on('mouseover', (event, d) => {
+        tooltip.transition()
+          .duration(200)
+          .style('opacity', 1);
+        tooltip.html(`Date: ${d3.timeFormat('%b %d, %Y')(d.date)}<br>Missed: ${d.missed}`)
+          .style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY - 40) + 'px');
+      })
+      .on('mousemove', (event) => {
+        tooltip.style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY - 40) + 'px');
+      })
+      .on('mouseout', () => {
+        tooltip.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
+
+    // Draw dots for completed tasks last
+    svg.selectAll('.dot-completed')
+      .data(combinedData)
+      .enter().append('circle')
+      .attr('class', 'dot-completed')
+      .attr('cx', d => x(d.date) + margin.left)
+      .attr('cy', d => y(d.completed) + margin.top)
+      .attr('r', 3)
+      .attr('fill', 'cyan')
+      .on('mouseover', (event, d) => {
+        tooltip.transition()
+          .duration(200)
+          .style('opacity', 1);
+        tooltip.html(`Date: ${d3.timeFormat('%b %d, %Y')(d.date)}<br>Completed: ${d.completed}`)
+          .style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY - 40) + 'px');
+      })
+      .on('mousemove', (event) => {
+        tooltip.style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY - 40) + 'px');
+      })
+      .on('mouseout', () => {
+        tooltip.transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
 
   }, [data]);
 
