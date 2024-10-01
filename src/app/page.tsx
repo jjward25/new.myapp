@@ -57,7 +57,7 @@ export default async function Home() {
                 completeDateFilter={false}
                 typeFilter={['Task']}
                 dueDateFilter={today}
-                isOpen={true}
+                isOpen={false}
                 title="Today's Tasks"
             />
             <TaskListWrapToday

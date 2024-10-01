@@ -149,7 +149,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-fuchsia-300 border border-cyan-200 text-white rounded-lg cursor-pointer"
+              className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-cyan-200 border border-cyan-200 text-white rounded-lg cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -169,13 +169,12 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
           </div>
 
-
-            <h2 className="font-bold text-sm flex-1 text-black ml-3 mr-2 mt-[6px]">{isEditing ? (
+            <h2 className="font-bold text-sm flex-1 text-black ml-3 mr-2 mt-[6px] w-full pl-2">{isEditing ? (
               <input
                 type="text"
                 value={editableTask["Task Name"] || ''}
                 onChange={(e) => handleInputChange(e, "Task Name")}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-auto "
+                className="input input-bordered bg-neutral-100 text-cyan-700 w-auto text-left"
                 onClick={(e) => e.stopPropagation()}
               />
             ) : editableTask["Task Name"]}</h2>
@@ -186,7 +185,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
 
         </div>
 
-        {/* Back Face */}
+        
         {/* Back Face */}
         <div
           className={`flip-card-face flip-card-back bg-slate-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}

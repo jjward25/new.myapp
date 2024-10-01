@@ -1,6 +1,5 @@
 // src/components/tasks/TaskClientWrap.tsx
 'use client';
-
 import React, { useState } from 'react';
 import ListTemplate from './TaskList';
 
