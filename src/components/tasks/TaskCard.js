@@ -117,9 +117,11 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-front bg-slate-200 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <div className='flex flex-row justify-start items-center text-black pb-2'>
+          {/** Action Buttons */}
+          <div className='flex flex-col justify-start items-center text-black pb-2'>
 
-            <p className='mr-2 ml-2 mt-[9px] mb-auto bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 rounded-lg px-1 font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
+          <div className='flex flex-row w-full justify-between md:justify-start'>
+            <p className='mx-2 mt-[9px] mb-auto bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 rounded-lg px-1 font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             
             <input
               type="checkbox"
@@ -145,17 +147,6 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               </svg>
             </button>
 
-
-            <h2 className="font-bold text-sm flex-1 text-black mr-2 mt-[6px]">{isEditing ? (
-              <input
-                type="text"
-                value={editableTask["Task Name"] || ''}
-                onChange={(e) => handleInputChange(e, "Task Name")}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-auto "
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : editableTask["Task Name"]}</h2>
-
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
               className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-fuchsia-300 border border-cyan-200 text-white rounded-lg cursor-pointer"
@@ -175,7 +166,23 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
                 />
               </svg>
             </button>
+
           </div>
+
+
+            <h2 className="font-bold text-sm flex-1 text-black ml-3 mr-2 mt-[6px]">{isEditing ? (
+              <input
+                type="text"
+                value={editableTask["Task Name"] || ''}
+                onChange={(e) => handleInputChange(e, "Task Name")}
+                className="input input-bordered bg-neutral-100 text-cyan-700 w-auto "
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : editableTask["Task Name"]}</h2>
+
+            
+          </div>
+          
 
         </div>
 

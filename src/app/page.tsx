@@ -78,7 +78,7 @@ export default async function Home() {
 
             <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
 
-              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 md:mb-2 h-full">
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2 h-full">
                 <div className="absolute -inset-1 rounded-lg bg-yellow-500 blur opacity-50 overflow-hidden"></div>
                 <a href="/workouts" title="Workout">
                   <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-950">
