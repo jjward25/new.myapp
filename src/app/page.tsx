@@ -2,8 +2,7 @@
 import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
-import TaskListWrapHome from '../components/tasks/TaskClientWrapHome';
-import TaskListWrapText from '../components/tasks/textbox/TaskClientWrapTextBox';
+import TaskListWrapHome from '../components/tasks/TaskClientWrapList';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
@@ -51,22 +50,8 @@ export default async function Home() {
         <div className='w-full md:grid md:grid-cols-2'>
 
           <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
-            
-            
-            <div className='mb-3 w-full overflow-hidden'>
-              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 h-full">
-                <div className="absolute pb-2 -inset-1  rounded-lg dark:bg-black blur opacity-90 overflow-hidden"></div>
-                <a href="/workouts" title="Workout">
-                  <div className="relative md:-mb-1 rounded-lg flex justify-around border-2 border-fuchsia-950 font-semibold overflow-hidden bg-fuchsia-950 text-white text-sm hover:bg-fuchsia-300 hover:text-fuchsia-950">
-                      Workout
-                  </div>
-                </a>
-              </div>
-            </div>
 
-            <div className='mb-4 w-full pb-4 border-b-2 border-cyan-600'><AddNewTaskForm onTaskAdded={''}/></div>
-            
-            
+            <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
 
             <TaskListWrapToday
                 completeDateFilter={false}
@@ -90,8 +75,21 @@ export default async function Home() {
           </div>
 
           <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
-            
-            <Routines/>
+
+            <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
+
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:my-1 md:mb-2 h-full">
+                <div className="absolute -inset-1 rounded-lg bg-yellow-500 blur opacity-50 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-950">
+                      Workout
+                  </div>
+                </a>
+              </div>
+              
+              <Routines/>
+            </div>
+
             <Calendar/>
           </div>
         </div>

@@ -16,8 +16,8 @@ const Routines = () => {
     <div className='flex flex-col w-full justify-start mb-2'>
 
       <div className={`${isOpen ? '':''} cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 h-full`} onClick={toggleOpen}>
-        <div className="absolute -inset-3  bg-yellow-500 dark:bg-black blur opacity-50"></div>
-        <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-yellow-800`}>
+        <div className="absolute -inset-3  bg-purple-500 dark:bg-black blur opacity-50"></div>
+        <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-fuchsia-800 hover:text-fuchsia-950`}>
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
             Daily Check-In
@@ -29,8 +29,8 @@ const Routines = () => {
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
           >
-            <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-black' : 'fill-black'}`} />
-            <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="10" className={`fill-fuchsia-950 ${isOpen ? '' : ''}`} />
+            <path d="M8 12l4 4 4-4" className="stroke-current text-fuchsia-200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
        
         </div>

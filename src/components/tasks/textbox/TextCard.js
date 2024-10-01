@@ -110,7 +110,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             <h2 className="font-bold text-black text-md flex-1">{editableTask["Task Name"]}</h2>
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white  rounded-lg"
+              className="absolute top-4 right-5 bg-cyan-950 hover:text-cyan-500 border border-cyan-200 text-white  rounded-lg"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

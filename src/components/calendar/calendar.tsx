@@ -104,10 +104,10 @@ export default function Calendar() {
   return (
     <div className="max-w-4xl mx-auto mt-6 md:mt-4">
       <div className="bg-white shadow overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300 border-2 border-cyan-950 rounded-tr-lg rounded-tl-lg">
-          <button onClick={handlePrevMonth} className="text-gray-600 hover:text-fuchsia-800">Prev</button>
-          <h2 className='font-semibold'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-          <button onClick={handleNextMonth} className="text-gray-600 hover:text-fuchsia-800">Next</button>
+        <div className="flex items-center justify-between px-6 py-4 bg-cyan-950 border-2 border-cyan-950 rounded-tr-lg rounded-tl-lg">
+          <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
+          <h2 className='font-semibold text-cyan-400'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+          <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
         </div>
         <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 rounded-br-lg rounded-bl-lg">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (

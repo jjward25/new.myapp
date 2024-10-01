@@ -64,10 +64,10 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const completeDateFilterDate = completeDateFilter;
 
   return (
-    <div className='flex flex-col w-full justify-start mb-2 bg-neutral-300 rounded-md'>
+    <div className='flex flex-col w-full justify-start mb-2 rounded-md'>
 
       <div className="cursor-pointer relative rounded-lg w-full overflow-hidden  h-full" onClick={toggleOpen}>
-        <div className="absolute -inset-3  bg-gradient-to-tr from-cyan-300 via-neutral-300 to-cyan-300 dark:bg-black blur opacity-90"></div>
+        <div className="absolute -inset-3  bg-cyan-400 blur opacity-40"></div>
         <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800">
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
@@ -80,8 +80,8 @@ const ListWrap: React.FC<ListWrapProps> = ({
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
           >
-            <circle cx="12" cy="12" r="10" className={`${isOpen ? 'fill-black' : 'fill-black'}`} />
-            <path d="M8 12l4 4 4-4" className="stroke-current text-white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="10" className={`fill-cyan-950 ${isOpen ? '' : ''}`} />
+            <path d="M8 12l4 4 4-4" className="stroke-current text-cyan-200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
        
         </div>
