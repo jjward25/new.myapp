@@ -106,7 +106,7 @@ export default function Calendar() {
       <div className="bg-white shadow overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 bg-cyan-950 border-2 border-cyan-950 rounded-tr-lg rounded-tl-lg">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
-          <h2 className='font-semibold text-cyan-400'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+          <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
           <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
         </div>
         <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 rounded-br-lg rounded-bl-lg">

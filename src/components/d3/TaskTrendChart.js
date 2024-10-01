@@ -108,8 +108,8 @@ const CompletedMissedTasksChart = () => {
       .attr('class', 'line missed')
       .attr('d', lineMissed)
       .attr('fill', 'none')
-      .attr('stroke', 'purple')
-      .attr('stroke-width', 2)
+      .attr('stroke', '#7f694b')
+      .attr('stroke-width', 1)
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Draw lines for Completed Tasks above Missed Tasks
@@ -118,8 +118,8 @@ const CompletedMissedTasksChart = () => {
       .attr('class', 'line completed')
       .attr('d', lineCompleted)
       .attr('fill', 'none')
-      .attr('stroke', 'cyan')
-      .attr('stroke-width', 2)
+      .attr('stroke', '#74a892')
+      .attr('stroke-width', 1)
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     const tooltip = d3.select('body').append('div')
@@ -140,7 +140,7 @@ const CompletedMissedTasksChart = () => {
       .attr('cx', d => x(d.date) + margin.left)
       .attr('cy', d => y(d.missed) + margin.top)
       .attr('r', 5) // Increase dot size for visibility
-      .attr('fill', 'purple')
+      .attr('fill', '#7f694b')
       .on('mouseover', (event, d) => {
         tooltip.transition()
           .duration(200)
@@ -167,7 +167,7 @@ const CompletedMissedTasksChart = () => {
       .attr('cx', d => x(d.date) + margin.left)
       .attr('cy', d => y(d.completed) + margin.top)
       .attr('r', 3)
-      .attr('fill', 'cyan')
+      .attr('fill', '#2e9da2')
       .on('mouseover', (event, d) => {
         tooltip.transition()
           .duration(200)

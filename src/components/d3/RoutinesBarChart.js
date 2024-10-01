@@ -126,7 +126,14 @@ const TrueValuesBarChart = () => {
       .nice()
       .range([height, 0]);
 
-    const color = d3.scaleOrdinal().domain(fields).range(d3.schemeSet2);
+    const color = d3.scaleOrdinal()
+      .domain(fields)
+      .range(["#c7522a", "#e5c185", "#fbf2c4", "#74a892", "#008585"]); // Cyan, Fuchsia/purple, amber, teal, 
+
+      //.range(["#121b3b", "#c05bb6", "#1a65bc", "#0fb2eb", "#f0d6ec"]); // Cyan, Fuchsia/purple, amber, teal, 
+
+      //.range(["#00ACC1", "#9370Db", "#ffb300", "#008080", "white"]); // Cyan, Fuchsia/purple, amber, teal, 
+
 
     svg
       .selectAll(".layer")
