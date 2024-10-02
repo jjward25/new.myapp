@@ -21,7 +21,7 @@ interface ListWrapProps {
 
 const ListWrap: React.FC<ListWrapProps> = ({
   title,
-  sortOrder = 'date',
+  sortOrder = 'priority',
   dateOrder = 'asc',
   priorityOrder = 'asc',
   dueDateFilter = null,
