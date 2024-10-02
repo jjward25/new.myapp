@@ -32,8 +32,8 @@ const LowerTrend = () => {
       .filter(workout => workout.Workout === "Lower Compounds")
       .flatMap(workout => {
         return Object.entries(workout.Exercises).flatMap(([exerciseName, exerciseData]) => {
-          const startingMax = exerciseData["Starting Max"] || exerciseData["Max"] || exerciseData["Value"] || null;
-          return workout.Date && startingMax !== null
+          const startingMax = exerciseData["Starting Max"]
+          return workout.Date 
             ? [{ date: workout.Date, exercise: exerciseName, startingMax }]
             : [];
         });
@@ -103,7 +103,11 @@ const LowerTrend = () => {
       .remove();
 
     // Color scale
-    const colorScale = d3.scaleOrdinal(d3.schemeSet2);
+    const colorScale = d3.scaleOrdinal()
+      .range(["#0c3547", "#10656d", "#598f91","#e1c36a", "#93b071", "#ede2cc","#edae93"]);
+ 
+    const colorScale2 = d3.scaleOrdinal()
+      .range(["white", "white", "white", "#c5832b", "#495057","#495057","#495057"]);
 
     const exercises = Array.from(new Set(filteredData.map(d => d.exercise)));
 
@@ -195,7 +199,7 @@ const LowerTrend = () => {
         .style("font-family", "Arial, sans-serif")
         .style("font-size", "12px")
         .style('font-weight', 'bold')
-        .style("fill", "#495057")
+        .style("fill", colorScale2(exercise))
         .text(exercise);
     });
   }

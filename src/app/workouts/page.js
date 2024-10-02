@@ -36,10 +36,10 @@ export default async function WorkoutHome() {
         1RM Chart
       </a>
 
-      <div className='bg-neutral-200 rounded-md border-2 border-amber-500 drop-shadow-sm w-full mt-6'>
+      <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
         <UpperTrend/>
       </div>
-      <div className='bg-neutral-200 rounded-md border-2 border-amber-500 drop-shadow-sm w-full mt-6'>
+      <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
         <LowerTrend/>
       </div>
 
