@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={inter.className}>
 
      
-        <div className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-100 to-cyan-950">
+        <div className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-400 to-cyan-950">
 
           <div className="w-full mx-auto justify-evenly min-h-screen bg-neutral-100 dark:bg-black max-w-[1400px] shadow-2xl shadow-cyan-950 border-l-2 border-r-2 border-cyan-950">
             <Navbar/>
