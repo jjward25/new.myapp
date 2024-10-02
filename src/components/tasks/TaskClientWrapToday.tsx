@@ -65,9 +65,9 @@ const ListWrap: React.FC<ListWrapProps> = ({
   return (
     <div className='flex flex-col w-full justify-start mb-2 rounded-md'>
 
-      <div className="cursor-pointer relative rounded-lg w-full overflow-hidden  h-full" onClick={toggleOpen}>
-        <div className="absolute -inset-3 bg-cyan-700 blur opacity-20"></div>
-        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600">
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} cursor-pointer relative w-full overflow-hidden h-full`} onClick={toggleOpen}>
+        <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} absolute -inset-3 bg-cyan-700 blur opacity-20`}></div>
+        <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
             {title}
@@ -87,22 +87,22 @@ const ListWrap: React.FC<ListWrapProps> = ({
       </div>
 
 
-      <div className={`px-5 ${isOpen ? 'bg-transparent rounded-br-lg dark:border-white rounded-bl-lg pb-3' : ''}`}>
+      <div className={`px-0 ${isOpen ? 'bg-neutral-200 rounded-br-lg rounded-bl-lg pb-3 border-2 border-t-0 border-cyan-700' : ''}`}>
         {isOpen && (
-          <div className='mt-3'>
+          <div className='mt-4 px-2'>
             
-            <div className="flex space-x-1 mb-2 mt-0 border-white pb-2 w-full justify-between">
+            <div className="flex space-x-1 mb-2 mt-0 border-white pb-2 w-full justify-between px-8">
              
               <button
                 onClick={() => handleToggleSortOrder('priority')}
-                className="w-full ml-1 md:ml-0 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
+                className="w-full ml-1 md:ml-0 mt-1 text-xs btn btn-sm btn-outline btn-default text-white hover:text-neutral-400 hover:underline bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 dark:bg-transparent"
               >
                 Priority {internalSortOrder === 'priority' && internalPriorityOrder === 'asc' ? 'Descending' : 'Ascending'}
               </button>
             </div>
 
 
-            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Next Up</p>
+            <p className='text-lg font-semibold mb-4 dark:text-white text-slate-800'>Next Up</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}

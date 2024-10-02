@@ -50,7 +50,8 @@ export default async function Home() {
           
           {/** Column 1 */}
           <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
-          <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
+
+          <div className='mb-2 md:mb-4 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
             <TaskListWrapToday
                 completeDateFilter={false}
                 typeFilter={['Task']}

@@ -117,9 +117,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           className={`flip-card-face flip-card-front bg-slate-200 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          {/** Action Buttons */}
+          {/** Front Card Content */}
           <div className='flex flex-col justify-start items-center text-black pb-2'>
-
+          {/** Action Buttons */}
           <div className='flex flex-row w-full justify-between md:justify-start'>
             <p className='mx-2 mt-[9px] mb-auto bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 rounded-lg px-1 font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
             
