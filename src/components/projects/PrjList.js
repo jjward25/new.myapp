@@ -48,7 +48,7 @@ const PrjList = () => {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      const transformedProjects = data.map((project) => ({
+      const transformedProjects = data.filter(project => !project["Project Complete Date"]).map((project) => ({
         _id: project._id, // Ensure _id is included
         projectName: project["Project Name"],
         projectPriority: project["Project Priority"],
@@ -241,6 +241,35 @@ const PrjList = () => {
     setIsEditing(true);
   };
 
+  const handleCompleteProject = async (projectName) => {
+    const completeDate = new Date().toISOString(); // Gets today's date in ISO format
+
+    try {
+      const response = await fetch('/api/projects', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectName,
+          updatedProject: {
+            "Project Complete Date": completeDate // Assuming your JSON structure has a "Complete Date" field
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Refetch projects to update state
+      fetchProjects();
+    } catch (error) {
+      console.error('Error completing project:', error);
+      setError('Unable to complete project');
+    }
+  };
+
   const sortMilestones = (milestones) => {
     if (sortOrder === 'date') {
       return milestones.sort((a, b) => {
@@ -272,37 +301,47 @@ const PrjList = () => {
     <div className="container mx-auto md:px-0 md:h-auto">
       {sortedProjects.map((project) => {
         const sortedMilestones = sortMilestones(filterMilestones(project.milestones));
+        
+        // Define a class for the project name based on its value
+        const projectNameClass = project.projectName === "Weekly Goals"
+          ? "text-neutral-300 font-normal"
+          : project.projectName === "Annual Goals"
+          ? "text-neutral-300 font-normal"
+          : "text-amber-400"; // default styling
 
         return (
           <div key={project._id} className="flex flex-col mb-1 max-w-[750px] mx-auto w-full h-full">
-            <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px]"></div>
-
-            <div className="flex justify-between items-center flex-col md:flex-row mb-3 md:mb-0 cursor-pointer" onClick={() => toggleOpen(project._id)}>
-              <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 text-cyan-900">
+            <div className="bg-cyan-950 px-2 rounded-lg flex justify-between items-center flex-col md:flex-row mb-3 cursor-pointer" onClick={() => toggleOpen(project._id)}>
+              <h1 className={`text-xl md:text-2xl ${projectNameClass} mb-2 pt-2 font-semibold`}>
                 {project.projectName}
               </h1>
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleOpenEditForm(project)}
-                  className="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:scale-95 text-xs hover:bg-yellow-700"
+                  className="px-3 py-1 bg-yellow-800 text-white rounded-lg hover:scale-95 text-xs hover:bg-yellow-700"
                 >
                   Edit Project
                 </button>
                 <button
                   onClick={() => handleDeleteProject(project.projectName)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-lg hover:scale-95 text-xs hover:bg-red-700"
+                  className="px-3 py-1 bg-red-800 text-white rounded-lg hover:scale-95 text-xs hover:bg-red-700"
                 >
                   Delete Project
                 </button>
                 <button
                   onClick={() => handleAddMilestoneForm(project.projectName)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded-lg hover:scale-95 text-xs hover:bg-blue-700"
+                  className="px-3 py-1 bg-blue-800 text-white rounded-lg hover:scale-95 text-xs hover:bg-blue-700"
                 >
                   Add Milestone
                 </button>
+                <button
+                  onClick={() => handleCompleteProject(project.projectName)} // Call complete function
+                  className="px-3 py-1 bg-green-800 text-white rounded-lg hover:scale-95 text-xs hover:bg-green-700"
+                >
+                  Complete Project
+                </button>
               </div>
             </div>
-            <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px] mb-3"></div>
 
             {openProjects[project._id] && (
               <div className={`flex flex-row w-auto justify-start overflow-auto disable-scrollbars`}>

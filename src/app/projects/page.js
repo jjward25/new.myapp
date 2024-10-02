@@ -135,6 +135,7 @@ const Milestones = () => {
         projectPriority: project["Project Priority"],
         type: project["Type"],
         notes: project["Notes"],
+        completeDate: project["Project Complete Date"] ? new Date(project["Project Complete Date"]) : null, // Only set if the date exists, otherwise set to null
         milestones: Object.entries(project.Milestones).map(([milestoneName, milestone]) => ({
           ...milestone,
           milestoneName,
@@ -154,8 +155,49 @@ const Milestones = () => {
       showCompletedMilestones
         ? milestone["Complete Date"] && milestone["Complete Date"] !== ""
         : false
-    )
+    ).map(milestone => ({
+      ...milestone,
+      projectName: project.projectName,
+      completeDate: project.completeDate
+    }))
   );
+
+  const completedMilestones = projects.flatMap(project => 
+    project.milestones.filter(milestone =>
+      milestone["Complete Date"] && milestone["Complete Date"] !== ""
+    ).map(milestone => ({
+      ...milestone,
+      projectName: project.projectName, // Adding the project name to the milestone object
+      completeDate: project.completeDate
+    }))
+  );
+  
+  // Group milestones by project and sort them
+  const groupedMilestones = completedMilestones.reduce((acc, milestone) => {
+    const projectName = milestone.projectName;
+    const completeDate = milestone.completeDate
+    if (!acc[projectName]) {
+      acc[projectName] = {
+        milestones: [],
+        completeDate: completeDate, 
+      };
+    }
+    acc[projectName].milestones.push(milestone);
+    return acc;
+  }, {});
+  
+  const sortedProjects = Object.entries(groupedMilestones)
+    .map(([projectName, { milestones, completeDate }]) => ({
+      projectName,
+      milestones: milestones.sort((a, b) => new Date(b["Complete Date"]) - new Date(a["Complete Date"])),
+      lastCompletedDate: milestones[0] ? new Date(milestones[0]["Complete Date"]) : new Date(0),
+      completeDate, 
+      isComplete: completeDate !== null,
+    }))
+    .sort((a, b) => b.lastCompletedDate - a.lastCompletedDate);
+  
+
+  console.log('Fetched Projects:', sortedProjects);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-12 w-full h-full justify-center">
@@ -165,7 +207,7 @@ const Milestones = () => {
       <p className='text-white py-4 mb-12 w-full max-w-[750px] text-center'>
         <button
           onClick={() => setShowForm((prev) => !prev)}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:scale-95 hover:bg-green-700"
+          className="px-4 py-2 bg-black text-white rounded-lg hover:scale-95 hover:bg-cyan-700"
         >
           {showForm ? 'Cancel' : 'Add New Project'}
         </button>
@@ -217,7 +259,7 @@ const Milestones = () => {
         )}
       </p>
 
-      <div className='w-full bg-gradient-to-tr from-black to-slate-800 rounded-xl mb-8 border border-white max-w-[750px]'>
+      <div className='w-full bg-gradient-to-tr from-black to-slate-800 rounded-xl mb-8 borader border-white max-w-[750px]'>
         <div className='w-full'>
           <MilestoneTrendComponent/>
         </div>
@@ -232,176 +274,60 @@ const Milestones = () => {
       <div className="flex flex-col w-full h-full mb-10">
         <button
           onClick={() => setShowCompletedMilestones((prev) => !prev)}
-          className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:scale-95 hover:bg-purple-700 max-w-[750px] mx-auto"
+          className="px-4 py-2 bg-black text-white rounded-lg hover:scale-95 hover:bg-cyan-700 max-w-[750px] mx-auto"
         >
           {showCompletedMilestones ? 'Hide Completed Milestones' : 'Show Completed Milestones'}
         </button>
         {showCompletedMilestones && (
-          <div className="mt-4 max-w-[750px] w-full mx-auto">
-            {filteredMilestones.length > 0 ? (
-              <ul>
-                {filteredMilestones.map((milestone, index) => (
-                  <li key={index} className="p-2 mt-10 border border-gray-300 rounded-lg mb-2 bg-gradient-to-tr from-cyan-900 to-fuchsia-900">
-                    <div className="bg-gray-800 text-white p-4 rounded-lg shadow-md mb-4">
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Milestone Name:</span>
-                        <span className="ml-2">{milestone.milestoneName}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Milestone Priority:</span>
-                        <span className="ml-2">{milestone["Milestone Priority"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Start Date:</span>
-                        <span className="ml-2">{milestone["Start Date"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Complete Date:</span>
-                        <span className="ml-2">{milestone["Complete Date"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Due Date:</span>
-                        <span className="ml-2">{milestone["Due Date"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Estimated Size:</span>
-                        <span className="ml-2">{milestone["Estimated Size"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Actual Hours:</span>
-                        <span className="ml-2">{milestone["Actual Hours"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Notes:</span>
-                        <span className="ml-2">{milestone["Notes"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Target:</span>
-                        <span className="ml-2">{milestone["Target"]}</span>
-                      </div>
-                      <div className="flex items-center mb-2">
-                        <span className="font-bold">Actual:</span>
-                        <span className="ml-2">{milestone["Actual"]}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-2">
+          <div className="w-full max-w-[750px] mt-12 mx-auto">
+            {sortedProjects.map((project, index) => (
+              <div key={index} className="mb-4 border border-gray-300 rounded-lg p-4 bg-gray-50">
+                <div className='flex flex-row justify-between mb-1'>
+                  <h2 className="text-xl font-semibold">{project.projectName}</h2>
+                  <h2 className={`text-sm font-semibold ${project.completeDate ? 'text-green-700' : 'text-yellow-500'}`}>
+                    {project.completeDate ? 'Complete' : 'Open'}
+                  </h2>
+                </div>
+                <ul className="list-disc pl-5">
+                  {project.milestones.map((milestone, index) => (
+                    <li key={index} className="text-sm text-gray-700">
+                      <strong>{milestone.milestoneName}</strong> - Completed on: {milestone["Complete Date"]}
                       <button
                         onClick={() => {
                           setEditingMilestone({
-                            projectId: milestone.projectId,
+                            projectId: project._id,
                             milestoneName: milestone.milestoneName,
                           });
-                          setEditMilestoneDetails(milestone);
+                          setEditMilestoneDetails({
+                            MilestonePriority: milestone["Milestone Priority"],
+                            StartDate: milestone["Start Date"],
+                            DueDate: milestone["Due Date"],
+                            CompleteDate: milestone["Complete Date"],
+                            EstimatedSize: milestone["Estimated Size"],
+                            ActualHours: milestone["Actual Hours"],
+                            Notes: milestone["Notes"],
+                            Target: milestone["Target"],
+                            Actual: milestone["Actual"],
+                          });
                         }}
-                        className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:scale-95"
+                        className="ml-2 text-blue-700 hover:text-blue-500"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(milestone.projectId, milestone.milestoneName)}
-                        className="px-4 py-2 bg-red-500 text-white rounded-lg hover:scale-95 ml-2"
+                        onClick={() => handleDelete(project._id, milestone.milestoneName)}
+                        className="ml-2 text-red-700 hover:text-red-500"
                       >
                         Delete
                       </button>
-                    </div>
-                    {editingMilestone && editingMilestone.milestoneName === milestone.milestoneName && (
-                      <form onSubmit={handleEditSubmit} className="mt-4">
-                        <input
-                          type="text"
-                          name="MilestonePriority"
-                          value={editMilestoneDetails.MilestonePriority}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Milestone Priority"
-                        />
-                        <input
-                          type="text"
-                          name="StartDate"
-                          value={editMilestoneDetails.StartDate}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Start Date"
-                        />
-                        <input
-                          type="text"
-                          name="DueDate"
-                          value={editMilestoneDetails.DueDate}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Due Date"
-                        />
-                        <input
-                          type="text"
-                          name="CompleteDate"
-                          value={editMilestoneDetails.CompleteDate}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Complete Date"
-                        />
-                        <input
-                          type="text"
-                          name="EstimatedSize"
-                          value={editMilestoneDetails.EstimatedSize}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Estimated Size"
-                        />
-                        <input
-                          type="text"
-                          name="ActualHours"
-                          value={editMilestoneDetails.ActualHours}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Actual Hours"
-                        />
-                        <input
-                          type="text"
-                          name="Notes"
-                          value={editMilestoneDetails.Notes}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Notes"
-                        />
-                        <input
-                          type="text"
-                          name="Target"
-                          value={editMilestoneDetails.Target}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Target"
-                        />
-                        <input
-                          type="text"
-                          name="Actual"
-                          value={editMilestoneDetails.Actual}
-                          onChange={handleEditChange}
-                          className="mb-2 px-4 py-2 border border-gray-300 rounded-lg text-cyan-700"
-                          placeholder="Actual"
-                        />
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:scale-95"
-                        >
-                          Save Changes
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setEditingMilestone(null)}
-                          className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:scale-95 ml-2"
-                        >
-                          Cancel
-                        </button>
-                      </form>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No completed milestones found.</p>
-            )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         )}
+
       </div>
     </main>
   );
