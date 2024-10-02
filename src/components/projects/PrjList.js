@@ -278,7 +278,7 @@ const PrjList = () => {
             <div className="bg-gradient-to-r from-purple-900 to-purple-300 h-[2px]"></div>
 
             <div className="flex justify-between items-center flex-col md:flex-row mb-3 md:mb-0 cursor-pointer" onClick={() => toggleOpen(project._id)}>
-              <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">
+              <h1 className="text-xl md:text-2xl font-semibold mb-2 pt-2 text-cyan-900">
                 {project.projectName}
               </h1>
               <div className="flex space-x-2">

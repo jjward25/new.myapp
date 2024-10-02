@@ -128,11 +128,13 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               checked={editableTask["Complete Date"] === today}
               onChange={setCompleteDateToToday}
               className="bg-cyan-700 text-white rounded-lg hover:bg-cyan-800 w-auto mr-2 text-sm transform scale-150 cursor-grab mt-3 mb-auto"
+              title="Mark Completed Today"
             />
 
             <button
               onClick={setDueDateToTomorrow}
               className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
+              title="Move to Tomorrow"
             >
               +1
             </button>
@@ -140,6 +142,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             <button
               onClick={duplicateTask}
               className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
+              title="Duplicate Task Tomorrow"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" />
@@ -150,6 +153,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
               className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-cyan-200 border border-cyan-200 text-white rounded-lg cursor-pointer"
+              title="Delete Task"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
