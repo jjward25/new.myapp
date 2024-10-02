@@ -49,7 +49,7 @@ export default async function Home() {
         <div className='w-full md:grid md:grid-cols-2'>
           
           {/** Column 1 */}
-          <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
+          <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4 md:pl-0'>
 
           <div className='mb-2 md:mb-4 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
             <TaskListWrapToday
@@ -74,7 +74,7 @@ export default async function Home() {
           </div>
 
           {/** Column 2 */}
-          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+          <div className='px-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
             <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
               <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
                 <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
