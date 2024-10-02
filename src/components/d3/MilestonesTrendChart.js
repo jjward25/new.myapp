@@ -26,7 +26,7 @@ const MilestoneTrendChart = ({ data }) => {
     svg.selectAll('*').remove(); // Clear the SVG before redrawing
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 20, right: 20, bottom: 25, left: 40 }; // Adjusted margins
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 }; // Adjusted margins
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom; // Adjusted height for better view
 
@@ -40,19 +40,25 @@ const MilestoneTrendChart = ({ data }) => {
 
     const xAxis = g => g
       .attr('transform', `translate(${margin.left},${height + margin.top})`)
-      .call(d3.axisBottom(x).ticks(width / 80).tickFormat(d3.timeFormat('%m-%d-%y')).tickSizeOuter(0))
-      .call(g => g.selectAll('.tick line').attr('stroke', 'fuchsia'))
-      .call(g => g.selectAll('.tick text').attr('fill', 'cyan'))
-      .call(g => g.select('.domain').attr('stroke', 'fuchsia'));
+      .call(d3.axisBottom(x).ticks(width / 80)
+        .tickFormat(d => d.getDate() === 1 ? d3.timeFormat('%b')(d) : d3.timeFormat('%d')(d)) // Show month name for 1st, otherwise day
+        .tickSizeOuter(0))
+      .call(g => g.selectAll('.tick line').attr('stroke', '#0097A7'))
+      .call(g => g.selectAll('.tick text')
+        .attr('fill', 'cyan')
+        .attr('transform', 'rotate(-45)') // Rotate labels by 45 degrees
+        .style('text-anchor', 'end') // Align text to the end for better visibility
+      )
+      .call(g => g.select('.domain').attr('stroke', '#0097A7'));
 
     const yAxis = g => g
       .attr('transform', `translate(${margin.left},${margin.top})`)
       .call(d3.axisLeft(y).ticks(d3.max(filteredData, d => d.completed)).tickFormat(d3.format('d')))
       .call(g => g.select('.domain').remove())
-      .call(g => g.selectAll('.tick line').attr('stroke', 'fuchsia').clone()
+      .call(g => g.selectAll('.tick line').attr('stroke', '#0097A7').clone()
         .attr('x2', width)
         .attr('stroke-opacity', 0.1))
-      .call(g => g.selectAll('.tick text').attr('fill', 'fuchsia'));
+      .call(g => g.selectAll('.tick text').attr('fill', '#0097A7'));
 
     svg.append('g')
       .attr('fill', 'cyan')

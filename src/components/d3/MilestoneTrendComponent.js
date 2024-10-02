@@ -45,7 +45,7 @@ const MilestoneTrendComponent = () => {
 
   return (
     <div className="p-4 mx-auto">
-      <h1 className="text-xl font-semibold text-fuchsia-600">Milestones Completed by Day</h1>
+      <h1 className="text-xl font-semibold text-cyan-400">Milestones Completed by Day</h1>
       <MilestoneTrendChart data={data} />
     </div>
   );

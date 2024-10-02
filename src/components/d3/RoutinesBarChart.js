@@ -130,11 +130,6 @@ const TrueValuesBarChart = () => {
       .domain(fields)
       .range(["#c7522a", "#e5c185", "#fbf2c4", "#74a892", "#008585"]); // Cyan, Fuchsia/purple, amber, teal, 
 
-      //.range(["#121b3b", "#c05bb6", "#1a65bc", "#0fb2eb", "#f0d6ec"]); // Cyan, Fuchsia/purple, amber, teal, 
-
-      //.range(["#00ACC1", "#9370Db", "#ffb300", "#008080", "white"]); // Cyan, Fuchsia/purple, amber, teal, 
-
-
     svg
       .selectAll(".layer")
       .data(stackedData)
@@ -155,29 +150,41 @@ const TrueValuesBarChart = () => {
       .on("mouseover", function (event, d) {
         const field = d3.select(this.parentNode).datum().key; // Get the current field name (e.g., Creative)
         const fieldData = d.data[field]; // Access the value and description for the field
-
+        const fullDate = d3.timeFormat('%b %d, %Y')(d.data.Date); // Format the date as YY-MM-DD
         tooltip
           .style("opacity", 1)
-          .html(fieldData.description) // Show the description
+          .html(`${fullDate}: ${fieldData.description}`) // Show formatted date and description
           .style("left", event.pageX + 5 + "px")
-          .style("top", event.pageY - 28 + "px");
+          .style("top", event.pageY - 28 + "px")
+          .style("font-size", "10px");
       })
+      
       .on("mouseout", function () {
         tooltip.style("opacity", 0);
       });
 
-    svg
+      svg
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0,${height})`)
       .call(
         d3
           .axisBottom(x)
-          .tickFormat((d) => d3.timeFormat("%b %d")(new Date(d)))
+          .tickFormat((d) => {
+            const date = new Date(d);
+            // Display the month name on the first of each month
+            return date.getDate() === 1 ? d3.timeFormat("%b")(date) : d3.timeFormat("%d")(date);
+          })
       )
       .call((g) => g.selectAll(".tick line").attr("stroke", "#ddd"))
-      .call((g) => g.selectAll(".tick text").attr("fill", "white"))
+      .call((g) => g.selectAll(".tick text")
+        .attr("fill", "white")
+        .style("text-anchor", "end")   // Tilt text at an angle
+        .attr("transform", "rotate(-45)")  // Apply a 45-degree tilt
+        .attr("dx", "-0.8em")
+        .attr("dy", "0.15em"))
       .call((g) => g.select(".domain").attr("stroke", "#ddd"));
+    
 
     const yAxis = d3
       .axisLeft(y)

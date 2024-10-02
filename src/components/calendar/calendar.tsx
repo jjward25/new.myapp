@@ -103,7 +103,7 @@ export default function Calendar() {
 
   return (
     <div className="max-w-4xl mx-auto mt-6 md:mt-4">
-      <div className="bg-white shadow overflow-hidden">
+      <div className="bg-transparent shadow overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 bg-cyan-950 border-2 border-cyan-950 rounded-tr-lg rounded-tl-lg">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
           <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
@@ -143,7 +143,7 @@ export default function Calendar() {
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.description} onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} placeholder="Description" />
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.location} onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })} placeholder="Location" />
-          <button type="submit" className='mt-2 w-full bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white'>Add Event</button>
+          <button type="submit" className='mt-2 w-full bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white dark:bg-cyan-950 dark:text-white dark:hover:text-cyan-200'>Add Event</button>
         </form>
       </div>
       {selectedEvent && (

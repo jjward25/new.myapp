@@ -66,8 +66,8 @@ const ListWrap: React.FC<ListWrapProps> = ({
     <div className='flex flex-col w-full justify-start mb-2 rounded-md'>
 
       <div className="cursor-pointer relative rounded-lg w-full overflow-hidden  h-full" onClick={toggleOpen}>
-        <div className="absolute -inset-3  bg-cyan-700 blur opacity-20"></div>
-        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 hover:text-cyan-600">
+        <div className="absolute -inset-3 bg-cyan-700 blur opacity-20"></div>
+        <div className="relative rounded-lg flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600">
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
             {title}
@@ -102,7 +102,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
             </div>
 
 
-            <p className='text-lg font-semibold my-4 text-slate-800'>Next Up</p>
+            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Next Up</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
@@ -117,7 +117,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
             />
             
             
-            <p className='text-lg font-semibold my-4 text-slate-800'>Big Rocks</p>
+            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Big Rocks</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
@@ -131,7 +131,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               sessionFilter={["Big"]}
             />
 
-            <p className='text-lg font-semibold my-4 text-slate-800'>Small Rocks</p>
+            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Small Rocks</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}

@@ -17,7 +17,7 @@ const Routines = () => {
 
       <div className={`${isOpen ? '':''} cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 h-full`} onClick={toggleOpen}>
         <div className="absolute -inset-3  bg-purple-800 blur opacity-20"></div>
-        <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-fuchsia-800 hover:text-fuchsia-600 text-fuchsia-950`}>
+        <div className={`${isOpen ? '':''} relative rounded-lg flex justify-between px-1 py-1 border-2 border-fuchsia-800 dark:text-fuchsia-500 hover:text-fuchsia-600 text-fuchsia-950`}>
           
           <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
             Daily Check-In

@@ -50,24 +50,6 @@ export default async function Home() {
           
           {/** Column 1 */}
           <div className='flex flex-col items-center mx-auto col-span-1 w-full px-4'>
-          <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
-              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
-                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
-                <a href="/workouts" title="Workout">
-                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
-                      Workout
-                  </div>
-                </a>
-              </div>
-              <Routines/>
-            </div>
-            <Calendar/>
-
-            
-          </div>
-
-          {/** Column 2 */}
-          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
           <div className='mb-2 w-full'><AddNewTaskForm onTaskAdded={''}/></div>            
             <TaskListWrapToday
                 completeDateFilter={false}
@@ -88,8 +70,22 @@ export default async function Home() {
               typeFilter={['List']}
               title="List Notes"
             />
-            
+          </div>
 
+          {/** Column 2 */}
+          <div className='px-4 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+            <div className='w-full overflow-hidden pb-2 border-b-2 border-cyan-600'>
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
+                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
+                      Workout
+                  </div>
+                </a>
+              </div>
+              <Routines/>
+            </div>
+            <Calendar/>
           </div>
 
         </div>

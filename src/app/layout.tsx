@@ -19,16 +19,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
 
-      <div className="cursor-pointer relative rounded-bl-md rounded-br-md md:rounded-lg w-full overflow-hidden md:my-1 h-full">
-        <div className="absolute -inset-3  bg-gradient-conic from-cyan-100 via-neutral-200 to-cyan-100 dark:bg-black blur opacity-90"></div>
-        <div className="relative rounded-bl-lg rounded-br-lg md:rounded-lg flex justify-around">
+     
+        <div className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-100 to-cyan-950">
 
-          <div className="w-full mx-auto justify-evenly min-h-screen bg-neutral-100 dark:bg-black100 max-w-[1400px] drop-shadow-md">
+          <div className="w-full mx-auto justify-evenly min-h-screen bg-neutral-100 dark:bg-black max-w-[1400px] shadow-2xl shadow-cyan-950 border-l-2 border-r-2 border-cyan-950">
             <Navbar/>
             {children}
           </div>
 
-        </div>
         </div>
 
       </body>

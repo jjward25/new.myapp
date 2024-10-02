@@ -38,7 +38,7 @@ const CompletedMissedTasksChart = () => {
     svg.selectAll('*').remove();
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 100, left: 30 };
+    const margin = { top: 10, right: 15, bottom: 80, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 
@@ -66,7 +66,10 @@ const CompletedMissedTasksChart = () => {
       .attr('transform', `translate(${margin.left},${height + margin.top})`)
       .call(d3.axisBottom(x)
         .ticks(d3.timeDay.every(1))
-        .tickFormat(d3.timeFormat('%b %d')))
+        .tickFormat(d => {
+          const date = new Date(d);
+          return date.getDate() === 1 ? d3.timeFormat('%b')(date) : d3.timeFormat('%d')(date);
+        }))
       .selectAll('text')
       .style('fill', 'white')
       .style('font-size', '9px')
@@ -145,9 +148,10 @@ const CompletedMissedTasksChart = () => {
         tooltip.transition()
           .duration(200)
           .style('opacity', 1);
-        tooltip.html(`Date: ${d3.timeFormat('%b %d, %Y')(d.date)}<br>Missed: ${d.missed}`)
+        tooltip.html(`${d3.timeFormat('%b %d, %Y')(d.date)}:<br>Missed ${d.missed}`)
           .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px');
+          .style('top', (event.pageY - 40) + 'px')
+          .style("font-size", "10px");
       })
       .on('mousemove', (event) => {
         tooltip.style('left', (event.pageX + 10) + 'px')
@@ -172,9 +176,10 @@ const CompletedMissedTasksChart = () => {
         tooltip.transition()
           .duration(200)
           .style('opacity', 1);
-        tooltip.html(`Date: ${d3.timeFormat('%b %d, %Y')(d.date)}<br>Completed: ${d.completed}`)
+        tooltip.html(`${d3.timeFormat('%b %d, %Y')(d.date)}:<br>Completed ${d.completed}`)
           .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px');
+          .style('top', (event.pageY - 40) + 'px')
+          .style("font-size", "10px");
       })
       .on('mousemove', (event) => {
         tooltip.style('left', (event.pageX + 10) + 'px')
