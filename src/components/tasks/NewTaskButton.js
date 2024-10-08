@@ -1,5 +1,5 @@
+// src/components/tasks/NewTaskButton.js
 "use client";
-
 import React, { useState } from 'react';
 
 const formatDate = (dateString) => {
@@ -7,7 +7,16 @@ const formatDate = (dateString) => {
   return isNaN(date.getTime()) ? null : date.toISOString().split('T')[0];
 };
 
-const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+// Function to get today's date in EST
+const getTodayInEST = () => {
+  const today = new Date();
+  // Convert to EST and format to YYYY-MM-DD
+  const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+  const estDate = today.toLocaleString('en-CA', options); // 'en-CA' gives the YYYY-MM-DD format directly
+  return estDate; // Returns the date in YYYY-MM-DD format
+};
+
+const today = getTodayInEST();
 
 const AddNewTaskForm = ({ onTaskAdded }) => {
   const [formData, setFormData] = useState({

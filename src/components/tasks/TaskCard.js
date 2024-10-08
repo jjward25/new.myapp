@@ -1,3 +1,4 @@
+// src/components/tasks/TaskCard.js
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -8,8 +9,24 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const cardRef = useRef(null);
-  const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
-  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0];
+
+  // Function to get today's date in EST formatted as YYYY-MM-DD
+  const getTodayInEST = () => {
+    const today = new Date();
+    const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+    return today.toLocaleDateString('en-CA', options); // 'en-CA' returns YYYY-MM-DD format
+  };
+  const today = getTodayInEST();
+
+  // Function to get tomorrow's date in EST formatted as YYYY-MM-DD
+  const getTomorrowInEST = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
+    const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+    return tomorrow.toLocaleDateString('en-CA', options); // 'en-CA' returns YYYY-MM-DD format
+  };
+  const tomorrow = getTomorrowInEST();
+  
 
   const adjustHeight = () => {
     if (cardRef.current) {
@@ -78,10 +95,25 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     }
   };
 
-  const setDueDateToTomorrow = async (e) => {
+  const DueDatePlusOne = async (e) => {
     e.stopPropagation();
-    const updatedTask = { ...editableTask, "Due Date": tomorrow };
+    
+    // Extract existing Due Date and parse it
+    const existingDueDateStr = editableTask["Due Date"];
+    const existingDueDate = new Date(existingDueDateStr);
+    
+    // Add one day to the existing Due Date
+    existingDueDate.setDate(existingDueDate.getDate() + 1);
+    
+    // Format the new date as YYYY-MM-DD
+    const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+    const newDueDate = existingDueDate.toLocaleDateString('en-CA', options); // Use 'en-CA' for YYYY-MM-DD
+
+    
+    // Update the editableTask with the new Due Date
+    const updatedTask = { ...editableTask, "Due Date": newDueDate };
     setEditableTask(updatedTask);
+    
     try {
       await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
       onEdit(updatedTask);
@@ -89,8 +121,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
       console.error('Error setting due date to tomorrow:', err);
     }
   };
+  
 
-  const duplicateTask = async (e) => {
+  const repeatTask = async (e) => {
     e.stopPropagation();
     const newTask = { ...editableTask, "Due Date": tomorrow, _id: undefined }; // Set Due Date to tomorrow and remove the ID
     try {
@@ -132,7 +165,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             />
 
             <button
-              onClick={setDueDateToTomorrow}
+              onClick={DueDatePlusOne}
               className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
               title="Move to Tomorrow"
             >
@@ -140,7 +173,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             </button>
 
             <button
-              onClick={duplicateTask}
+              onClick={repeatTask}
               className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
               title="Duplicate Task Tomorrow"
             >

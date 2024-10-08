@@ -129,6 +129,7 @@ export default function NewWorkoutBtn() {
             console.log('New workout created:', result);
             setLastWorkout(null);
             setWorkoutType(newWorkoutType);
+            window.location.reload()
             await fetchLastWorkout(); // Re-fetch the last workout
         } else {
             console.error('Error creating workout:', createResponse.statusText);

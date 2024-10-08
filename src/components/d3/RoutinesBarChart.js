@@ -21,7 +21,7 @@ const TrueValuesBarChart = () => {
   }, []);
 
   const processAndSetData = (data) => {
-    const fields = ["Workout", "Creative", "Skill Dev", "Job Search", "Social Activities"];
+    const fields = ["Job Search","Learning","Prof Dev","Workout","Creative","Language","Call","Events","PersonalPrj"];
 
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
@@ -44,22 +44,46 @@ const TrueValuesBarChart = () => {
               description: d["Creative Desc"] || "No description", // Corresponding description
             };
             break;
-          case "Skill Dev":
+          case "Language":
             entry[field] = {
               value: d[field], // true/false value
-              description: d["Skill Desc"] || "No description", // Corresponding description
+              description: "No description", // Corresponding description
+            };
+            break;
+          case "Learning":
+              entry[field] = {
+                value: d[field], // true/false value
+                description: d["LearningAndDev Desc"] || "No description", // Corresponding description
+              };
+              break;
+          case "Prof Dev":
+            entry[field] = {
+              value: d[field], // true/false value
+              description: d["LearningAndDev Desc"] || "No description", // Corresponding description
             };
             break;
           case "Job Search":
             entry[field] = {
               value: d[field], // true/false value
-              description: d["Job Search Desc"] || "No description", // Corresponding description
+              description: "No description", // Corresponding description
             };
             break;
-          case "Social Activities":
+          case "Event":
             entry[field] = {
               value: d[field], // true/false value
-              description: d["Social Desc"] || "No description", // Corresponding description
+              description: d["Events Desc"] || "No description", // Corresponding description
+            };
+            break;
+          case "Call":
+            entry[field] = {
+              value: d[field], // true/false value
+              description: d["Call Name"] || "No description", // Corresponding description
+            };
+            break;
+          case "PersonalPrj":
+            entry[field] = {
+              value: d[field], // true/false value
+              description: "No description", // Corresponding description
             };
             break;
           default:
@@ -81,9 +105,9 @@ const TrueValuesBarChart = () => {
   useEffect(() => {
     if (data.length === 0) return;
 
-    const fields = ["Workout", "Creative", "Skill Dev", "Job Search", "Social Activities"];
+    const fields = ["Job Search","Learning","Prof Dev","Workout","Creative","Language","Call","Events","PersonalPrj"];
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 50, left: 30 };
+    const margin = { top: 10, right: 15, bottom: 60, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 150 - margin.top - margin.bottom;
 
@@ -128,7 +152,29 @@ const TrueValuesBarChart = () => {
 
     const color = d3.scaleOrdinal()
       .domain(fields)
-      .range(["#c7522a", "#e5c185", "#fbf2c4", "#74a892", "#008585"]); // Cyan, Fuchsia/purple, amber, teal, 
+      .range([
+        // Job Search
+        "#74a892", // Soft green
+        // Learning
+        "#8e44ad", // Violet
+        // Prof Dev 
+        "#f8e1a6", // Light yellow
+        // Workout
+        "#f57f20", // Bright orange
+        //Creative
+        "#4c3b4d", // Dark purple
+        //Language
+        "#c7522a", // Deep orange
+        // Call
+        "#007b5f", // Rich teal
+        // Events
+        "#6a98c1",  // Muted blue
+        //Personal Prj
+        "#e5c185", // Beige
+        
+      ]);
+      
+      
 
     svg
       .selectAll(".layer")
@@ -199,10 +245,16 @@ const TrueValuesBarChart = () => {
       .call((g) => g.selectAll(".tick line").attr("stroke", "#ddd"))
       .call((g) => g.selectAll(".tick text").attr("fill", "white"));
 
-    const legend = d3
+      const legend = d3
       .select(svgRef.current)
       .append("g")
       .attr("transform", `translate(${margin.left}, ${150 - margin.bottom + 30})`);
+
+    const legendItemWidth = 80; // Approximate width of each legend item
+    const legendItemHeight = 15; // Height between each row of legend items
+
+    let legendX = 0;
+    let legendY = 0;
 
     legend
       .selectAll(".legend-item")
@@ -210,7 +262,16 @@ const TrueValuesBarChart = () => {
       .enter()
       .append("g")
       .attr("class", "legend-item")
-      .attr("transform", (d, i) => `translate(${i * 80}, 0)`)
+      .attr("transform", function (d, i) {
+        // Calculate x position (wrap around if exceeds width)
+        if (legendX + legendItemWidth > width) {
+          legendX = 0; // Reset x position
+          legendY += legendItemHeight; // Move to next row
+        }
+        const transform = `translate(${legendX}, ${legendY})`;
+        legendX += legendItemWidth; // Increment x for the next item
+        return transform;
+      })
       .each(function (d) {
         const item = d3.select(this);
 
@@ -231,6 +292,7 @@ const TrueValuesBarChart = () => {
           .style("fill", "white")
           .text(d);
       });
+
   }, [data]);
 
   return (

@@ -6,7 +6,7 @@ import AddRoutineButton from './NewButton';
 import RoutineCardList from './RoutineCardList';
 
 const Routines = () => {
-  const [isOpen, setIsOpen] = useState(false); // Default to open
+  const [isOpen, setIsOpen] = useState(false); // Default to open/closed
 
   const toggleOpen = () => {
     setIsOpen(prev => !prev);

@@ -102,7 +102,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
             </div>
 
 
-            <p className='text-lg font-semibold mb-4 dark:text-white text-slate-800'>Next Up</p>
+            <p className='text-lg font-semibold mb-4 dark:text-white text-slate-800'>Daily Tasks</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
@@ -113,37 +113,9 @@ const ListWrap: React.FC<ListWrapProps> = ({
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
               dueDateBeforeFilter={dueDateBeforeFilterDate}
-              sessionFilter={["Next"]}
+              sessionFilter={["Next","Big","Small"]}
             />
-            
-            
-            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Big Rocks</p>
-            <ListTemplate
-              sortOrder={internalSortOrder}
-              dateOrder={internalDateOrder}
-              priorityOrder={internalPriorityOrder}
-              dueDateFilter={dueDateFilterDate}
-              priorityFilter={priorityFilter}
-              typeFilter={typeFilter}
-              completeDateFilter={completeDateFilterDate}
-              dueDateFromFilter={dueDateFromFilterDate}
-              dueDateBeforeFilter={dueDateBeforeFilterDate}
-              sessionFilter={["Big"]}
-            />
-
-            <p className='text-lg font-semibold my-4 dark:text-white text-slate-800'>Small Rocks</p>
-            <ListTemplate
-              sortOrder={internalSortOrder}
-              dateOrder={internalDateOrder}
-              priorityOrder={internalPriorityOrder}
-              dueDateFilter={dueDateFilterDate}
-              priorityFilter={priorityFilter}
-              typeFilter={typeFilter}
-              completeDateFilter={completeDateFilterDate}
-              dueDateFromFilter={dueDateFromFilterDate}
-              dueDateBeforeFilter={dueDateBeforeFilterDate}
-              sessionFilter={["Small"]}
-            />
+        
           </div>
         )}
       </div>
