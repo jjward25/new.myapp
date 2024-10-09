@@ -26,7 +26,7 @@ const TrueValuesBarChart = () => {
   }, []);
 
   const processData = (data) => {
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "PersonalPrj"];
+    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
   
@@ -34,21 +34,59 @@ const TrueValuesBarChart = () => {
       .map((d) => {
         const parsedDate = d3.timeParse("%Y-%m-%d")(d.Date);
         const entry = { Date: parsedDate };
+  
         fields.forEach((field) => {
+          let description = d[field + " Desc"]; // Default to the description from the data if available
+  
+          // If the description is missing, provide a unique fallback for each field
+          switch (field) {
+            case "Job Search":
+              description =  "Job search activities.";
+              break;
+            case "Learning":
+              description =  "Learning activities.";
+              break;
+            case "Prof Dev":
+              description =  "Professional development activities.";
+              break;
+            case "Workout":
+              description =  "Workout";
+              break;
+            case "Creative":
+              description = d["Creative Desc"] || "Creative projects.";
+              break;
+            case "Language":
+              description =  "Language learning.";
+              break;
+            case "Call":
+              description =  d["Call Name"] || "Phone call.";
+              break;
+            case "Events":
+              description = d["Events Desc"] || "Events.";
+              break;
+            case "Passion":
+              description =  "Personal Projects";
+              break;
+            default:
+              description = "No description available."; // Fallback for any unexpected fields
+          }
+  
           entry[field] = {
             value: d[field],
-            description: d[field + " Desc"] || "No description",
+            description: description,
           };
         });
+  
         return entry;
       })
       .filter((d) => d.Date instanceof Date && !isNaN(d.Date) && d.Date >= cutoffDate)
       .sort((a, b) => a.Date - b.Date);
   };
+  
 
   const stackedData = useMemo(() => {
     if (data.length === 0) return [];
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "PersonalPrj"];
+    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
     const stack = d3.stack().keys(fields).value((d, key) => (d[key].value ? 1 : 0));
     return stack(data);
   }, [data]);
@@ -56,7 +94,7 @@ const TrueValuesBarChart = () => {
   useEffect(() => {
     if (stackedData.length === 0) return;
 
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "PersonalPrj"];
+    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
     const containerWidth = svgRef.current.clientWidth;
     const margin = { top: 10, right: 15, bottom: 60, left: 30 };
     const width = containerWidth - margin.left - margin.right;

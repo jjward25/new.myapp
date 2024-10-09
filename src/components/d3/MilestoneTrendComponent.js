@@ -13,11 +13,15 @@ const fetchData = async () => {
     projects.forEach(project => {
       Object.entries(project.Milestones).forEach(([milestoneName, milestoneDetails]) => {
         const completeDate = milestoneDetails['Complete Date'];
+        const milestoneName2 = milestoneName
         if (completeDate) {
           const parsedDate = new Date(completeDate);
+          const milestoneName = milestoneName2
           milestonesCompleted.push({
             date: parsedDate,
-            completed: 1 // Assuming each completed milestone is counted as 1
+            name: milestoneName,
+            completed: 1, // Assuming each completed milestone is counted as 1
+            projectName: project['Project Name'] // Include the project name
           });
         }
       });
@@ -29,9 +33,6 @@ const fetchData = async () => {
     return [];
   }
 };
-
-
-
 
 const MilestoneTrendComponent = () => {
   const [data, setData] = useState([]);
@@ -47,6 +48,15 @@ const MilestoneTrendComponent = () => {
     <div className="p-4 mx-auto">
       <h1 className="text-xl font-semibold text-cyan-400">Milestones Completed by Day</h1>
       <MilestoneTrendChart data={data} />
+      <div id="tooltip" style={{
+        position: 'absolute',
+        background: 'white',
+        border: '1px solid #ccc',
+        padding: '5px',
+        borderRadius: '3px',
+        pointerEvents: 'none',
+        display: 'none', // Start hidden
+      }} />
     </div>
   );
 };
