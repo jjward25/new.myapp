@@ -55,7 +55,7 @@ const getWeatherCondition = (code) => {
   }
 };
 
-const WeatherClient = () => {
+const WeatherClient = React.memo(() => {
   const [weatherData, setWeatherData] = useState({ temperature: null, weatherCondition: null });
 
   useEffect(() => {
@@ -115,6 +115,6 @@ const WeatherClient = () => {
       </div>
     </div>
   );
-};
+});
 
 export default WeatherClient;

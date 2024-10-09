@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { processTaskData } from './TaskTrendData';
+import { debounce } from 'lodash'; // You may need to install lodash
 
 const normalizeDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -15,20 +16,33 @@ const CompletedMissedTasksChart = () => {
   const tooltipRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = debounce(async () => {
+      const cacheKey = 'taskData';
+      const cachedData = localStorage.getItem(cacheKey);
+    
+      if (cachedData) {
+        setData(JSON.parse(cachedData));
+        return;
+      }
+    
       try {
         const response = await fetch('/api/backlog');
         const tasks = await response.json();
-
         const filteredTasks = tasks.filter(task => task['Due Date'] !== null && task['Due Date'] !== '');
         const processedData = processTaskData(filteredTasks);
         setData(processedData);
+        localStorage.setItem(cacheKey, JSON.stringify(processedData)); // Cache the data
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    };
-
+    },300); // Adjust the debounce delay as necessary
+  
     fetchData();
+  
+    // Cleanup function to cancel any pending debounced calls
+    return () => {
+      fetchData.cancel();
+    };
   }, []);
 
   useEffect(() => {
@@ -72,7 +86,7 @@ const CompletedMissedTasksChart = () => {
         }))
       .selectAll('text')
       .style('fill', 'white')
-      .style('font-size', '9px')
+      .style('font-size', '10px')
       .attr('transform', 'rotate(-45)')
       .attr('text-anchor', 'end');
 
@@ -82,7 +96,7 @@ const CompletedMissedTasksChart = () => {
 
     yAxisGroup.selectAll('text')
       .style('fill', 'white')
-      .style('font-size', '12px');
+      .style('font-size', '10px');
 
     yAxisGroup.select('path')
       .style('stroke', 'slategray');
