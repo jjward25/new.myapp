@@ -200,7 +200,7 @@ const TrueValuesBarChart = () => {
           .style("fill", "white")
           .text(d);
       });
-  }, [stackedData]);
+  }, [stackedData,data]);
 
   return (
     <div style={{ overflowX: "none", padding: "10px 10px", maxWidth: "100%" }}>

@@ -117,4 +117,6 @@ const WeatherClient = React.memo(() => {
   );
 });
 
+WeatherClient.displayName = 'WeatherClient'; // Add this line
+
 export default WeatherClient;
