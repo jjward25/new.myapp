@@ -10,6 +10,7 @@ import DateUpdater from '../components/dates/HomeDate'
 import {getToday,getTomorrow} from '../utils/Date'
 import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
+import MilestoneList from '@/components/projects/homeList/MilestoneList';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -63,6 +64,7 @@ export default async function Home() {
                 <div className='border-t-2 border-cyan-600 mt-4 pt-4'>
                   <Routines/> 
                 </div>
+                
               </div>
           
           </div>
@@ -72,6 +74,11 @@ export default async function Home() {
 
             <div className='mb-2 md:mb-4 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
             <div className='pb-2 border-b-2 border-cyan-600'>
+              
+              <MilestoneList/>
+              <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={true}/>
+              
+              {/**
               <TaskListWrapToday
                   completeDateFilter={false}
                   typeFilter={['Task']}
@@ -86,10 +93,12 @@ export default async function Home() {
                   isOpen={false}
                   title="Tomorrow's Tasks"
               />
+               */}
+              
               <TaskListWrapHome
                 completeDateFilter={null}
                 typeFilter={['List']}
-                title="List Notes"
+                title="Notes"
               />
             </div>
             <Calendar/>

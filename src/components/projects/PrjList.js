@@ -1,3 +1,4 @@
+// src/components/projects/PrjList.js
 'use client'; // Ensure this component runs in the client
 import React, { useState, useEffect } from 'react';
 import MilestoneCard from './MilestoneCard';
@@ -311,7 +312,7 @@ const PrjList = () => {
 
         return (
           <div key={project._id} className="flex flex-col mb-1 max-w-[750px] mx-auto w-full h-full">
-            <div className="bg-cyan-950 px-2 rounded-lg flex justify-between items-center flex-col md:flex-row mb-3 cursor-pointer" onClick={() => toggleOpen(project._id)}>
+            <div className="bg-cyan-950 px-2 pl-3 rounded-lg flex justify-between items-center flex-col md:flex-row mb-3 cursor-pointer" onClick={() => toggleOpen(project._id)}>
               <h1 className={`text-xl md:text-2xl ${projectNameClass} mb-2 pt-2 font-semibold`}>
                 {project.projectName}
               </h1>

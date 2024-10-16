@@ -1,3 +1,4 @@
+// src/app/projects/page/js
 "use client";
 import React, { useState, useEffect } from 'react';
 import PrjList from '../../components/projects/PrjList';
