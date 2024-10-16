@@ -19,7 +19,7 @@ const MilestoneList: React.FC = () => {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(true); // State for accordion toggle
+  const [isOpen, setIsOpen] = useState(false); // State for accordion toggle
 
   useEffect(() => {
     fetchMilestones();
@@ -69,7 +69,7 @@ const MilestoneList: React.FC = () => {
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
           <p className='text-lg font-semibold pl-1 my-0'>P0 Milestones</p>
           <svg
-            className={`w-6 h-6 mt-1 transition-transform duration-300 transform ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"

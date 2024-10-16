@@ -53,30 +53,37 @@ export default async function Home() {
           <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
             
             <div className='w-full overflow-hidden '>
-                <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
-                  <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
-                  <a href="/workouts" title="Workout">
-                    <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
-                        Workout
-                    </div>
-                  </a>
-                </div>
-                <div className='border-t-2 border-cyan-600 mt-4 pt-4'>
-                  <Routines/> 
-                </div>
-                
+
+              <div className=''>
+                <Calendar/>
               </div>
+
+              
+              <div className='border-t-2 border-cyan-600 mt-4 pt-4'>
+                <Routines/> 
+              </div>
+                
+            </div>
           
           </div>
 
           {/** Column 2 */}
           <div className='md:px-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
 
-            <div className='mb-2 md:mb-4 w-full'><AddNewTaskForm onTaskAdded={''}/></div>
+            <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
+                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
+                      Workout
+                  </div>
+                </a>
+              </div>
+
+            <div className='mb-2 md:mb-4 w-full border-t-2 border-cyan-600 mt-4 pt-4'><AddNewTaskForm onTaskAdded={''}/></div>
             <div className='pb-2 border-b-2 border-cyan-600'>
               
               <MilestoneList/>
-              <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={true}/>
+              <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={false}/>
               
               {/**
               <TaskListWrapToday
@@ -101,7 +108,7 @@ export default async function Home() {
                 title="Notes"
               />
             </div>
-            <Calendar/>
+            
           </div>
 
         </div>

@@ -102,7 +102,7 @@ export default function Calendar() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-6 md:mt-4">
+    <div className="max-w-4xl mx-auto">
       <div className="bg-transparent shadow overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 bg-cyan-950 border-2 border-cyan-950 rounded-tr-lg rounded-tl-lg">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
