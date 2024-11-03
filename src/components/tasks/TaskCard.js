@@ -98,9 +98,9 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   const DueDatePlusOne = async (e) => {
     e.stopPropagation();
     
-    // Extract existing Due Date and parse it
+    // Extract existing Due Date and create a local date
     const existingDueDateStr = editableTask["Due Date"];
-    const existingDueDate = new Date(existingDueDateStr);
+    const existingDueDate = new Date(existingDueDateStr + 'T00:00:00'); // Local time, assuming input is in EST
     
     // Add one day to the existing Due Date
     existingDueDate.setDate(existingDueDate.getDate() + 1);
@@ -109,18 +109,18 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
     const newDueDate = existingDueDate.toLocaleDateString('en-CA', options); // Use 'en-CA' for YYYY-MM-DD
 
-    
     // Update the editableTask with the new Due Date
     const updatedTask = { ...editableTask, "Due Date": newDueDate };
-    setEditableTask(updatedTask);
     
     try {
-      await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
-      onEdit(updatedTask);
+        const response = await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
+        onEdit(updatedTask);
     } catch (err) {
-      console.error('Error setting due date to tomorrow:', err);
+        console.error('Error setting due date to tomorrow:', err);
     }
-  };
+};
+
+
   
 
   const repeatTask = async (e) => {
