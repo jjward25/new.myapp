@@ -1,14 +1,10 @@
+// src/component/d3/TaskTrendChart.js
+
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { processTaskData } from './TaskTrendData';
+import { processTaskData, normalizeDate } from './TaskTrendData';
 import { debounce } from 'lodash'; // You may need to install lodash
-
-const normalizeDate = (dateStr) => {
-  const date = new Date(dateStr);
-  const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  return estDate.toISOString().split('T')[0];
-};
 
 const CompletedMissedTasksChart = () => {
   const [data, setData] = useState({ completed: {}, missed: {} });
@@ -35,7 +31,7 @@ const CompletedMissedTasksChart = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    },300); // Adjust the debounce delay as necessary
+    }, 300); // Adjust the debounce delay as necessary
   
     fetchData();
   
