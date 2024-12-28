@@ -64,7 +64,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
               {/* 550 Wakeup */}
               <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">550 Wakeup:</label>
+                  <label className="block text-sm text-black font-semibold">6AM Wakeup:</label>
                 </div>
                 <div className="w-auto">
                   {isEditing ? (
@@ -75,7 +75,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                         onChange={(e) => onInputChange(e, '550 Wakeup')}
                         className="checkbox checkbox-primary"
                       />
-                      <span>550 Wakeup</span>
+                      <span>6AM Wakeup</span>
                     </label>
                   ) : (
                     <p className={`px-3 inline-block ${routine['550 Wakeup'] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
