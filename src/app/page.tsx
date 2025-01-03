@@ -81,7 +81,7 @@ export default async function Home() {
             <div className='pb-2 border-b-2 border-cyan-600'>
               
               <MilestoneList/>
-              <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={false}/>
+              <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={true}/>
               
               {/**
               <TaskListWrapToday
