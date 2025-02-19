@@ -12,6 +12,11 @@ const CompletedMissedTasksChart = () => {
   const tooltipRef = useRef(null);
 
   useEffect(() => {
+    console.log('Processed Data:', data);
+  }, [data]);
+  
+
+  useEffect(() => {
     const fetchData = debounce(async () => {
       const cacheKey = 'taskData';
       const cachedData = localStorage.getItem(cacheKey);
@@ -43,30 +48,35 @@ const CompletedMissedTasksChart = () => {
 
   useEffect(() => {
     if (Object.keys(data.completed).length === 0) return;
-
+  
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
-
+  
     const containerWidth = svgRef.current.clientWidth;
     const margin = { top: 10, right: 15, bottom: 80, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
-
+  
     const now = new Date();
     const last30Days = d3.timeDay.offset(now, -30);
-    const xDomainDates = d3.timeDays(last30Days, now);
-
+    const xDomainDates = d3.timeDays(last30Days, now).map(d => normalizeDate(d));
+    
     const combinedData = xDomainDates.map(date => ({
-      date,
-      completed: data.completed[normalizeDate(date)] || 0,
-      missed: data.missed[normalizeDate(date)] || 0,
+      date: new Date(date),
+      completed: data.completed[date] || 0,
+      missed: data.missed[date] || 0,
     }));
-
+  
+    console.log("Combined Data for Chart:", combinedData);
+  
     const x = d3.scaleTime()
       .domain(d3.extent(combinedData, d => d.date))
       .range([0, width]);
-
-    const yMax = Math.max(d3.max(combinedData, d => d.completed), d3.max(combinedData, d => d.missed)) + 1;
+  
+    const yMax = Math.max(
+      d3.max(combinedData, d => d.completed),
+      d3.max(combinedData, d => d.missed)
+    ) + 1;
     const y = d3.scaleLinear()
       .domain([0, yMax])
       .nice()

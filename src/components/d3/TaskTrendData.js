@@ -1,19 +1,23 @@
-// src/component/d3/TaskTrendData.js
-
 export const normalizeDate = (dateStr) => {
+  if (!dateStr) return null;
   const date = new Date(dateStr);
-  const estDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  return `${estDate.getFullYear()}-${String(estDate.getMonth() + 1).padStart(2, '0')}-${String(estDate.getDate()).padStart(2, '0')}`;
+  if (isNaN(date.getTime())) {
+    console.error("Invalid date:", dateStr);
+    return null;
+  }
+  return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
 };
 
 export const processTaskData = (tasks) => {
+  console.log('Input Tasks:', tasks);
+
   const completedTasks = {};
   const missedTasks = {};
 
   tasks.forEach(task => {
     const dueDate = normalizeDate(task['Due Date']);
-    
-    if (task['Status'] === 'Completed') {
+
+    if (task['Complete Date']) {
       completedTasks[dueDate] = (completedTasks[dueDate] || 0) + 1;
     } else {
       missedTasks[dueDate] = (missedTasks[dueDate] || 0) + 1;
@@ -25,3 +29,5 @@ export const processTaskData = (tasks) => {
     missed: missedTasks,
   };
 };
+
+
