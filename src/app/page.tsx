@@ -36,12 +36,12 @@ export default async function Home() {
       <div className="flex flex-col w-full h-full mb-10 justify-center">
 
         {/** Calendar */}
-        <div className='flex flex-col md:flex-row rounded-md w-full mb-6'>
+        <div className='flex flex-col md:flex-row rounded-md w-full'>
           <Calendar/>
         </div>          
         
         {/** Lists */}
-        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-md mb-4'>
+        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-md rounded-tl-none mb-4'>
 
           <div className='mb-2 md:mb-4 pt-2 w-full'>
             <div className='h-12 pt-2 bg-transparent text-cyan-300 italic opacity-70 text-xl font-semibold text-center'>Tasks & Lists</div>

@@ -1,6 +1,5 @@
-//src/app/chat/page.tsx
 'use client'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -8,7 +7,7 @@ interface Model {
   id: string;
 }
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const [apiKey, setApiKey] = useState('');
   const [message, setMessage] = useState(''); 
@@ -137,5 +136,13 @@ export default function Home() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

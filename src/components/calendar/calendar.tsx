@@ -102,16 +102,16 @@ export default function Calendar() {
   };
 
   return (
-    <div className="w-full mx-auto flex flex-col md:flex-row">
-      <div className="bg-black shadow overflow-hidden rounded-md">
-        <div className="flex items-center justify-between px-6 py-4 bg-cyan-950 border-b-2 border-cyan-500 rounded-tr-lg rounded-tl-lg">
+    <div className="w-full mx-auto flex flex-col md:flex-row ">
+      <div className="bg-transparent shadow overflow-hidden  rounded-bl-none rounded-br-none">
+        <div className="flex items-center justify-between px-6 py-4 bg-cyan-950  rounded-tr-lg rounded-tl-lg">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
           <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
           <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
         </div>
-        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 rounded-br-lg rounded-bl-lg text-cyan-100 opacity-80">
+        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black opacity-80">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="text-center text-sm font-medium text-cyan-500">{day}</div>
+            <div key={day} className="text-center text-sm font-semibold text-cyan-950 bg-neutral-300 rounded-md">{day}</div>
           ))}
           {[...Array(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay())].map((_, i) => (
             <div key={`prev-${i}`} className="text-center py-2 text-gray-400"></div>
