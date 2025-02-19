@@ -41,7 +41,7 @@ const LowerTrend = () => {
 
     // Ensure svgRef.current is available and get its width
     const containerWidth = svgRef.current ? svgRef.current.clientWidth : 800; // Fallback width if ref is null
-    const margin = { top: 20, right: 30, bottom: 20, left: 40 };
+    const margin = { top: 20, right: 30, bottom: 35, left: 40 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 
