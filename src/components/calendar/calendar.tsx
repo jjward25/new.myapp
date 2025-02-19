@@ -137,8 +137,8 @@ export default function Calendar() {
           })}
         </div>
       </div>
-      <div className="my-6">
-        <form className='mx-auto' onSubmit={handleAddEvent}>
+      <div className="mt-2 mb-6">
+        <form className='w-full mx-auto flex flex-wrap justify-center items-center' onSubmit={handleAddEvent}>
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Title" required />
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
           <input className='w-5/12 border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.description} onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} placeholder="Description" />
