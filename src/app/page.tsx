@@ -83,7 +83,7 @@ export default async function Home() {
             <ChatComponent/>
         </div>
 
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px]"></div> 
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mt-4"></div> 
 
         {/** Charts: Routines and Tasks */}
         <div className='flex flex-col md:flex-row pt-3'>

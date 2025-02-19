@@ -109,7 +109,7 @@ export default function Calendar() {
           <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
           <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
         </div>
-        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black opacity-80">
+        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black border-b-0">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div key={day} className="text-center text-sm font-semibold text-cyan-950 bg-neutral-300 rounded-md">{day}</div>
           ))}
@@ -143,7 +143,7 @@ export default function Calendar() {
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.description} onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} placeholder="Description" />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.location} onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })} placeholder="Location" />
-          <button type="submit" className='mt-2 w-1/3 bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white dark:bg-cyan-950 dark:text-white dark:hover:text-cyan-200'>Add Event</button>
+          <button type="submit" className='mt-2 w-2/3 bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white dark:bg-cyan-950 dark:text-white dark:hover:text-cyan-200'>Add Event</button>
         </form>
       </div>
       {selectedEvent && (
