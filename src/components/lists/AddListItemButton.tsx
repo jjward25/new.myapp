@@ -140,7 +140,7 @@ const AddListItemButton: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setIsOpen(true)}
-        className="btn text-sm mx-0 border-cyan-950 bg-cyan-950 hover:border-cyan-200 text-white btn-secondary hover:bg-cyan-950 hover:text-cyan-300 w-full max-w-[1000px] min-h-0 h-10 mb-2"
+        className="btn text-sm mx-0 hover:border-yellow-500 bg-cyan-950  border-cyan-200 text-white btn-secondary hover:bg-cyan-950 hover:text-cyan-300 w-full max-w-[1000px] min-h-0 h-10 mb-2"
       >
         Add List Item
       </button>

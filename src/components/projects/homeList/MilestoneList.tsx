@@ -67,7 +67,7 @@ const MilestoneList: React.FC = () => {
       <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} cursor-pointer relative w-full overflow-hidden h-full`} onClick={toggleAccordion}>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} absolute -inset-3 bg-cyan-700 blur opacity-20`}></div>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
-          <p className='text-lg font-semibold pl-1 my-0'>Project P0s</p>
+          <p className='text-lg font-semibold pl-1 my-0 text-white opacity-90'>Project P0s</p>
           <svg
             className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
             viewBox="0 0 24 24"
@@ -82,7 +82,7 @@ const MilestoneList: React.FC = () => {
 
       <div className={`px-0 ${isOpen ? 'bg-neutral-200 rounded-br-lg rounded-bl-lg pb-3 border-2 border-t-0 border-cyan-700 flex justify-center' : ''}`}>
         {isOpen && (
-          <div className='mt-4 w-full px-2'>
+          <div className='mt-2 w-full px-2'>
             {milestones.length === 0 ? (
               <p>No milestones with Priority 0 found.</p>
             ) : (

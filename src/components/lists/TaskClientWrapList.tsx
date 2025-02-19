@@ -27,7 +27,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [items, setItems] = useState<ListItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [hideCompleted, setHideCompleted] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
   // Convert string items to proper format
@@ -159,7 +159,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
       <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} cursor-pointer relative w-full overflow-hidden h-full`} onClick={toggleOpen}>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} absolute -inset-3 bg-cyan-700 blur opacity-20`}></div>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
-          <p className={`text-lg font-semibold pl-1 my-0`}>
+          <p className={`text-lg font-semibold pl-1 my-0 text-white opacity-90`}>
             {listName}
           </p>
           
@@ -182,7 +182,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               <p className="text-red-500">{error}</p>
             ) : (
               <>
-                <div className="flex justify-end mb-4 space-x-4">
+                <div className="flex justify-between mb-4 space-x-4">
                   <button
                     onClick={() => setHideCompleted(!hideCompleted)}
                     className="text-sm text-cyan-600 hover:text-cyan-800"

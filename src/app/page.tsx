@@ -14,6 +14,7 @@ import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
 import UpperTrend from '@/components/d3/workoutUpperTrend'
 import LowerTrend from '@/components/d3/workoutLowerTrend'
+import ChatComponent from '@/components/chatbot'
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -35,28 +36,26 @@ export default async function Home() {
       <div className="flex flex-col w-full h-full mb-10 justify-center">
 
         {/** Calendar */}
-        <div className='flex flex-col md:flex-row'>
-                <Calendar/>
+        <div className='flex flex-col md:flex-row rounded-md w-full mb-6'>
+          <Calendar/>
         </div>          
-
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px]"></div> 
         
         {/** Lists */}
-        <div className='flex flex-col md:flex-row gap-4'>
+        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-md mb-4'>
 
-          <div className='mb-2 md:mb-4 pt-6 w-full'>
+          <div className='mb-2 md:mb-4 pt-2 w-full'>
+            <div className='h-12 pt-2 bg-transparent text-cyan-300 italic opacity-70 text-xl font-semibold text-center'>Tasks & Lists</div>
+            <MilestoneList/>
+          </div>
+          
+          <div className='mb-2 md:mb-4 pt-2 w-full'>
             <div className='mb-2'>
               <AddNewTaskForm onTaskAdded={''}/>
             </div>
             <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={true}/>              
           </div>
 
-          <div className='mb-2 md:mb-4 pt-6 w-full'>
-            <div className='h-12 pb-4 bg-transparent'></div>
-            <MilestoneList/>
-          </div>
-
-          <div className='mb-2 md:mb-4 pt-6 w-full flex flex-col'>
+          <div className='mb-2 md:mb-4 pt-2 w-full flex flex-col'>
             <AddListItemButton/>   
             <TaskListWrapList
               listName="Random"
@@ -75,66 +74,65 @@ export default async function Home() {
               isOpen={false}
             />
           </div>
-      </div>         
-         
+        </div>         
+
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
+          
+        {/** Chat */}
+        <div className='flex flex-col md:flex-row'>
+            <ChatComponent/>
+        </div>
 
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px]"></div> 
 
+        {/** Charts: Routines and Tasks */}
         <div className='flex flex-col md:flex-row pt-3'>
-          <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
-            <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
-            <RoutinesBooleanBar/>
-          </div>
+            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
+              <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
+              <RoutinesBooleanBar/>
+            </div>
 
-          <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
-            <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
-            <TaskTrendChart/>
-          </div>
-          
+            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
+              <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
+              <TaskTrendChart/>
+            </div>
         </div>
 
         {/** Main Components List */}
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
         <div className='w-full md:grid md:grid-cols-2'>
+        
+        {/** Column 1: Workout */}
+        <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
           
-          {/** Column 1 */}
-          <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
-            
-            <div className='w-full overflow-hidden '>
-              <div className='border-b-2 border-cyan-600 mb-4 pb-2'>
-                <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
-                  <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
-                  <a href="/workouts" title="Workout">
-                    <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
-                        Workout
-                    </div>
-                  </a>
-                </div>
+        <div className='w-full overflow-hidden '>
+            <div className='pb-2'>
+              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
+                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
+                <a href="/workouts" title="Workout">
+                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
+                      Workout
+                  </div>
+                </a>
               </div>
-
-              <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
-                <UpperTrend/>
-              </div>
-              <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
-                <LowerTrend/>
-              </div>
-
-                
-                
             </div>
-          
+
+            <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full'>
+              <UpperTrend/>
+            </div>
+            <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
+              <LowerTrend/>
+            </div>              
           </div>
-
-          {/** Column 2 */}
-          <div className='md:px-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
-
-            <Routines/> 
-
-          </div>
-
         </div>
-      </div>
 
-    </main>
+        {/** Column 2: Routines */}
+        <div className='md:px-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+          <Routines/> 
+        </div>
+
+      </div>
+    </div>
+  </main>
   );
 }

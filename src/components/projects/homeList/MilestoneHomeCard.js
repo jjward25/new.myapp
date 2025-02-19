@@ -29,9 +29,9 @@ const MilestoneCard = ({ milestone }) => {
   };
 
   return (
-    <div className='w-full mt-2'>
-      <div className="prj-card p-[2px] bg-cyan-900 hover:bg-fuchsia-600 rounded-lg shadow-md mb-4 text-black cursor-pointer">
-        <div className='bg-slate-300 rounded-lg py-1 px-1'>
+    <div className='w-full'>
+      <div className="prj-card p-[2px] rounded-lg text-black">
+        <div className='rounded-lg pt-1 px-1'>
           <div className='flex flex-row mb-1 pt-0'>
             <p className='max-w-[30px] m-1 p-1 mr-3 text-center bg-cyan-900 rounded-xl font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>
               P{milestone["Milestone Priority"]}

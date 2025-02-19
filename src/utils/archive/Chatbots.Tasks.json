@@ -1,0 +1,135 @@
+[{
+  "_id": {
+    "$oid": "67b6194139389159db27e953"
+  },
+  "open_tasks": [
+    {
+      "task_name": "GretalAI TakeHome Test",
+      "project": "Job Search",
+      "create_date": "2025-02-10",
+      "due_date": "No due date",
+      "complete_date": null,
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Edit Portfolio Timeline",
+      "project": "Job Search",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": null,
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "list interview subjects",
+      "project": "Nutshell",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": null,
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "gym",
+      "project": "life",
+      "create_date": "2025-02-10",
+      "due_date": "No due date",
+      "complete_date": null,
+      "description": "No description provided",
+      "relevant_links": []
+    }
+  ],
+  "completed_tasks": [
+    {
+      "task_name": "practice spanish",
+      "project": "Spanish",
+      "create_date": "2025-02-06",
+      "due_date": "No due date",
+      "complete_date": "2025-02-06",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Finish coding video",
+      "project": "Coding",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-07",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Update Portfolio",
+      "project": "Job Search",
+      "create_date": "2025-02-06",
+      "due_date": "No due date",
+      "complete_date": "2025-02-07",
+      "description": "Condense to one page and add new chatbots",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Respond to Lane and Itamar",
+      "project": "Life",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-07",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "GTM Bot",
+      "project": "Learning",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-07",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Practice Spanish",
+      "project": "Spanish",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-08",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "upload ragModel",
+      "project": "Job Search",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-08",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "workout",
+      "project": "life",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-08",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "lunch w Lane",
+      "project": "Life",
+      "create_date": "2025-02-07",
+      "due_date": "No due date",
+      "complete_date": "2025-02-08",
+      "description": "No description provided",
+      "relevant_links": []
+    },
+    {
+      "task_name": "Schedule Call w Josh",
+      "project": "Life",
+      "create_date": "2025-02-08",
+      "due_date": "No due date",
+      "complete_date": "2025-02-10",
+      "description": "No description provided",
+      "relevant_links": []
+    }
+  ]
+}]

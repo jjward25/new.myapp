@@ -69,7 +69,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} absolute -inset-3 bg-cyan-700 blur opacity-20`}></div>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
           
-          <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 `}>
+          <p className={`${isOpen ? '' : ''} text-lg font-semibold pl-1 my-0 text-white opacity-90`}>
             {title}
           </p>
           
@@ -101,8 +101,6 @@ const ListWrap: React.FC<ListWrapProps> = ({
               </button>
             </div>
 
-
-            <p className='text-lg font-semibold mb-4 dark:text-white text-slate-800'>Daily Tasks</p>
             <ListTemplate
               sortOrder={internalSortOrder}
               dateOrder={internalDateOrder}
