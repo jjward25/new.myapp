@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import type React from "react"
 
 import { useSearchParams } from "next/navigation"
@@ -9,7 +9,7 @@ interface Model {
   id: string
 }
 
-export default function Home() {
+function HomeContent() {
   const [apiKey, setApiKey] = useState("")
   const [message, setMessage] = useState("")
   const [models, setModels] = useState<Model[]>([])
@@ -173,6 +173,14 @@ export default function Home() {
         </div>
       )}
     </main>
+  )
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }
 
