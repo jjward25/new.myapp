@@ -1,16 +1,14 @@
 "use client"
-import { useEffect, useState, Suspense } from "react"
+import { useState, useEffect } from "react"
 import type React from "react"
 
-import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 
 interface Model {
   id: string
 }
 
-function HomeContent() {
-  const searchParams = useSearchParams()
+export default function Home() {
   const [apiKey, setApiKey] = useState("")
   const [message, setMessage] = useState("")
   const [models, setModels] = useState<Model[]>([])
@@ -19,58 +17,37 @@ function HomeContent() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    const storedApiKey = process.env.OPENROUTER_API_KEY
-
-    async function fetchApiData() {
-      const code = searchParams.get("code")
-      if (code) {
-        const apiRoute = "/api/chat/oauth"
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code }),
-        }
-        try {
-          const response = await fetch(apiRoute, requestOptions)
-          const data = await response.json()
-          if (data.key) {
-            window.localStorage.setItem("apiKey", data.key)
-            setApiKey(data.key)
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error)
-        }
-      }
-    }
-
-    async function fetchModels() {
-      try {
-        const response = await fetch("https://openrouter.ai/api/v1/models")
-        const data = await response.json()
-        const filteredModels = data.data.filter((model: Model) => model.id.toLowerCase().includes("free"))
-        setModels(filteredModels)
-        if (filteredModels.length > 0) {
-          setSelectedModel(filteredModels[0].id)
-        }
-      } catch (error) {
-        console.error("Error fetching models:", error)
-      }
-    }
-
-    fetchApiData()
     fetchModels()
-  }, [searchParams])
+  }, [])
+
+  const fetchModels = async () => {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/models")
+      const data = await response.json()
+      const filteredModels = data.data.filter((model: Model) => model.id.toLowerCase().includes("free"))
+      setModels(filteredModels)
+      if (filteredModels.length > 0) {
+        setSelectedModel(filteredModels[0].id)
+      }
+    } catch (error) {
+      console.error("Error fetching models:", error)
+    }
+  }
 
   const openRouterAuth = () => {
     const callbackUrl = `${window.location.origin}/`
-    window.open(`https://openrouter.ai/auth?callback_url=${callbackUrl}`, "_blank", "noopener,noreferrer")
+    window.open(
+      `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}`,
+      "_blank",
+      "noopener,noreferrer",
+    )
   }
 
   const getCompletionsResponse = async () => {
     setIsLoading(true)
     setMessage("") // Clear previous message
     const apiRoute = "/api/chat/completions"
-    const requestBody = { apiKey, model: selectedModel, text: inputText }
+    const requestBody = { model: selectedModel, text: inputText }
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,7 +64,7 @@ function HomeContent() {
           setMessage("Received an unexpected response format from the server.")
         }
       } else {
-        setMessage(`Error: ${data.error || "An unknown error occurred"}`)
+        setMessage(`Error: ${data.error?.message || "An unknown error occurred"}`)
       }
     } catch (error) {
       console.error("Error fetching data:", error)
@@ -104,15 +81,16 @@ function HomeContent() {
     }
   }
 
+  const handleLogout = () => {
+    setApiKey("")
+  }
+
   return (
     <main className="flex flex-col items-center justify-center h-auto p-24 border-2 border-cyan-700 w-full rounded-md">
       {apiKey ? (
         <button
           className="absolute top-5 right-5 rounded-lg bg-blue-600 text-white py-2 px-4 hover:bg-blue-500 shadow-lg"
-          onClick={() => {
-            window.localStorage.removeItem("apiKey")
-            setApiKey("")
-          }}
+          onClick={handleLogout}
         >
           Log Out
         </button>
@@ -146,7 +124,9 @@ function HomeContent() {
                 onChange={(e) => setInputText(e.target.value)}
               />
               <button
-                className={`flex-shrink-0 rounded-lg py-2 px-4 shadow-lg ${!inputText || isLoading ? "bg-gray-400" : "bg-blue-600 text-white hover:bg-blue-500"}`}
+                className={`flex-shrink-0 rounded-lg py-2 px-4 shadow-lg ${
+                  !inputText || isLoading ? "bg-gray-400" : "bg-blue-600 text-white hover:bg-blue-500"
+                }`}
                 type="submit"
                 disabled={!inputText || isLoading}
               >
@@ -173,11 +153,5 @@ function HomeContent() {
   )
 }
 
-export default function Home() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
-    </Suspense>
-  )
-}
+
 
