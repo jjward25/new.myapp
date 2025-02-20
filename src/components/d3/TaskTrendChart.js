@@ -1,223 +1,219 @@
-// src/component/d3/TaskTrendChart.js
-
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
-import { processTaskData, normalizeDate } from './TaskTrendData';
-import { debounce } from 'lodash'; // You may need to install lodash
+import React, { useEffect, useRef, useState } from "react";
+import * as d3 from "d3";
 
-const CompletedMissedTasksChart = () => {
-  const [data, setData] = useState({ completed: {}, missed: {} });
+const TaskBarChart = () => {
+  const [data, setData] = useState([]);
   const svgRef = useRef(null);
-  const tooltipRef = useRef(null);
 
   useEffect(() => {
-    console.log('Processed Data:', data);
-  }, [data]);
-  
-
-  useEffect(() => {
-    const fetchData = debounce(async () => {
-      const cacheKey = 'taskData';
-      const cachedData = localStorage.getItem(cacheKey);
-    
-      if (cachedData) {
-        setData(JSON.parse(cachedData));
-        return;
-      }
-    
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/backlog');
+        const response = await fetch("/api/backlog/");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
         const tasks = await response.json();
-        const filteredTasks = tasks.filter(task => task['Due Date'] !== null && task['Due Date'] !== '');
-        const processedData = processTaskData(filteredTasks);
+        const processedData = processData(tasks);
         setData(processedData);
-        localStorage.setItem(cacheKey, JSON.stringify(processedData)); // Cache the data
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
-    }, 300); // Adjust the debounce delay as necessary
-  
-    fetchData();
-  
-    // Cleanup function to cancel any pending debounced calls
-    return () => {
-      fetchData.cancel();
     };
+
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (Object.keys(data.completed).length === 0) return;
-  
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
-  
-    const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 80, left: 30 };
-    const width = containerWidth - margin.left - margin.right;
-    const height = 200 - margin.top - margin.bottom;
-  
-    const now = new Date();
-    const last30Days = d3.timeDay.offset(now, -30);
-    const xDomainDates = d3.timeDays(last30Days, now).map(d => normalizeDate(d));
+  const processData = (tasks) => {
+    const tasksByDate = {};
     
-    const combinedData = xDomainDates.map(date => ({
-      date: new Date(date),
-      completed: data.completed[date] || 0,
-      missed: data.missed[date] || 0,
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    
+    for (let i = 30; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      tasksByDate[dateStr] = {
+        date: dateStr,
+        completed: 0,
+        incomplete: 0
+      };
+    }
+
+    tasks.forEach(task => {
+      const dueDate = task["Due Date"];
+      if (!dueDate || !tasksByDate[dueDate]) return;
+      
+      if (task["Complete Date"]) {
+        tasksByDate[dueDate].completed++;
+      } else {
+        tasksByDate[dueDate].incomplete++;
+      }
+    });
+
+    const result = Object.entries(tasksByDate)
+      .map(([date, data]) => ({
+        date,
+        completed: data.completed || 0,
+        incomplete: data.incomplete || 0
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    return result;
+  };
+
+  useEffect(() => {
+    if (!data.length) return;
+
+    const containerWidth = svgRef.current.clientWidth;
+    const margin = { top: 10, right: 15, bottom: 60, left: 30 };
+    const width = containerWidth - margin.left - margin.right;
+    const height = 150 - margin.top - margin.bottom;
+
+    // Calculate dynamic bar width based on available space
+    const minSpaceBetweenBars = 2; // Minimum spacing between bars
+    const maxBarWidth = 20; // Maximum width for any bar
+    const numBars = data.length;
+    
+    // Calculate the width taking spacing into account
+    const calculatedBarWidth = (width / numBars) - minSpaceBetweenBars;
+    // Use the smaller of calculated width or max width
+    const barWidth = Math.min(calculatedBarWidth, maxBarWidth);
+
+    d3.select("#taskbarchart").selectAll("*").remove();
+
+    const svg = d3
+      .select("#taskbarchart")
+      .attr("width", containerWidth)
+      .attr("height", 150)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .style("position", "absolute")
+      .style("background", "#333")
+      .style("color", "#fff")
+      .style("padding", "5px")
+      .style("border-radius", "5px")
+      .style("opacity", 0);
+
+    const normalizedData = data.map(d => ({
+      date: typeof d.date === 'string' ? d.date : d.date.toISOString().split('T')[0],
+      completed: d.completed || 0,
+      incomplete: d.incomplete || 0
     }));
-  
-    console.log("Combined Data for Chart:", combinedData);
-  
-    const x = d3.scaleTime()
-      .domain(d3.extent(combinedData, d => d.date))
-      .range([0, width]);
-  
-    const yMax = Math.max(
-      d3.max(combinedData, d => d.completed),
-      d3.max(combinedData, d => d.missed)
-    ) + 1;
+
+    const x = d3.scaleBand()
+      .domain(normalizedData.map(d => d.date))
+      .range([0, width])
+      .padding(0.3); // Adjust padding based on bar width
+
     const y = d3.scaleLinear()
-      .domain([0, yMax])
-      .nice()
-      .range([height, 0]);
+      .domain([0, Math.ceil(d3.max(data, d => d.completed + d.incomplete))])
+      .range([height, 0])
+      .nice();
 
-    svg.append('g')
-      .attr('transform', `translate(${margin.left},${height + margin.top})`)
-      .call(d3.axisBottom(x)
-        .ticks(d3.timeDay.every(1))
-        .tickFormat(d => {
-          const date = new Date(d);
-          return date.getDate() === 1 ? d3.timeFormat('%b')(date) : d3.timeFormat('%d')(date);
-        }))
-      .selectAll('text')
-      .style('fill', 'white')
-      .style('font-size', '10px')
-      .attr('transform', 'rotate(-45)')
-      .attr('text-anchor', 'end');
+    const stack = d3.stack()
+      .keys(["incomplete", "completed"])
+      .order(d3.stackOrderNone)
+      .offset(d3.stackOffsetNone);
 
-    const yAxisGroup = svg.append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`)
-      .call(d3.axisLeft(y));
+    const stackedData = stack(normalizedData);
 
-    yAxisGroup.selectAll('text')
-      .style('fill', 'white')
-      .style('font-size', '10px');
+    const color = d3.scaleOrdinal()
+      .domain(["incomplete", "completed"])
+      .range(["#7f694b", "#74a892"]);
 
-    yAxisGroup.select('path')
-      .style('stroke', 'slategray');
-
-    svg.append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`)
-      .call(d3.axisLeft(y)
-        .tickSize(-width)
-        .tickFormat(() => '')
-        .ticks(yMax))
-      .selectAll('line')
-      .style('stroke', 'slategray')
-      .style('stroke-width', '1px');
-
-    const lineCompleted = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.completed));
-
-    const lineMissed = d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.missed));
-
-    // Draw lines for Missed Tasks first
-    svg.append('path')
-      .data([combinedData])
-      .attr('class', 'line missed')
-      .attr('d', lineMissed)
-      .attr('fill', 'none')
-      .attr('stroke', '#7f694b')
-      .attr('stroke-width', 1)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-    // Draw lines for Completed Tasks above Missed Tasks
-    svg.append('path')
-      .data([combinedData])
-      .attr('class', 'line completed')
-      .attr('d', lineCompleted)
-      .attr('fill', 'none')
-      .attr('stroke', '#74a892')
-      .attr('stroke-width', 1)
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-    const tooltip = d3.select('body').append('div')
-      .style('opacity', 0)
-      .style('position', 'absolute')
-      .style('background-color', 'rgba(0,0,0,0.7)')
-      .style('color', 'white')
-      .style('padding', '5px')
-      .style('border-radius', '5px')
-      .style('pointer-events', 'none')
-      .attr('class', 'tooltip');
-
-    // Draw dots for missed tasks
-    svg.selectAll('.dot-missed')
-      .data(combinedData)
-      .enter().append('circle')
-      .attr('class', 'dot-missed')
-      .attr('cx', d => x(d.date) + margin.left)
-      .attr('cy', d => y(d.missed) + margin.top)
-      .attr('r', 5) // Increase dot size for visibility
-      .attr('fill', '#7f694b')
-      .on('mouseover', (event, d) => {
-        tooltip.transition()
-          .duration(200)
-          .style('opacity', 1);
-        tooltip.html(`${d3.timeFormat('%b %d, %Y')(d.date)}:<br>Missed ${d.missed}`)
-          .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px')
+    svg.selectAll("g.stack")
+      .data(stackedData)
+      .join("g")
+      .attr("class", "stack")
+      .attr("fill", d => color(d.key))
+      .selectAll("rect")
+      .data(d => d)
+      .join("rect")
+      .attr("x", d => x(d.data.date) + (x.bandwidth() - barWidth) / 2) // Center the bar in its band
+      .attr("y", d => y(d[1]))
+      .attr("height", d => y(d[0]) - y(d[1]))
+      .attr("width", barWidth)
+      .attr("stroke", "white")
+      .attr("stroke-width", 0.5)
+      .on("mouseover", function(event, d) {
+        const completed = d.data.completed;
+        const incomplete = d.data.incomplete;
+        const total = completed + incomplete;
+        const date = d.data.date;
+        
+        tooltip
+          .style("opacity", 1)
+          .html(`${date}<br>Completed: ${completed}<br>Incomplete: ${incomplete}<br>Total: ${total}`)
+          .style("left", (event.pageX + 5) + "px")
+          .style("top", (event.pageY - 28) + "px")
           .style("font-size", "10px");
       })
-      .on('mousemove', (event) => {
-        tooltip.style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px');
-      })
-      .on('mouseout', () => {
-        tooltip.transition()
-          .duration(500)
-          .style('opacity', 0);
+      .on("mouseout", function() {
+        tooltip.style("opacity", 0);
       });
 
-    // Draw dots for completed tasks last
-    svg.selectAll('.dot-completed')
-      .data(combinedData)
-      .enter().append('circle')
-      .attr('class', 'dot-completed')
-      .attr('cx', d => x(d.date) + margin.left)
-      .attr('cy', d => y(d.completed) + margin.top)
-      .attr('r', 3)
-      .attr('fill', '#2e9da2')
-      .on('mouseover', (event, d) => {
-        tooltip.transition()
-          .duration(200)
-          .style('opacity', 1);
-        tooltip.html(`${d3.timeFormat('%b %d, %Y')(d.date)}:<br>Completed ${d.completed}`)
-          .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px')
-          .style("font-size", "10px");
-      })
-      .on('mousemove', (event) => {
-        tooltip.style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 40) + 'px');
-      })
-      .on('mouseout', () => {
-        tooltip.transition()
-          .duration(500)
-          .style('opacity', 0);
-      });
+    const xAxis = svg
+      .append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x).tickFormat((dateStr) => {
+        if (!dateStr || typeof dateStr !== 'string') {
+          return '';
+        }
+        
+        const [year, month, day] = dateStr.split('-');
+        return day === '01' ? d3.timeFormat("%b")(new Date(year, month - 1, 1)) : day;
+      }));
+
+    xAxis.selectAll(".tick text")
+      .attr("fill", "white")
+      .style("font-size", "10px")
+      .attr("transform", "rotate(-45)")
+      .attr("text-anchor", "end");
+
+    const yAxis = svg
+      .append("g")
+      .attr("class", "y-axis")
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("d")));
+
+    yAxis.selectAll(".tick text")
+      .attr("fill", "white")
+      .style("font-size", "10px");
+    yAxis.select(".domain").attr("stroke", "white");
+
+    const legend = svg.append("g")
+      .attr("transform", `translate(${width - 100}, -5)`);
+
+    ["Completed", "Incomplete"].forEach((text, i) => {
+      const g = legend.append("g")
+        .attr("transform", `translate(0, ${i * 15})`);
+
+      g.append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", color(text.toLowerCase()));
+
+      g.append("text")
+        .attr("x", 15)
+        .attr("y", 9)
+        .attr("fill", "white")
+        .style("font-size", "10px")
+        .text(text);
+    });
 
   }, [data]);
 
   return (
-    <div style={{ overflowX: 'none', padding: '10px 10px', maxWidth: '100%' }}>
-      <svg ref={svgRef} width="100%" height="100%" style={{ maxWidth: '100%' }}></svg>
+    <div style={{ overflowX: "none", padding: "10px 10px", maxWidth: "100%" }}>
+      <svg id="taskbarchart" ref={svgRef} width="100%" height="100%" style={{ maxWidth: "100%" }}></svg>
     </div>
   );
 };
 
-export default CompletedMissedTasksChart;
+export default TaskBarChart;

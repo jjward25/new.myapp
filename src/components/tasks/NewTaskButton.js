@@ -2,11 +2,6 @@
 "use client";
 import React, { useState } from 'react';
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date.toISOString().split('T')[0];
-};
-
 // Function to get today's date in EST
 const getTodayInEST = () => {
   const today = new Date();
@@ -14,6 +9,13 @@ const getTodayInEST = () => {
   const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
   const estDate = today.toLocaleString('en-CA', options); // 'en-CA' gives the YYYY-MM-DD format directly
   return estDate; // Returns the date in YYYY-MM-DD format
+};
+
+const formatDate = (dateString) => {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  // Ensure we're getting the date in YYYY-MM-DD format without timezone offset
+  return date.toISOString().split('T')[0];
 };
 
 const today = getTodayInEST();
@@ -42,12 +44,16 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log('Submitting form data:', formData);
+    
     const formattedData = {
       ...formData,
       "Start Date": formatDate(formData["Start Date"]),
       "Due Date": formatDate(formData["Due Date"]),
       "Complete Date": formatDate(formData["Complete Date"])
     };
+
+    console.log('Formatted data:', formattedData);
 
     try {
       const response = await fetch('/api/backlog', {
