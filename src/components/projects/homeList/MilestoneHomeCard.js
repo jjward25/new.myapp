@@ -23,7 +23,8 @@ const MilestoneCard = ({ milestone }) => {
     // Ensure `editedMilestone` contains all required fields
     handleEditMilestone({
       ...editedMilestone,
-      milestoneName: milestone.milestoneName // Pass original milestone name
+      milestoneName: milestone.milestoneName, // Pass original milestone name
+      milestoneNotes: milestone.Notes
     });
     setIsEditing(false);
   };
@@ -33,12 +34,17 @@ const MilestoneCard = ({ milestone }) => {
       <div className="prj-card p-[2px] rounded-lg text-black">
         <div className='rounded-lg pt-1 px-1'>
           <div className='flex flex-row mb-1 pt-0'>
-            <p className='max-w-[30px] m-1 p-1 mr-3 text-center bg-cyan-900 rounded-xl font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>
+            <p className='max-w-[30px] m-1 p-1 mr-3 mt-0 mb-auto text-center bg-cyan-900 rounded-xl font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>
               P{milestone["Milestone Priority"]}
             </p>
-            <p className='font-semibold text-cyan-700 text-md my-auto pr-4'>
-              {milestone.milestoneName}
-            </p>
+            <div className='flex-col'>
+              <p className='font-semibold text-cyan-700 text-md my-auto pr-4'>
+                {milestone.milestoneName}
+              </p>
+              <p className='text-xs text-gray-500'>
+                {milestone.Notes}
+              </p>
+            </div>
           </div>
         </div>
       </div>
