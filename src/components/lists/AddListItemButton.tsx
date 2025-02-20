@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 // Define available lists as a const array
-const AVAILABLE_LISTS = ['Movies', 'Books', 'Shopping'] as const;
+const AVAILABLE_LISTS = ['Movies', 'Books', 'Shopping','TV Shows'] as const;
 // Create a type from the array values
 type ListName = typeof AVAILABLE_LISTS[number];
 
