@@ -60,8 +60,10 @@ function HomeContent() {
   }, [searchParams]);
 
   const openRouterAuth = () => {
-    window.open('https://openrouter.ai/auth?callback_url=http://localhost:3000/');
+    const callbackUrl = `${window.location.origin}/`;
+    window.open(`https://openrouter.ai/auth?callback_url=${callbackUrl}`, '_blank', 'noopener,noreferrer');
   };
+  
 
   const getCompletionsResponse = async () => {
     setIsLoading(true);
