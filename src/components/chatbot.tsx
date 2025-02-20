@@ -68,6 +68,7 @@ function HomeContent() {
 
   const getCompletionsResponse = async () => {
     setIsLoading(true)
+    setMessage("") // Clear previous message
     const apiRoute = "/api/chat/completions"
     const requestBody = { apiKey, model: selectedModel, text: inputText }
     const requestOptions = {
@@ -78,10 +79,20 @@ function HomeContent() {
     try {
       const response = await fetch(apiRoute, requestOptions)
       const data = await response.json()
-      setMessage(data.choices[0].message.content)
-      setIsLoading(false)
+
+      if (response.ok) {
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+          setMessage(data.choices[0].message.content)
+        } else {
+          setMessage("Received an unexpected response format from the server.")
+        }
+      } else {
+        setMessage(`Error: ${data.error || "An unknown error occurred"}`)
+      }
     } catch (error) {
       console.error("Error fetching data:", error)
+      setMessage("An error occurred while fetching the response. Please try again.")
+    } finally {
       setIsLoading(false)
     }
   }
