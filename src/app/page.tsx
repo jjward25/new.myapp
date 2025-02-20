@@ -59,7 +59,7 @@ export default async function Home() {
             <AddListItemButton/>   
             <TaskListWrapList
               listName="Random"
-              isOpen={true}
+              isOpen={false}
             />       
             <TaskListWrapList
               listName="Shopping"
