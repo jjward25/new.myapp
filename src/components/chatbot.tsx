@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import type React from "react"
 
+import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 
 interface Model {
@@ -15,10 +16,33 @@ export default function Home() {
   const [selectedModel, setSelectedModel] = useState("")
   const [inputText, setInputText] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     fetchModels()
+    handleOAuthCallback()
   }, [])
+
+  const handleOAuthCallback = async () => {
+    const code = searchParams.get("code")
+    if (code) {
+      try {
+        const response = await fetch("/api/chat/oauth", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code }),
+        })
+        const data = await response.json()
+        if (data.key) {
+          setApiKey(data.key)
+        }
+      } catch (error) {
+        console.error("Error handling OAuth callback:", error)
+      }
+    }
+  }
 
   const fetchModels = async () => {
     try {
@@ -36,11 +60,7 @@ export default function Home() {
 
   const openRouterAuth = () => {
     const callbackUrl = `${window.location.origin}/`
-    window.open(
-      `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}`,
-      "_blank",
-      "noopener,noreferrer",
-    )
+    window.location.href = `https://openrouter.ai/auth?callback_url=${encodeURIComponent(callbackUrl)}`
   }
 
   const getCompletionsResponse = async () => {
@@ -50,7 +70,10 @@ export default function Home() {
     const requestBody = { model: selectedModel, text: inputText }
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
       body: JSON.stringify(requestBody),
     }
     try {
@@ -152,6 +175,4 @@ export default function Home() {
     </main>
   )
 }
-
-
 
