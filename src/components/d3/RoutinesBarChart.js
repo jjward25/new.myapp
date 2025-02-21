@@ -96,16 +96,17 @@ const TrueValuesBarChart = () => {
 
     const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
     const containerWidth = svgRef.current.clientWidth;
+    const containerHeight = svgRef.current.clientHeight;
     const margin = { top: 10, right: 15, bottom: 60, left: 30 };
     const width = containerWidth - margin.left - margin.right;
-    const height = 150 - margin.top - margin.bottom;
+    const height = 200 - margin.top - margin.bottom;
 
     d3.select("#barchart").selectAll("*").remove();
 
     const svg = d3
       .select("#barchart")
       .attr("width", containerWidth)
-      .attr("height", 150)
+      .attr("height", 200)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -199,7 +200,7 @@ const TrueValuesBarChart = () => {
     const legend = d3
       .select(svgRef.current)
       .append("g")
-      .attr("transform", `translate(${margin.left}, ${150 - margin.bottom + 30})`);
+      .attr("transform", `translate(${margin.left}, ${200 - margin.bottom + 30})`);
 
     const legendItemWidth = 80;
     const legendItemHeight = 15;

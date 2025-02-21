@@ -93,12 +93,12 @@ export default async function Home() {
 
         {/** Charts: Routines and Tasks */}
         <div className='flex flex-col md:flex-row pt-3'>
-            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
+            <div className='w-full h-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
               <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
               <RoutinesBooleanBar/>
             </div>
 
-            <div className='w-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
+            <div className='w-full h-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
               <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
               <TaskTrendChart/>
             </div>
