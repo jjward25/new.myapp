@@ -134,7 +134,7 @@ const AddListItemButton: React.FC = () => {
       action: "addItems",
       listName: selectedList,
       items: validItems.map((item) => ({
-        name: item.name.trim(),
+        name: item.name ? item.name.trim() : "",
         done: false,
         ...(selectedList === "Movies" && {
           length: item.length || "",
