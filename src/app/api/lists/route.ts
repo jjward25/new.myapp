@@ -72,7 +72,10 @@ async function handleCreateList(body: any) {
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error creating list:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to create list" },
+      { status: 500 }
+    );
   }
 }
 
