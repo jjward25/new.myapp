@@ -101,7 +101,7 @@ async function handleAddItems(body: any) {
   } catch (error) {
     console.error("Error adding items:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message }, { status: 500 });
+      { error: error instanceof Error ? error.message : "Error adding items" }, { status: 500 });
   }
 }
 
