@@ -7,7 +7,7 @@ import TodaysWorkout from '@/components/workouts/todaysWorkout';
 import UpperTrend from '@/components/d3/workoutUpperTrend'
 import LowerTrend from '@/components/d3/workoutLowerTrend'
 
-export const revalidate = 60 * 60; // Regenerate the page every hour
+//export const revalidate = 60 * 60; // Regenerate the page every hour
 
 export default async function WorkoutHome() {
   // Fetch today's date and all workouts
