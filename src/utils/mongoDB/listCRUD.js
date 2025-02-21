@@ -180,3 +180,27 @@ export async function createList(name, list = []) {
   
   return result;
 }
+
+
+export async function addItemsToList(listName, items) {
+  const client = await clientPromise;
+  const db = client.db('Personal');
+  const collection = db.collection('Lists');
+
+  try {
+    // Find the list and update it by pushing all new items
+    const result = await collection.updateOne(
+      { name: listName },
+      { $push: { list: { $each: items } } }
+    );
+
+    if (result.matchedCount === 0) {
+      throw new Error('List not found');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error adding items:', error);
+    throw error;
+  }
+}

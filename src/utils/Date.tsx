@@ -36,4 +36,17 @@ export function getTomorrow() {
   return adjustedTomorrow.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 }
 
+export function getYesterday() {
+  const today = new Date();
+  // Convert to EST/EDT timezone
+  const estYesterday = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  estYesterday.setDate(estYesterday.getDate() - 1); 
+  const offset = estYesterday.getTimezoneOffset() * 60000; // Offset in milliseconds
+  const adjustedYesterday = new Date(estYesterday.getTime() - offset);
+  return adjustedYesterday.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}
+
+
+
+
 
