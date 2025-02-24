@@ -7,7 +7,7 @@ import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/dates/HomeDate'
-import {getToday,getTomorrow, getYesterday} from '../utils/Date'
+import {getToday,getTomorrow, getYesterday, getDayAfterTomorrow} from '../utils/Date'
 import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
 import MilestoneList from '@/components/projects/homeList/MilestoneList';
@@ -24,6 +24,7 @@ export default async function Home() {
   const today = await getToday();
   const tomorrow = await getTomorrow();
   const yesterday = await getYesterday();
+  const twoDays = await getDayAfterTomorrow();
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
@@ -54,8 +55,9 @@ export default async function Home() {
             <div className='mb-2'>
               <AddNewTaskForm onTaskAdded={''}/>
             </div>
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} title="Open Tasks" isOpen={true}/>              
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={yesterday} dueDateBeforeFilter={today} title="Yesterday's Tasks" isOpen={false}/>              
+            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} dueDateBeforeFilter={tomorrow} title="Open Tasks" isOpen={true}/>              
+            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={yesterday} dueDateBeforeFilter={today} title="Yesterday's Tasks" isOpen={false}/>     
+            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={tomorrow} dueDateBeforeFilter={twoDays} title="Tomorrow's Tasks" isOpen={false}/>                       
           </div>
 
           <div className='mb-2 md:mb-4 pt-2 w-full flex flex-col'>
