@@ -15,6 +15,7 @@ import AddListItemButton from '@/components/lists/AddListItemButton';
 import UpperTrend from '@/components/d3/workoutUpperTrend'
 import LowerTrend from '@/components/d3/workoutLowerTrend'
 import ChatComponent from '@/components/chatbot'
+import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -93,12 +94,12 @@ export default async function Home() {
 
         {/** Charts: Routines and Tasks */}
         <div className='flex flex-col md:flex-row pt-3'>
-            <div className='w-full h-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
+            <div className='w-full h-full bg-gradient-to-tr from-black to-slate-800  max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
               <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
               <RoutinesBooleanBar/>
             </div>
 
-            <div className='w-full h-full bg-gradient-to-br from-black via-slate-950 to-black max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
+            <div className='w-full h-full bg-gradient-to-tr from-black to-slate-800  max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
               <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
               <TaskTrendChart/>
             </div>
@@ -110,6 +111,9 @@ export default async function Home() {
         
         {/** Column 1: Workout */}
         <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
+        <div className='mb-2 drop-shadow-sm w-full'>
+          <MilestoneTrendComponent/>
+        </div>
           
         <div className='w-full overflow-hidden '>
             <div className='pb-2'>

@@ -50,7 +50,7 @@ const MilestoneTrendChart = ({ data }) => {
         .tickSizeOuter(0))
       .call(g => g.selectAll('.tick line').attr('stroke', '#0097A7'))
       .call(g => g.selectAll('.tick text')
-        .attr('fill', 'cyan')
+        .attr('fill', 'black')
         .attr('transform', 'rotate(-45)')
         .style('text-anchor', 'end'))
       .call(g => g.select('.domain').attr('stroke', '#0097A7'));
