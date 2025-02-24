@@ -82,6 +82,10 @@ export default async function Home() {
               listName="TV Shows"
               isOpen={false}
             />
+            <TaskListWrapList
+              listName="Call"
+              isOpen={false}
+            />
           </div>
         </div>         
 
