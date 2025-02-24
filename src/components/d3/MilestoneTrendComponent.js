@@ -46,7 +46,7 @@ const MilestoneTrendComponent = () => {
   }, []);
 
   return (
-    <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg">
+    <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg w-full h-full">
       <h1 className="text-xl font-semibold text-cyan-800">Milestones Completed by Day</h1>
       <MilestoneTrendChart data={data} />
       <div id="tooltip" style={{

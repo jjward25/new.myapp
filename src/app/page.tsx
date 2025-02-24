@@ -93,14 +93,12 @@ export default async function Home() {
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mt-4"></div> 
 
         {/** Charts: Routines and Tasks */}
-        <div className='flex flex-col md:flex-row pt-3'>
-            <div className='w-full h-full bg-gradient-to-tr from-black to-slate-800  max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:mr-3'>
-              <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
-              <RoutinesBooleanBar/>
+        <div className='flex flex-col md:flex-row pt-3 gap-4'>
+            <div className='mb-2 drop-shadow-sm w-full'>
+              <MilestoneTrendComponent/>
             </div>
-
-            <div className='w-full h-full bg-gradient-to-tr from-black to-slate-800  max-w-[750px] rounded-xl mb-4 border border-cyan-300 md:ml-3'>
-              <p className='ml-5 mt-3 text-white text-md'>Tasks Completed by Day</p>
+          <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg w-full mb-2">
+          <h1 className="text-xl font-semibold text-cyan-800">Tasks Completed by Day</h1>
               <TaskTrendChart/>
             </div>
         </div>
@@ -111,8 +109,10 @@ export default async function Home() {
         
         {/** Column 1: Workout */}
         <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
-        <div className='mb-2 drop-shadow-sm w-full'>
-          <MilestoneTrendComponent/>
+        
+        <div className='w-full h-fit bg-gradient-to-tr from-black to-fuchsia-950  max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
+          <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
+          <RoutinesBooleanBar/>
         </div>
           
         <div className='w-full overflow-hidden '>
@@ -137,7 +137,7 @@ export default async function Home() {
         </div>
 
         {/** Column 2: Routines */}
-        <div className='md:px-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+        <div className='w-full md:px-4 md:pl-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
           <Routines/> 
         </div>
 
