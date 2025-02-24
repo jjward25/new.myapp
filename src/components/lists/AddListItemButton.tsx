@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 
-const AVAILABLE_LISTS = ["Movies", "Books", "Shopping", "TV Shows"] as const
+const AVAILABLE_LISTS = ["Movies", "Books", "Shopping", "TV Shows","Call"] as const
 type ListName = (typeof AVAILABLE_LISTS)[number]
 
 interface ListItemBase {
