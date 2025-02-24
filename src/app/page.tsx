@@ -39,7 +39,7 @@ export default async function Home() {
       <div className="flex flex-col w-full h-full mb-10 justify-center">
 
         {/** Calendar */}
-        <div className='flex flex-col md:flex-row rounded-md w-full'>
+        <div className='flex flex-col md:flex-row rounded-md w-full h-full'>
           <Calendar/>
         </div>          
         

@@ -102,14 +102,14 @@ export default function Calendar() {
   };
 
   return (
-    <div className="w-full mx-auto flex flex-col md:flex-row ">
-      <div className="bg-transparent shadow overflow-hidden  rounded-bl-none rounded-br-none">
-        <div className="flex items-center justify-between px-6 py-4 bg-cyan-950  rounded-tr-lg rounded-tl-lg">
+    <div className="w-full mx-auto flex flex-col md:flex-row h-full">
+      <div className="bg-transparent shadow md:rounded-bl-none md:rounded-br-none h-full">
+        <div className="flex items-center justify-between px-6 pt-4 bg-cyan-950 rounded-tr-lg rounded-tl-lg">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
           <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
           <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
         </div>
-        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black border-b-0">
+        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black md:border-b-0 h-full">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div key={day} className="text-center text-sm font-semibold text-cyan-950 bg-neutral-300 rounded-md">{day}</div>
           ))}
@@ -137,7 +137,7 @@ export default function Calendar() {
           })}
         </div>
       </div>
-      <div className="bg-neutral-100 w-full md:w-1/4 my-auto">
+      <div className="bg-neutral-100 w-full md:w-1/4 my-8 md:my-auto h-full">
         <form className='pl-4 w-full mx-auto flex flex-wrap justify-center items-center' onSubmit={handleAddEvent}>
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Title" required />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
