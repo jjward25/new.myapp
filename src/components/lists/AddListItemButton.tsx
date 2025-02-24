@@ -3,8 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 
-const AVAILABLE_LISTS = ["Movies", "Books", "Shopping", "TV Shows","Call"] as const
-type ListName = (typeof AVAILABLE_LISTS)[number]
+type ListName = string; // Since the lists are now dynamic, they can be any string.
 
 interface ListItemBase {
   name: string
@@ -23,6 +22,7 @@ const AddListItemButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedList, setSelectedList] = useState<ListName | "">("")
   const [newListName, setNewListName] = useState("")
+  const [availableLists, setAvailableLists] = useState<ListName[]>([]) // Dynamic list state
   const modalRef = useRef<HTMLDivElement>(null)
   const [items, setItems] = useState<Partial<MovieItem>[]>([
     {
@@ -33,6 +33,24 @@ const AddListItemButton: React.FC = () => {
       notes: "",
     },
   ])
+
+   // Fetch available lists when the component mounts
+   useEffect(() => {
+    const fetchLists = async () => {
+      try {
+        const response = await fetch("/api/lists");
+        if (!response.ok) {
+          throw new Error("Failed to fetch lists");
+        }
+        const data = await response.json();
+        setAvailableLists(data.lists.map((list: { name: string }) => list.name)); // Extract names
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+      }
+    };
+
+    fetchLists();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -225,7 +243,7 @@ const AddListItemButton: React.FC = () => {
                 <div>
                   <h3 className="mb-3">Select List:</h3>
                   <div className="space-y-2">
-                    {AVAILABLE_LISTS.map((list) => (
+                    {availableLists.map((list) => (
                       <button
                         key={list}
                         onClick={() => setSelectedList(list)}

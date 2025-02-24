@@ -1,4 +1,4 @@
-import { getListByName, createList, addItemsToList } from "@/utils/mongoDB/listCRUD"
+import { getLists, getListByName, createList, addItemsToList } from "@/utils/mongoDB/listCRUD"
 import { NextResponse } from "next/server"
 
 interface ListItem {
@@ -21,28 +21,26 @@ interface AddItemsRequest {
 
 export async function GET(request: Request) {
   try {
-    // Get listName from URL parameters
     const { searchParams } = new URL(request.url)
     const listName = searchParams.get("name")
 
-    if (!listName) {
-      return NextResponse.json({ error: "List name is required" }, { status: 400 })
+    if (listName) {
+      // If a specific list name is provided, fetch that list
+      const list = await getListByName(listName)
+      if (!list) {
+        return NextResponse.json({ error: "List not found" }, { status: 404 })
+      }
+      return NextResponse.json({ list: list.list })
+    } else {
+      // If no list name is provided, fetch all lists
+      const lists = await getLists()
+      return NextResponse.json({ lists })
     }
-
-    console.log("API: Fetching list:", listName)
-    const list = await getListByName(listName)
-    console.log("API: Found list:", list)
-
-    if (!list) {
-      return NextResponse.json({ error: "List not found" }, { status: 404 })
-    }
-
-    return NextResponse.json({ list: list.list })
   } catch (error) {
     console.error("API Error:", error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch list" },
-      { status: 500 },
+      { error: error instanceof Error ? error.message : "Failed to fetch lists" },
+      { status: 500 }
     )
   }
 }

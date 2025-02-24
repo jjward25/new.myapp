@@ -16,6 +16,7 @@ import UpperTrend from '@/components/d3/workoutUpperTrend'
 import LowerTrend from '@/components/d3/workoutLowerTrend'
 import ChatComponent from '@/components/chatbot'
 import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
+import AvailableLists from '../components/lists/AvailableLists';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -62,30 +63,7 @@ export default async function Home() {
 
           <div className='mb-2 md:mb-4 pt-2 w-full flex flex-col'>
             <AddListItemButton/>   
-            <TaskListWrapList
-              listName="Random"
-              isOpen={false}
-            />       
-            <TaskListWrapList
-              listName="Shopping"
-              isOpen={false}
-            />
-            <TaskListWrapList
-              listName="Movies"
-              isOpen={false}
-            />
-            <TaskListWrapList
-              listName="Books"
-              isOpen={false}
-            />
-            <TaskListWrapList
-              listName="TV Shows"
-              isOpen={false}
-            />
-            <TaskListWrapList
-              listName="Call"
-              isOpen={false}
-            />
+            <AvailableLists/>
           </div>
         </div>         
 

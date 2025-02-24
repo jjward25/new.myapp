@@ -5,7 +5,7 @@ const MilestoneTrendChart = ({ data }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    console.log('Data received by MilestoneTrendChart:', data);
+    //console.log('Data received by MilestoneTrendChart:', data);
 
     if (!data || data.length === 0) return;
 

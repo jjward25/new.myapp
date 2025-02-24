@@ -40,7 +40,7 @@ const MilestoneTrendComponent = () => {
 
   useEffect(() => {
     fetchData().then(data => {
-      console.log('Transformed data:', data); // Check the format
+      //console.log('Transformed data:', data); // Check the format
       setData(data);
     });
   }, []);
