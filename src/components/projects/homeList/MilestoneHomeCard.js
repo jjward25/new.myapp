@@ -24,7 +24,9 @@ const MilestoneCard = ({ milestone }) => {
     handleEditMilestone({
       ...editedMilestone,
       milestoneName: milestone.milestoneName, // Pass original milestone name
-      milestoneNotes: milestone.Notes
+      milestoneNotes: milestone.Notes,
+      projectNAme: milestone.ProjectName,
+      milestonePriority: milestone["Milestone Priority"]
     });
     setIsEditing(false);
   };
@@ -32,20 +34,17 @@ const MilestoneCard = ({ milestone }) => {
   return (
     <div className='w-full'>
       <div className="prj-card p-[2px] rounded-lg text-black">
-        <div className='rounded-lg pt-1 px-1'>
-          <div className='flex flex-row mb-1 pt-0'>
-            <p className='max-w-[30px] m-1 p-1 mr-3 mt-0 mb-auto text-center bg-cyan-900 rounded-xl font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>
-              P{milestone["Milestone Priority"]}
-            </p>
-            <div className='flex-col'>
-              <p className='font-semibold text-cyan-700 text-md my-auto pr-4'>
+        <div className='rounded-lg '>
+    
+            <div className='flex-col bg-cyan-900 px-2 py-1 rounded-lg'>
+              <p className='font-semibold text-neutral-300 text-sm my-auto pr-4'>
                 {milestone.milestoneName}
               </p>
-              <p className='text-xs text-gray-500'>
+              <p className='text-xs text-cyan-600'>
                 {milestone.Notes}
               </p>
             </div>
-          </div>
+          
         </div>
       </div>
     </div>

@@ -1,25 +1,30 @@
-'use client'; // Ensure this component runs in the client
+'use client';
 import React, { useEffect, useState } from 'react';
 import MilestoneCard from './MilestoneHomeCard';
 
 // Define interfaces for Project and Milestone
 interface Milestone {
-  id: number; // Assuming there's an id, adjust as necessary
+  id: number;
   milestoneName: string;
-  "Milestone Priority": string; // This might need to be changed based on your API response
-  "Complete Date": string | null; // Add this line to include Complete Date
+  "Milestone Priority": string;
+  "Complete Date": string | null;
+  projectName: string;
 }
 
 interface Project {
-  id: number; // Assuming there's an id, adjust as necessary
-  Milestones: { [key: string]: Milestone }; // Mapping of milestone name to Milestone object
+  id: number;
+  "Project Name": string;
+  "Project Priority": number;
+  "Project Complete Date": string | null;
+  Milestones: { [key: string]: Milestone };
 }
 
 const MilestoneList: React.FC = () => {
-  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [groupedMilestones, setGroupedMilestones] = useState<{ [key: string]: Milestone[] }>({});
+  const [sortedProjects, setSortedProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(true); // State for accordion toggle
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     fetchMilestones();
@@ -31,22 +36,51 @@ const MilestoneList: React.FC = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data: Project[] = await response.json(); // Explicitly define the type of data
-
-      const allMilestones = data.flatMap((project: Project) => 
-        Object.entries(project.Milestones).map(([milestoneName, milestone]) => ({
+      const data: Project[] = await response.json();
+  
+      console.log("Raw API Data:", data); // Log full API response
+  
+      // Filter projects where "Project Complete Date" is null
+      const filteredProjects = data.filter(project => !project["Project Complete Date"]);
+      console.log("Filtered Projects:", filteredProjects);
+  
+      // Extract milestones and group them under each project
+      const allMilestones = filteredProjects.flatMap((project) =>
+        Object.entries(project.Milestones || {}).map(([milestoneName, milestone]) => ({
           ...milestone,
           milestoneName,
+          projectName: project["Project Name"],
         }))
       );
-
+      console.log("All Milestones:", allMilestones);
+  
+      // Filter milestones with priority 0 and incomplete status
       const milestonesWithPriorityZero = allMilestones.filter(milestone => {
-            const priorityZero = parseInt(milestone["Milestone Priority"], 10) === 0;
-            const isCompleteDateNullOrEmpty = milestone["Complete Date"] === null || milestone["Complete Date"] === ""; // Check if Complete Date is null or empty
-            return priorityZero && isCompleteDateNullOrEmpty; // Filter both conditions
-        });
-
-      setMilestones(milestonesWithPriorityZero);
+        const priorityZero = Number(milestone["Milestone Priority"]) === 0;
+        const isCompleteDateNullOrEmpty = !milestone["Complete Date"] || milestone["Complete Date"] === "";
+        return priorityZero && isCompleteDateNullOrEmpty;
+      });
+      console.log("Milestones With P0:", milestonesWithPriorityZero);
+  
+      // Group milestones by project name
+      const grouped = milestonesWithPriorityZero.reduce<{ [key: string]: Milestone[] }>((acc, milestone) => {
+        if (!acc[milestone.projectName]) {
+          acc[milestone.projectName] = [];
+        }
+        acc[milestone.projectName].push(milestone);
+        return acc;
+      }, {});
+      console.log("Grouped Milestones:", grouped);
+  
+      // Ensure only projects with at least one milestone appear
+      const sortedProjects = filteredProjects
+        .filter(project => grouped[project["Project Name"]] && grouped[project["Project Name"]].length > 0)
+        .sort((a, b) => a["Project Priority"] - b["Project Priority"]);
+  
+      console.log("Sorted Projects:", sortedProjects);
+  
+      setGroupedMilestones(grouped);
+      setSortedProjects(sortedProjects);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching milestones:', error);
@@ -54,6 +88,7 @@ const MilestoneList: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   const toggleAccordion = () => {
     setIsOpen(prev => !prev);
@@ -83,12 +118,26 @@ const MilestoneList: React.FC = () => {
       <div className={`px-0 ${isOpen ? 'bg-neutral-200 rounded-br-lg rounded-bl-lg pb-3 border-2 border-t-0 border-cyan-700 flex justify-center' : ''}`}>
         {isOpen && (
           <div className='mt-2 w-full px-2'>
-            {milestones.length === 0 ? (
+            {sortedProjects.length === 0 ? (
               <p>No milestones with Priority 0 found.</p>
             ) : (
-              milestones.map((milestone, index) => (
-                <MilestoneCard key={index} milestone={milestone} />
-              ))
+              sortedProjects.map((project) => {
+                const milestones = groupedMilestones[project["Project Name"]] || [];
+                return (
+                  <div key={project.id} className='mb-1'>
+                   <h3 className="text-lg font-bold mb-1 bg-gradient-to-r from-cyan-600 to-blue-400 bg-clip-text text-transparent">
+                    {project["Project Name"]}
+                  </h3>
+                    {milestones.length > 0 ? (
+                      milestones.map((milestone, index) => (
+                        <MilestoneCard key={index} milestone={milestone} />
+                      ))
+                    ) : (
+                      <p className='text-sm text-gray-500'>No milestones for this project.</p>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
         )}
