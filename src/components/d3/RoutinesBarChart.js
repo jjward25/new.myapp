@@ -26,7 +26,7 @@ const TrueValuesBarChart = () => {
   }, []);
 
   const processData = (data) => {
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
+    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
   
@@ -43,20 +43,20 @@ const TrueValuesBarChart = () => {
             case "Job Search":
               description =  "Job search activities.";
               break;
-            case "Learning":
-              description =  "Learning activities.";
+            case "Mobility":
+              description =  "Mobility work.";
               break;
-            case "Prof Dev":
-              description =  "Professional development activities.";
+            case "Reading":
+              description =  d["Reading Desc"] || "Daily reading.";
               break;
             case "Workout":
               description =  "Workout";
               break;
-            case "Creative":
-              description = d["Creative Desc"] || "Creative projects.";
+            case "Piano":
+              description = "Piano practice.";
               break;
             case "Language":
-              description =  "Language learning.";
+              description =  "Language practice.";
               break;
             case "Call":
               description =  d["Call Name"] || "Phone call.";
@@ -64,8 +64,8 @@ const TrueValuesBarChart = () => {
             case "Events":
               description = d["Events Desc"] || "Events.";
               break;
-            case "Passion":
-              description =  "Personal Projects";
+            case "Tasks":
+              description =  "Tasks";
               break;
             default:
               description = "No description available."; // Fallback for any unexpected fields
@@ -86,7 +86,7 @@ const TrueValuesBarChart = () => {
 
   const stackedData = useMemo(() => {
     if (data.length === 0) return [];
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
+    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const stack = d3.stack().keys(fields).value((d, key) => (d[key].value ? 1 : 0));
     return stack(data);
   }, [data]);
@@ -94,7 +94,7 @@ const TrueValuesBarChart = () => {
   useEffect(() => {
     if (stackedData.length === 0) return;
 
-    const fields = ["Job Search", "Learning", "Prof Dev", "Workout", "Creative", "Language", "Call", "Events", "Passion"];
+    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const containerWidth = svgRef.current.clientWidth;
     const containerHeight = svgRef.current.clientHeight;
     const margin = { top: 10, right: 15, bottom: 60, left: 30 };
@@ -133,15 +133,15 @@ const TrueValuesBarChart = () => {
     const color = d3.scaleOrdinal()
       .domain(fields)
       .range([
-        "#74a892", // Job Search
-        "#8e44ad", // Learning
-        "#f8e1a6", // Prof Dev
-        "#f57f20", // Workout
-        "#4c3b4d", // Creative
-        "#c7522a", // Language
-        "#007b5f", // Call
-        "#6a98c1", // Events
-        "#e5c185", // Personal Prj
+        "#4A90E2", // Mobility (blue)
+        "#5DADE2", // Workout (blue)
+        "#8E44AD", // Language (purple)
+        "#9B59B6", // Piano (purple)
+        "#AF7AC5", // Reading (purple)
+        "#E67E22", // Job Search (orange)
+        "#F39C12", // Tasks (amber)
+        "#27AE60", // Events (green)
+        "#2ECC71"  // Call (green)
       ]);
 
     svg

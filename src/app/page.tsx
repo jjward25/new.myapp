@@ -76,7 +76,7 @@ export default async function Home() {
 
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mt-4"></div> 
 
-        {/** Charts: Routines and Tasks */}
+        {/** Charts: Project Milestones and Tasks*/}
         <div className='flex flex-col md:flex-row pt-3 gap-4'>
             <div className='mb-2 drop-shadow-sm w-full'>
               <MilestoneTrendComponent/>
@@ -94,7 +94,7 @@ export default async function Home() {
         {/** Column 1: Workout */}
         <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
         
-        <div className='w-full h-fit bg-gradient-to-tr from-black to-fuchsia-950  max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
+        <div className='w-full h-fit bg-gradient-to-tr from-black to-slate-800 max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
           <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
           <RoutinesBooleanBar/>
         </div>

@@ -58,7 +58,7 @@ const TaskBarChart = () => {
   useEffect(() => {
     if (!data.length || !svgRef.current) return
 
-    const margin = { top: 20, right: 30, bottom: 70, left: 40 }
+    const margin = { top: 20, right: 30, bottom: 40, left: 40 }
     const width = svgRef.current.clientWidth - margin.left - margin.right
     const height = 200 - margin.top - margin.bottom
 
@@ -146,7 +146,7 @@ const TaskBarChart = () => {
       .text((d) => d)
       .attr("fill", "white")
 
-    const svgHeight = height + margin.top + margin.bottom // Added 40px for legend
+    const svgHeight = height + margin.top + margin.bottom 
     d3.select(svgRef.current).attr("height", svgHeight)
   }, [data])
 

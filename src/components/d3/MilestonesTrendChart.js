@@ -26,7 +26,7 @@ const MilestoneTrendChart = ({ data }) => {
     svg.selectAll('*').remove(); // Clear the SVG before redrawing
 
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 20, right: 20, bottom: 60, left: 30 };
+    const margin = { top: 20, right: 20, bottom: 80, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 
@@ -94,50 +94,56 @@ const MilestoneTrendChart = ({ data }) => {
     svg.append('g').call(yAxis);
 
     // Legend
-    const legend = svg.append('g')
-      .attr('transform', `translate(${margin.left}, ${height + margin.top + 40})`);
+    // Legend
+const legend = svg.append('g')
+.attr('transform', `translate(${margin.left}, ${height + margin.top + 40})`);
 
-    const legendItemWidth = 140;
-    const legendItemHeight = 15;
-    const legendPadding = 10; // Space between legend items
+const legendPadding = 10; // Space between legend items
+let legendX = 0;
+let legendY = 0;
 
-    let legendX = 0;
-    let legendY = 0;
+const uniqueProjectNames = [...new Set(filteredData.map(d => d.projectName))];
 
-    const uniqueProjectNames = [...new Set(filteredData.map(d => d.projectName))];
+const legendItems = legend.selectAll('.legend-item')
+.data(uniqueProjectNames)
+.enter()
+.append('g')
+.attr('class', 'legend-item')
+.attr('transform', function(d, i) {
+  const item = d3.select(this);
+  
+  // Append text to measure its width
+  const text = item.append('text')
+    .attr('x', 20)
+    .attr('y', 10)
+    .style('font-size', '10px')
+    .style('fill', '#0097A7')
+    .text(d);
+  
+  // Get the width of the text
+  const textWidth = text.node().getBBox().width;
+  const legendItemWidth = 20 + textWidth + legendPadding; // 20 for the color box and spacing
 
-    const legendItems = legend.selectAll('.legend-item')
-      .data(uniqueProjectNames)
-      .enter()
-      .append('g')
-      .attr('class', 'legend-item')
-      .attr('transform', function (d, i) {
-        // Check if the current item exceeds the width
-        if (legendX + legendItemWidth > width) {
-          legendX = 0; // Reset to start of new line
-          legendY += legendItemHeight + legendPadding; // Move down for new line
-        }
-        
-        const transform = `translate(${legendX}, ${legendY})`;
-        legendX += legendItemWidth + legendPadding; // Move x position for next item
-        return transform;
-      })
-      .each(function (d) {
-        const item = d3.select(this);
-        item.append('rect')
-          .attr('x', 0)
-          .attr('width', 12)
-          .attr('height', 12)
-          .attr('fill', colorScale(d))
-          .attr('stroke', 'white')
-          .attr('stroke-width', 1);
-        item.append('text')
-          .attr('x', 20)
-          .attr('y', 10)
-          .style('font-size', '10px')
-          .style('fill', '#0097A7') // Change color to match your chart theme
-          .text(d);
-      });
+  // Check if the current item exceeds the width
+  if (legendX + legendItemWidth > width) {
+    legendX = 0; // Reset to start of new line
+    legendY += 15 + legendPadding; // Move down for new line
+  }
+
+  const transform = `translate(${legendX}, ${legendY})`;
+  legendX += legendItemWidth; // Move x position for next item
+  return transform;
+})
+.each(function(d) {
+  const item = d3.select(this);
+  item.append('rect')
+    .attr('x', 0)
+    .attr('width', 12)
+    .attr('height', 12)
+    .attr('fill', colorScale(d))
+    .attr('stroke', 'white')
+    .attr('stroke-width', 1);
+});
 
   }, [data]);
 
