@@ -80,23 +80,28 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   </div>
               </div>
 
-              {/* Wakeup */}
+              {/* 6am Wakeup */}
               <div className="flex items-center mb-2 p-1 rounded">
-                    <div className="w-auto mr-2">
-                      <label className="block text-sm text-black font-semibold">6am Wakeup:</label>
-                    </div>
-                    <div className="w-auto text-xs">
-                      {isEditing ? (
-                        <input
-                          type="number"
-                          value={routine["6am Wakeup"]}
-                          onChange={(e) => onInputChange(e, '6am Wakeup')}
-                          className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                        />
-                      ) : (
-                        <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["6am Wakeup"]}</p>
-                      )}
-                  </div>
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">6am Wakeup:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine['6am Wakeup']}
+                        onChange={(e) => onInputChange(e, '6am Wakeup')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>6am Wakeup</span>
+                    </label>
+                  ) : (
+                    <p className={`px-3 inline-block ${routine['6am Wakeup'] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine['6am Wakeup'] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Mobility */}
