@@ -140,16 +140,16 @@ const TrueValuesBarChart = () => {
       .domain(fields)
       .range([
         "#E74C3C", // 6am Wakeup
-        "#C0392B ", //Done by 730
-        "#4A90E2", // Mobility (blue)
-        "#5DADE2", // Workout (blue)
-        "#8E44AD", // Language (purple)
-        "#9B59B6", // Piano (purple)
-        "#AF7AC5", // Reading (purple)
+        "#C0392B", // Done by 730
         "#E67E22", // Job Search (orange)
-        "#F39C12", // Tasks (amber)
+        "#4A90E2", // Mobility (blue)
+        "#AF7AC5", // Reading (purple)
+        "#5DADE2", // Workout (blue)
+        "#9B59B6", // Piano (purple)
+        "#8E44AD", // Language (purple)
+        "#2ECC71", // Call (green)
         "#27AE60", // Events (green)
-        "#2ECC71"  // Call (green)
+        "#F39C12" // Tasks (amber)        
       ]);
 
     svg
