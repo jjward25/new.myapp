@@ -26,7 +26,7 @@ const TrueValuesBarChart = () => {
   }, []);
 
   const processData = (data) => {
-    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
+    const fields = ["6am Wakeup","Done by 730","Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
   
@@ -40,6 +40,12 @@ const TrueValuesBarChart = () => {
   
           // If the description is missing, provide a unique fallback for each field
           switch (field) {
+            case "6am Wakeup":
+              description =  "6am Wakeup.";
+              break;
+            case "Done by 730":
+              description =  "Good start.";
+              break;
             case "Job Search":
               description =  "Job search activities.";
               break;
@@ -86,7 +92,7 @@ const TrueValuesBarChart = () => {
 
   const stackedData = useMemo(() => {
     if (data.length === 0) return [];
-    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
+    const fields = ["6am Wakeup","Done by 730","Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const stack = d3.stack().keys(fields).value((d, key) => (d[key].value ? 1 : 0));
     return stack(data);
   }, [data]);
@@ -94,12 +100,12 @@ const TrueValuesBarChart = () => {
   useEffect(() => {
     if (stackedData.length === 0) return;
 
-    const fields = ["Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
+    const fields = ["6am Wakeup","Done by 730","Job Search", "Mobility", "Reading", "Workout", "Piano", "Language", "Call", "Events", "Tasks"];
     const containerWidth = svgRef.current.clientWidth;
     const containerHeight = svgRef.current.clientHeight;
-    const margin = { top: 10, right: 15, bottom: 60, left: 30 };
+    const margin = { top: 10, right: 15, bottom: 120, left: 30 };
     const width = containerWidth - margin.left - margin.right;
-    const height = 200 - margin.top - margin.bottom;
+    const height = 250 - margin.top - margin.bottom;
 
     d3.select("#barchart").selectAll("*").remove();
 
@@ -133,6 +139,8 @@ const TrueValuesBarChart = () => {
     const color = d3.scaleOrdinal()
       .domain(fields)
       .range([
+        "#E74C3C", // 6am Wakeup
+        "#C0392B ", //Done by 730
         "#4A90E2", // Mobility (blue)
         "#5DADE2", // Workout (blue)
         "#8E44AD", // Language (purple)
@@ -200,7 +208,7 @@ const TrueValuesBarChart = () => {
     const legend = d3
       .select(svgRef.current)
       .append("g")
-      .attr("transform", `translate(${margin.left}, ${200 - margin.bottom + 30})`);
+      .attr("transform", `translate(${margin.left}, ${200 - margin.bottom + 80})`);
 
     const legendItemWidth = 80;
     const legendItemHeight = 15;

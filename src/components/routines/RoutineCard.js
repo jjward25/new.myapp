@@ -80,6 +80,25 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   </div>
               </div>
 
+              {/* Wakeup */}
+              <div className="flex items-center mb-2 p-1 rounded">
+                    <div className="w-auto mr-2">
+                      <label className="block text-sm text-black font-semibold">6am Wakeup:</label>
+                    </div>
+                    <div className="w-auto text-xs">
+                      {isEditing ? (
+                        <input
+                          type="number"
+                          value={routine["6am Wakeup"]}
+                          onChange={(e) => onInputChange(e, '6am Wakeup')}
+                          className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                        />
+                      ) : (
+                        <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg text-white  px-3">{routine["6am Wakeup"]}</p>
+                      )}
+                  </div>
+              </div>
+
               {/* Mobility */}
               <div className="flex items-center mb-2 p-1 rounded">
                 <div className="w-auto mr-2">
@@ -104,6 +123,54 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 </div>
               </div>
 
+                 {/* Language */}
+                 <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">15m Language:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine["Language"]}
+                        onChange={(e) => onInputChange(e, 'Language')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>Language</span>
+                    </label>
+                  ) : (
+                    <p className={`px-3 inline-block ${routine["Language"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Language"] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Piano */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">20m Piano:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine["Piano"]}
+                        onChange={(e) => onInputChange(e, 'Piano')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>Piano</span>
+                    </label>
+                  ) : (
+                    <p className={`px-3 inline-block ${routine["Piano"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Piano"] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               {/* Breakfast */}
               <div className="flex items-center mb-2  p-1 rounded">
                 <div className="w-auto mr-2">
@@ -123,6 +190,30 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   ) : (
                     <p className={`px-3 inline-block ${routine["Breakfast"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Breakfast"] ? 'True' : 'False'}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Done by 730 */}
+              <div className="flex items-center mb-2  p-1 rounded">
+                <div className="w-auto mr-2">
+                  <label className="block text-sm text-black font-semibold">Done by 730:</label>
+                </div>
+                <div className="w-auto">
+                  {isEditing ? (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={routine["Done by 730"]}
+                        onChange={(e) => onInputChange(e, 'Done by 730')}
+                        className="checkbox checkbox-primary"
+                      />
+                      <span>Done by 730</span>
+                    </label>
+                  ) : (
+                    <p className={`px-3 inline-block ${routine["Done by 730"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine["Done by 730"] ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
@@ -171,54 +262,6 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                   ) : (
                     <p className={`px-3 inline-block ${routine["Dinner"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine["Dinner"] ? 'True' : 'False'}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Language */}
-              <div className="flex items-center mb-2  p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">15m Language:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={routine["Language"]}
-                        onChange={(e) => onInputChange(e, 'Language')}
-                        className="checkbox checkbox-primary"
-                      />
-                      <span>Language</span>
-                    </label>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine["Language"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Language"] ? 'True' : 'False'}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Piano */}
-              <div className="flex items-center mb-2  p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">20m Piano:</label>
-                </div>
-                <div className="w-auto">
-                  {isEditing ? (
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={routine["Piano"]}
-                        onChange={(e) => onInputChange(e, 'Piano')}
-                        className="checkbox checkbox-primary"
-                      />
-                      <span>Piano</span>
-                    </label>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine["Piano"] ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine["Piano"] ? 'True' : 'False'}
                     </p>
                   )}
                 </div>
