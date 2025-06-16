@@ -67,28 +67,21 @@ export default async function Home() {
           </div>
         </div>         
 
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
-          
-        {/** Chat */}
-        <div className='flex flex-col md:flex-row'>
-            <ChatComponent/>
-        </div>
-
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mt-4"></div> 
 
         {/** Charts: Project Milestones and Tasks*/}
         <div className='flex flex-col md:flex-row pt-3 gap-4'>
-            <div className='mb-2 drop-shadow-sm w-full'>
+            <div className=' drop-shadow-sm w-full'>
               <MilestoneTrendComponent/>
             </div>
-          <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg w-full mb-2">
+          <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg w-full">
           <h1 className="text-xl font-semibold text-cyan-800">Tasks Completed by Day</h1>
               <TaskTrendChart/>
             </div>
         </div>
 
         {/** Main Components List */}
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] mb-4"></div> 
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div> 
         <div className='w-full md:grid md:grid-cols-2'>
         
         {/** Column 1: Workout */}
@@ -126,6 +119,13 @@ export default async function Home() {
         </div>
 
       </div>
+
+      <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div> 
+          
+          {/** Chat */}
+          <div className='flex flex-col md:flex-row'>
+              <ChatComponent/>
+          </div>
     </div>
   </main>
   );
