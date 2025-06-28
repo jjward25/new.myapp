@@ -27,7 +27,7 @@ const TrueValuesBarChart = () => {
 
   const processData = (data) => {
     const mainFields = ["Morning Exercise", "Evening Exercise", "Applications", "Fresh Air"];
-    const bonusFields = ["Language", "Piano", "Reading", "Writing", "Social", "Cook/Meal Prep"];
+    const bonusFields = ["Language", "Piano", "Reading", "Writing", "Social", "Cook/Meal Prep", "Coding", "Prof Dev"];
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
   
