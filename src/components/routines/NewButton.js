@@ -27,6 +27,8 @@ const AddRoutineButton = () => {
       "Writing": false,
       "Social": false,
       "Cook/Meal Prep": false,
+      "Coding": false,
+      "Prof Dev": false,
       "Daily Score": 0,
       "Journal": ""
     };

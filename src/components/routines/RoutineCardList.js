@@ -50,7 +50,9 @@ const RoutineCardList = () => {
           routineData["Reading"],
           routineData["Writing"],
           routineData["Social"],
-          routineData["Cook/Meal Prep"]
+          routineData["Cook/Meal Prep"],
+          routineData["Coding"],
+          routineData["Prof Dev"]
         ];
 
         const mainCount = mainActivities.filter(Boolean).length;
