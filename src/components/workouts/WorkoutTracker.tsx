@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 
 interface Set {
@@ -69,12 +69,7 @@ export default function WorkoutTracker() {
   const [collapsedSessions, setCollapsedSessions] = useState<Record<string, boolean>>({});
   const [collapsedExercises, setCollapsedExercises] = useState<Record<string, boolean>>({});
 
-  useEffect(() => {
-    fetchTemplates();
-    fetchAllWorkouts();
-  }, []);
-
-  const fetchTemplates = async () => {
+  const fetchTemplates = useCallback(async () => {
     try {
       const response = await fetch('/api/workouts/templates');
       const data = await response.json();
@@ -85,9 +80,9 @@ export default function WorkoutTracker() {
     } catch (error) {
       console.error('Error fetching templates:', error);
     }
-  };
+  }, []);
 
-  const fetchAllWorkouts = async () => {
+  const fetchAllWorkouts = useCallback(async () => {
     try {
       const response = await fetch('/api/workouts');
       const data = await response.json();
@@ -100,7 +95,12 @@ export default function WorkoutTracker() {
     } catch (error) {
       console.error('Error fetching all workouts:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTemplates();
+    fetchAllWorkouts();
+  }, [fetchTemplates, fetchAllWorkouts]);
 
   const checkForExistingWorkout = async (day: string, date: string) => {
     try {
@@ -812,7 +812,7 @@ function ExerciseCard({
 
           {/* Existing Sets */}
           <div className="mb-4">
-            <h5 className="font-medium mb-3">Today's Sets:</h5>
+            <h5 className="font-medium mb-3">{`Today's Sets:`}</h5>
             {exercise.Sets.length === 0 ? (
               <p className="text-gray-400 text-sm">No sets completed yet</p>
             ) : (
