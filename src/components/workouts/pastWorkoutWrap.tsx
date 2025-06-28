@@ -3,29 +3,27 @@
 import React, { useState } from 'react';
 import PastWorkout from './pastWorkout';
 
+interface Set {
+    SetNumber: number;
+    Reps: number;
+    Weight: number;
+}
+
 interface Exercise {
-    "Starting Max": number | null;
-    Type: string;
-    Set1Reps: number | null;
-    Set2Reps: number | null;
-    Set3Reps: number | null;
-    Set4Reps: number | null;
-    Set1Weight: number | null;
-    Set2Weight: number | null;
-    Set3Weight: number | null;
-    Set4Weight: number | null;
-    "Ending Max": number | null;
+    ExerciseType: string;
+    Sets: Set[];
 }
 
 interface Workout {
     _id: string;
-    Date: string; // Change this to Date if it's a Date object
-    Workout: string;
-    Exercises: Record<string, Exercise>; // Using Record to represent exercises as a dictionary
+    Date: string;
+    Day: string;
+    WorkoutName: string;
+    Exercises: Record<string, Exercise>;
 }
 
 interface WorkoutWrapProps {
-    workout: Workout; // Specify the type for workout prop
+    workout: Workout;
 }
 
 export function PastWorkoutWrap({ workout }: WorkoutWrapProps) {
@@ -35,18 +33,42 @@ export function PastWorkoutWrap({ workout }: WorkoutWrapProps) {
         setIsVisible(!isVisible);
     };
 
+    // Calculate total sets and total reps for summary
+    const calculateWorkoutSummary = () => {
+        let totalSets = 0;
+        let totalReps = 0;
+        let totalWeight = 0;
+
+        Object.values(workout.Exercises).forEach(exercise => {
+            totalSets += exercise.Sets.length;
+            exercise.Sets.forEach(set => {
+                totalReps += set.Reps;
+                totalWeight += set.Reps * set.Weight;
+            });
+        });
+
+        return { totalSets, totalReps, totalWeight };
+    };
+
+    const { totalSets, totalReps, totalWeight } = calculateWorkoutSummary();
+
     return (
         <div className="workout-item">
             <h3
                 onClick={toggleVisibility}
-                className="text-sm font-semibold mb-2 pt-3 mt-2 border-t border-white cursor-pointer"
+                className="text-sm font-semibold mb-2 pt-3 mt-2 border-t border-white cursor-pointer hover:text-cyan-400 transition-colors"
             >
-                {workout.Date}: <em className="not-italic text-amber-500">{workout.Workout}</em>
+                {workout.Date}: <em className="not-italic text-amber-500">{workout.WorkoutName}</em> (Day {workout.Day})
             </h3>
+            
+            {/* Workout Summary */}
+            <div className="text-xs text-gray-400 mb-2">
+                {totalSets} sets • {totalReps} total reps • {totalWeight} lbs total volume
+            </div>
 
             {/* Conditionally render the Workout component */}
             {isVisible && (
-                <PastWorkout exercises={workout.Exercises} date={workout.Date} />
+                <PastWorkout workout={workout} />
             )}
         </div>
     );

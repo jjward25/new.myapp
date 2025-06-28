@@ -10,20 +10,21 @@ export async function getBacklog() {
   return backlog;
 }
 
-
 export async function addRoutine(newRoutine) {
   const client = await clientPromise;
   const db = client.db('Personal');
   const collection = db.collection('Routines');
   try {
     const result = await collection.insertOne(newRoutine);
-    return result.ops[0];  // Return the newly added routine
+    return { 
+      ...newRoutine, 
+      _id: result.insertedId 
+    };
   } catch (error) {
     console.error('Error in addRoutine:', error);
-    throw new Error('Failed to insert routine into database.');
+    throw error;
   }
 }
-
 
 export async function updateItem(id, updatedItem) {
   const client = await clientPromise;

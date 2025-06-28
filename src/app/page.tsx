@@ -71,21 +71,26 @@ export default async function Home() {
 
         {/** Charts: Project Milestones and Tasks*/}
         <div className='flex flex-col md:flex-row pt-3 gap-4'>
-            <div className=' drop-shadow-sm w-full'>
-              <MilestoneTrendComponent/>
-            </div>
           <div className="p-4 mx-auto bg-gradient-to-tr from-black to-slate-800 rounded-lg w-full">
-          <h1 className="text-xl font-semibold text-cyan-800">Tasks Completed by Day</h1>
-              <TaskTrendChart/>
-            </div>
+            <h1 className="text-xl font-semibold text-cyan-800">Tasks Completed by Day</h1>
+            <TaskTrendChart/>
+          </div>
+          <div className=' drop-shadow-sm w-full'>
+            <MilestoneTrendComponent/>
+          </div>
         </div>
 
         {/** Main Components List */}
         <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div> 
         <div className='w-full md:grid md:grid-cols-2'>
         
-        {/** Column 1: Workout */}
-        <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pl-0'>
+        {/** Column 1: Routines */}
+        <div className='w-full md:px-4 md:pr-4 md:pl-0 md:border-r-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
+          <Routines/> 
+        </div>
+
+        {/** Column 2: Workout */}
+        <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pr-0'>
         
         <div className='w-full h-fit bg-gradient-to-tr from-black to-slate-800 max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
           <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
@@ -113,10 +118,7 @@ export default async function Home() {
           </div>
         </div>
 
-        {/** Column 2: Routines */}
-        <div className='w-full md:px-4 md:pl-4 md:pr-0 md:border-l-2 md:border-cyan-600 border-t-2 border-cyan-600 pt-5 md:pt-0 mt-3 md:mt-0 md:border-t-0'>
-          <Routines/> 
-        </div>
+        
 
       </div>
 

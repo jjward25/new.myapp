@@ -107,6 +107,34 @@ const AddListItemButton: React.FC = () => {
     }
   }
 
+  const handleDeleteList = async (listName: string) => {
+    if (!confirm(`Are you sure you want to delete the "${listName}" list? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch("/api/lists", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ listName }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete list")
+      }
+
+      // Update the available lists by removing the deleted list
+      setAvailableLists(availableLists.filter(list => list !== listName))
+      alert("List deleted successfully!")
+    } catch (error) {
+      console.error("Error deleting list:", error)
+      alert("Failed to delete list")
+    }
+  }
+
   const handleItemChange = (index: number, field: keyof MovieItem, value: any) => {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], [field]: value }
@@ -210,10 +238,10 @@ const AddListItemButton: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div
             ref={modalRef}
-            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto z-50"
           >
             <div className="mb-6">
               <h2 className="text-xl font-bold mb-4">Add New List</h2>
@@ -244,13 +272,24 @@ const AddListItemButton: React.FC = () => {
                   <h3 className="mb-3">Select List:</h3>
                   <div className="space-y-2">
                     {availableLists.map((list) => (
-                      <button
-                        key={list}
-                        onClick={() => setSelectedList(list)}
-                        className="block w-full text-left px-4 py-2 hover:bg-cyan-100 rounded"
-                      >
-                        {list}
-                      </button>
+                      <div key={list} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                        <button
+                          onClick={() => setSelectedList(list)}
+                          className="flex-1 text-left px-2 py-1 hover:bg-cyan-100 rounded"
+                        >
+                          {list}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDeleteList(list)
+                          }}
+                          className="ml-2 px-2 py-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded text-sm"
+                          title={`Delete ${list} list`}
+                        >
+                          ✕
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </div>

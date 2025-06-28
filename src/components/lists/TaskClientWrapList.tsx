@@ -29,6 +29,17 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [hideCompleted, setHideCompleted] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [editingMovie, setEditingMovie] = useState<MovieItem | null>(null);
+  const [sortBy, setSortBy] = useState<'none' | 'rating-asc' | 'rating-desc'>('none');
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [quickAddItem, setQuickAddItem] = useState<Partial<MovieItem>>({
+    name: '',
+    done: false,
+    length: '',
+    rating: null,
+    notes: ''
+  });
 
   // Convert string items to proper format
   const normalizeItem = (item: ListItem): ListItemBase => {
@@ -146,13 +157,165 @@ const ListWrap: React.FC<ListWrapProps> = ({
     }
   };
 
+  const handleMovieClick = (item: ListItem) => {
+    if (listName !== 'Movies') return;
+    
+    const normalizedItem = normalizeItem(item);
+    const movieItem = item as MovieItem;
+    
+    if (expandedItem === normalizedItem.name) {
+      // Close if already expanded
+      setExpandedItem(null);
+      setEditingMovie(null);
+    } else {
+      // Expand and set up editing
+      setExpandedItem(normalizedItem.name);
+      setEditingMovie({
+        ...normalizedItem,
+        length: movieItem.length || '',
+        rating: movieItem.rating || null,
+        notes: movieItem.notes || ''
+      });
+    }
+  };
+
+  const handleSaveMovie = async () => {
+    if (!editingMovie) return;
+
+    try {
+      const response = await fetch('/api/lists/items/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          listName,
+          itemName: editingMovie.name,
+          updates: editingMovie
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update movie');
+      }
+
+      // Update local state
+      setItems(items.map(item => {
+        const normalizedItem = normalizeItem(item);
+        return normalizedItem.name === editingMovie.name ? editingMovie : item;
+      }));
+      
+      setExpandedItem(null);
+      setEditingMovie(null);
+      alert('Movie updated successfully!');
+    } catch (error) {
+      console.error('Error updating movie:', error);
+      alert('Failed to update movie');
+    }
+  };
+
+  const handleCancelMovieEdit = () => {
+    setExpandedItem(null);
+    setEditingMovie(null);
+  };
+
+  const handleQuickAdd = async () => {
+    if (!quickAddItem.name?.trim()) {
+      alert('Please enter an item name');
+      return;
+    }
+
+    try {
+      const itemToAdd = listName === 'Movies' 
+        ? quickAddItem
+        : { name: quickAddItem.name, done: false };
+
+      const response = await fetch('/api/lists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'addItems',
+          listName,
+          items: [itemToAdd]
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add item');
+      }
+
+      // Add to local state
+      setItems([...items, itemToAdd as ListItem]);
+      
+      // Reset form
+      setQuickAddItem({
+        name: '',
+        done: false,
+        length: '',
+        rating: null,
+        notes: ''
+      });
+      setShowQuickAdd(false);
+      
+    } catch (error) {
+      console.error('Error adding item:', error);
+      alert('Failed to add item');
+    }
+  };
+
+  const handleCancelQuickAdd = () => {
+    setQuickAddItem({
+      name: '',
+      done: false,
+      length: '',
+      rating: null,
+      notes: ''
+    });
+    setShowQuickAdd(false);
+  };
+
   const toggleOpen = () => {
     setIsOpen(prev => !prev);
   };
 
-  const filteredItems = hideCompleted 
-    ? items.filter(item => !normalizeItem(item).done) 
-    : items;
+  const handleSortToggle = () => {
+    if (sortBy === 'none') {
+      setSortBy('rating-desc');
+    } else if (sortBy === 'rating-desc') {
+      setSortBy('rating-asc');
+    } else {
+      setSortBy('none');
+    }
+  };
+
+  const getSortedItems = (itemsToSort: ListItem[]) => {
+    if (listName !== 'Movies' || sortBy === 'none') {
+      return itemsToSort;
+    }
+
+    return [...itemsToSort].sort((a, b) => {
+      const movieA = a as MovieItem;
+      const movieB = b as MovieItem;
+      
+      const ratingA = movieA.rating || 0;
+      const ratingB = movieB.rating || 0;
+      
+      if (sortBy === 'rating-desc') {
+        return ratingB - ratingA;
+      } else {
+        return ratingA - ratingB;
+      }
+    });
+  };
+
+  const filteredItems = getSortedItems(
+    hideCompleted 
+      ? items.filter(item => !normalizeItem(item).done) 
+      : items
+  );
 
   return (
     <div className='flex flex-col w-full justify-start mb-2 h-fit'>
@@ -183,42 +346,220 @@ const ListWrap: React.FC<ListWrapProps> = ({
             ) : (
               <>
                 <div className="flex justify-between mb-4 space-x-4">
-                  <button
-                    onClick={() => setHideCompleted(!hideCompleted)}
-                    className="text-sm text-cyan-600 hover:text-cyan-800"
-                  >
-                    {hideCompleted ? 'Show Completed' : 'Hide Completed'}
-                  </button>
-                  <button
-                    onClick={() => setIsEditing(!isEditing)}
-                    className="text-sm text-cyan-600 hover:text-cyan-800"
-                  >
-                    {isEditing ? 'Done Editing' : 'Edit List'}
-                  </button>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => setHideCompleted(!hideCompleted)}
+                      className="text-sm text-cyan-600 hover:text-cyan-800"
+                    >
+                      {hideCompleted ? 'Show Completed' : 'Hide Completed'}
+                    </button>
+                    {listName === 'Movies' && (
+                      <button
+                        onClick={handleSortToggle}
+                        className="text-sm text-cyan-600 hover:text-cyan-800"
+                      >
+                        Sort: {sortBy === 'none' ? 'None' : sortBy === 'rating-desc' ? 'Rating ↓' : 'Rating ↑'}
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex space-x-4">
+                    <button
+                      onClick={() => setShowQuickAdd(!showQuickAdd)}
+                      className="text-sm text-cyan-600 hover:text-cyan-800 font-bold"
+                      title="Add item to this list"
+                    >
+                      + Add Item
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="text-sm text-cyan-600 hover:text-cyan-800"
+                    >
+                      {isEditing ? 'Done Editing' : 'Edit List'}
+                    </button>
+                  </div>
                 </div>
+
+                {showQuickAdd && (
+                  <div className="mb-4 p-4 border border-cyan-200 rounded-lg bg-cyan-50">
+                    <h4 className="font-semibold mb-3">Add New Item</h4>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          value={quickAddItem.name}
+                          onChange={(e) => setQuickAddItem({...quickAddItem, name: e.target.value})}
+                          className="w-full border border-gray-300 rounded-md px-2 py-1"
+                          placeholder="Enter item name"
+                          onKeyPress={(e) => e.key === 'Enter' && handleQuickAdd()}
+                        />
+                      </div>
+                      
+                      {listName === 'Movies' && (
+                        <>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Length
+                            </label>
+                            <input
+                              type="text"
+                              value={quickAddItem.length || ''}
+                              onChange={(e) => setQuickAddItem({...quickAddItem, length: e.target.value})}
+                              placeholder="e.g., 2h15m"
+                              className="w-full border border-gray-300 rounded-md px-2 py-1"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Rating (0-5)
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="5"
+                              step="0.5"
+                              value={quickAddItem.rating || ''}
+                              onChange={(e) => setQuickAddItem({...quickAddItem, rating: e.target.value ? Number(e.target.value) : null})}
+                              className="w-full border border-gray-300 rounded-md px-2 py-1"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Notes
+                            </label>
+                            <textarea
+                              value={quickAddItem.notes || ''}
+                              onChange={(e) => setQuickAddItem({...quickAddItem, notes: e.target.value})}
+                              rows={2}
+                              className="w-full border border-gray-300 rounded-md px-2 py-1 resize-none"
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    
+                    <div className="flex justify-end space-x-2 mt-4">
+                      <button
+                        onClick={handleCancelQuickAdd}
+                        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleQuickAdd}
+                        className="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm"
+                      >
+                        Add Item
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <ul className="space-y-2">
                   {filteredItems.map((item) => {
                     const normalizedItem = normalizeItem(item);
+                    const isMovieList = listName === 'Movies';
+                    const isExpanded = expandedItem === normalizedItem.name;
+                    
                     return (
-                      <li key={normalizedItem.name} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={normalizedItem.done}
-                            onChange={() => handleCheckboxChange(normalizedItem.name)}
-                            className="checkbox"
-                          />
-                          <span className={`${normalizedItem.done ? 'line-through text-gray-500' : ''}`}>
-                            {normalizedItem.name}
-                          </span>
+                      <li key={normalizedItem.name} className="border rounded-lg p-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={normalizedItem.done}
+                              onChange={() => handleCheckboxChange(normalizedItem.name)}
+                              className="checkbox"
+                            />
+                            <span 
+                              className={`${normalizedItem.done ? 'line-through text-gray-500' : ''} ${
+                                isMovieList ? 'cursor-pointer hover:text-cyan-600' : ''
+                              }`}
+                              onClick={() => isMovieList && handleMovieClick(item)}
+                            >
+                              {normalizedItem.name}
+                            </span>
+                          </div>
+                          {isEditing && (
+                            <button
+                              onClick={() => handleDeleteItem(normalizedItem.name)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              Delete
+                            </button>
+                          )}
                         </div>
-                        {isEditing && (
-                          <button
-                            onClick={() => handleDeleteItem(normalizedItem.name)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            Delete
-                          </button>
+                        
+                        {isMovieList && isExpanded && editingMovie && (
+                          <div className="mt-4 p-4 bg-gray-50 rounded border-t">
+                            <h4 className="font-semibold mb-3">Edit Movie Details</h4>
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Title
+                                </label>
+                                <input
+                                  type="text"
+                                  value={editingMovie.name}
+                                  onChange={(e) => setEditingMovie({...editingMovie, name: e.target.value})}
+                                  className="w-full border border-gray-300 rounded-md px-2 py-1"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Length
+                                </label>
+                                <input
+                                  type="text"
+                                  value={editingMovie.length || ''}
+                                  onChange={(e) => setEditingMovie({...editingMovie, length: e.target.value})}
+                                  placeholder="e.g., 2h15m"
+                                  className="w-full border border-gray-300 rounded-md px-2 py-1"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Rating (0-5)
+                                </label>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="5"
+                                  step="0.5"
+                                  value={editingMovie.rating || ''}
+                                  onChange={(e) => setEditingMovie({...editingMovie, rating: e.target.value ? Number(e.target.value) : null})}
+                                  className="w-full border border-gray-300 rounded-md px-2 py-1"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Notes
+                                </label>
+                                <textarea
+                                  value={editingMovie.notes || ''}
+                                  onChange={(e) => setEditingMovie({...editingMovie, notes: e.target.value})}
+                                  rows={3}
+                                  className="w-full border border-gray-300 rounded-md px-2 py-1 resize-none"
+                                />
+                              </div>
+                            </div>
+                            <div className="flex justify-end space-x-2 mt-4">
+                              <button
+                                onClick={handleCancelMovieEdit}
+                                className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={handleSaveMovie}
+                                className="px-3 py-1 bg-cyan-600 hover:bg-cyan-700 text-white rounded text-sm"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </div>
                         )}
                       </li>
                     );

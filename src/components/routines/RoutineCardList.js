@@ -36,13 +36,50 @@ const RoutineCardList = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put('/api/routines', { id: editableRoutine._id, updatedItem: editableRoutine }, {
+      // Calculate the daily score automatically before saving
+      const calculateDailyScore = (routineData) => {
+        const mainActivities = [
+          routineData["Morning Exercise"],
+          routineData["Evening Exercise"],
+          routineData["Applications"]
+        ];
+        
+        const bonusActivities = [
+          routineData["Language"],
+          routineData["Piano"],
+          routineData["Reading"],
+          routineData["Writing"],
+          routineData["Social"],
+          routineData["Cook/Meal Prep"]
+        ];
+
+        const mainCount = mainActivities.filter(Boolean).length;
+        const bonusCount = bonusActivities.filter(Boolean).length;
+
+        if (mainCount === 0) return 0;
+        if (mainCount === 1) return 1;
+        if (mainCount === 2) return bonusCount > 0 ? 3 : 2;
+        if (mainCount === 3) return bonusCount > 0 ? 4 : 3;
+        
+        return 0;
+      };
+
+      const updatedRoutineWithScore = {
+        ...editableRoutine,
+        "Daily Score": calculateDailyScore(editableRoutine)
+      };
+
+      await axios.put('/api/routines', { 
+        id: updatedRoutineWithScore._id, 
+        updatedItem: updatedRoutineWithScore 
+      }, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
+      
       setRoutines((prev) => 
-        prev.map((r, index) => (index === editingIndex ? editableRoutine : r))
+        prev.map((r, index) => (index === editingIndex ? updatedRoutineWithScore : r))
       );
       setEditingIndex(null);
       setEditableRoutine(null);

@@ -1,0 +1,772 @@
+{
+  "Templates": {
+    "Day_A": {
+      "Name": "Heavy Upper",
+      "Exercises": {
+        "Lean-forward Dips": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "6-10",
+          "Group": "Chest",
+          "Emphasis": "Lower Chest, Front Delts",
+          "Time": "Morning"
+        },
+        "DB Military Press": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Shoulders",
+          "Emphasis": "Traps, Front Delts",
+          "Time": "Morning"
+        },
+        "DB Pullover": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "6-8",
+          "Group": "Chest, Back",
+          "Emphasis": "Sternum, Mid-Back",
+          "Time": "Morning"
+        },
+        "Flies": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "12-15",
+          "Group": "Chest",
+          "Emphasis": "Sternum",
+          "Time": "Morning"
+        },
+        "Pull Ups": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "5-8",
+          "Group": "Back",
+          "Emphasis": "Lats, Biceps",
+          "Time": "Morning"
+        },
+        "Laying Side Shoulder Raise": {
+          "Superset": "SS1",
+          "Sets": 3,
+          "Reps": "10-12",
+          "Group": "Shoulders",
+          "Emphasis": "Side Delts",
+          "Time": "Morning"
+        },
+        "Band Pull-Aparts/FacePulls": {
+          "Superset": "SS1",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Back",
+          "Emphasis": "Rear Delts",
+          "Time": "Morning"
+        },
+        "Hangs": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "Max Time",
+          "Group": "Shoulders",
+          "Emphasis": "Mobility",
+          "Time": "Evening",
+          "Unit":"Time"
+        },
+        "Ab Roller": {
+          "Superset": "",
+          "Sets": 5,
+          "Reps": "Max Rolls",
+          "Group": "Core",
+          "Emphasis": "Abs",
+          "Time": "Evening"
+        },
+        "Deep Squat Hold + Press": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Core, Hips",
+          "Emphasis": "Erectors, Quads",
+          "Time": "Evening"
+        },
+        "90/90 Stretch": {
+          "Superset": "",
+          "Sets": 1,
+          "Reps": "2 mins",
+          "Group": "Hips",
+          "Emphasis": "Hip Mobility",
+          "Time": "Evening",
+          "Unit":"Time"
+        }
+      }
+    },
+    "Day_B": {
+      "Name": "Back and Hips",
+      "Exercises": {
+        "Hangs": {
+          "Superset": "SS1",
+          "Sets": 3,
+          "Reps": "Max Time",
+          "Group": "Shoulders",
+          "Emphasis": "Mobility",
+          "Time": "Morning",
+          "Unit":"Time"
+        },
+        "Deficit Decline Push Ups": {
+          "Superset": "SS1",
+          "Sets": 3,
+          "Reps": "8-15",
+          "Group": "Chest",
+          "Emphasis": "Upper, Front Delts",
+          "Time": "Morning"
+        },
+        "DB Rows": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "3-8",
+          "Group": "Back",
+          "Emphasis": "Lats, Upper Back",
+          "Time": "Morning"
+        },
+        "DB Deficit Deadlifts": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "6-8",
+          "Group": "Back",
+          "Emphasis": "Lower Back, Hamstrings, Glutes",
+          "Time": "Morning"
+        },
+        "Split Squats": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "6-10",
+          "Group": "Legs",
+          "Emphasis": "Quads, Glutes",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Knee Raise": {
+          "Superset": "SS2",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Hip Flexors",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Hamstring Curl": {
+          "Superset": "SS2",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Hamstring",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Glute Kick": {
+          "Superset": "SS2",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Glute",
+          "Time": "Morning"
+        },
+        "Monkeyfoot Laying Side Raise SS": {
+          "Superset": "SS3",
+          "Sets": 3,
+          "Reps": "10-15",
+          "Group": "Legs",
+          "Emphasis": "Glute, Hip Flexor",
+          "Time": "Morning"
+        },
+        "Planks / Side Planks": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Core",
+          "Emphasis": "Abs, Obliques",
+          "Time": "Evening",
+          "Unit":"Time"
+        },
+        "Calves + Tibialias": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Legs",
+          "Emphasis": "Calves, Shin, Injury Prevention",
+          "Time": "Evening"
+        },
+        "Deep Squat Hold + Press": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Core, Hips",
+          "Emphasis": "Erectors, Quads",
+          "Time": "Evening"
+        },
+        "90/90 Stretch": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Hips",
+          "Emphasis": "Hip Mobility",
+          "Time": "Evening",
+          "Unit":"Time"
+        }
+      }
+    },
+    "Day_C": {
+      "Name": "Leg Day",
+      "Exercises": {
+        "Sissy Squats": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "6-10",
+          "Group": "Quad",
+          "Emphasis": "ROM, Knee Health",
+          "Time": "Morning"
+        },
+        "RDLs (Front and Side)": {
+          "Superset": "SS1",
+          "Sets": 3,
+          "Reps": "8-15",
+          "Group": "Back",
+          "Emphasis": "Lower Back, Hamstrings",
+          "Time": "Morning"
+        },
+        "Zercher Squat": {
+          "Superset": "SS1",
+          "Sets": 6,
+          "Reps": "6-10",
+          "Group": "Back",
+          "Emphasis": "Erectors, Quads, Core",
+          "Time": "Morning"
+        },
+        "Military Press": {
+          "Superset": "SS2",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Shoulders",
+          "Emphasis": "Traps, Front Delts",
+          "Time": "Morning"
+        },
+        "Band Pull-Aparts/FacePulls": {
+          "Superset": "SS2",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Back",
+          "Emphasis": "Rear Delts",
+          "Time": "Morning"
+        },
+        "Laying Side Shoulder Raise": {
+          "Superset": "SS3",
+          "Sets": 3,
+          "Reps": "10-12",
+          "Group": "Shoulders",
+          "Emphasis": "Side Delts",
+          "Time": "Morning"
+        },
+        "Seated Front DB Raises": {
+          "Superset": "SS3",
+          "Sets": 3,
+          "Reps": "8-15",
+          "Group": "Shoulders",
+          "Emphasis": "Front Delts",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Knee Raise": {
+          "Superset": "SS4",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Hip Flexors",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Hamstring Curl": {
+          "Superset": "SS4",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Hamstring",
+          "Time": "Morning"
+        },
+        "MonkeyFoot Glute Kick": {
+          "Superset": "SS4",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Legs",
+          "Emphasis": "Glute",
+          "Time": "Morning"
+        },
+        "Calves + Tibialias": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Legs",
+          "Emphasis": "Calves, Shin, Injury Prevention",
+          "Time": "Evening"
+        },
+        "Ab Roller": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Core",
+          "Emphasis": "Abs",
+          "Time": "Evening"
+        },
+        "90/90 Stretch": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Hips",
+          "Emphasis": "Mobility",
+          "Time": "Evening",
+          "Unit":"Time"
+        },
+        "Hangs": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Shoulders",
+          "Emphasis": "Mobility",
+          "Time": "Evening",
+          "Unit":"Time"
+        }
+      }
+    },
+    "Day_D": {
+      "Name": "Maintenance + Mobility",
+      "Exercises": {
+        "Deep Squat Hold + Press": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "8-12",
+          "Group": "Core, Hips",
+          "Emphasis": "Erectors, Quads",
+          "Time": "All Day"
+        },
+        "Band Pull-Aparts/FacePulls": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Back",
+          "Emphasis": "Rear Delts",
+          "Time": "All Day"
+        },
+        "90/90 Stretch": {
+          "Superset": "",
+          "Sets": 1,
+          "Reps": "2 mins",
+          "Group": "Hips",
+          "Emphasis": "Mobility",
+          "Time": "All Day",
+          "Unit":"Time"
+        },
+        "Cossack Squats": {
+          "Superset": "",
+          "Sets": 2,
+          "Reps": "8-20",
+          "Group": "Hips, Hamstrings",
+          "Emphasis": "Mobility",
+          "Time": "All Day"
+        },
+        "Monkeyfoot Side Raise SS": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "10-15",
+          "Group": "Legs",
+          "Emphasis": "Glute, Hip Flexor",
+          "Time": "All Day"
+        },
+        "Banded Glute Bridge March": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Legs",
+          "Emphasis": "Glutes, Hip Flexor",
+          "Time": "All Day"
+        },
+        "Calf Raises": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Legs",
+          "Emphasis": "Calves",
+          "Time": "All Day"
+        },
+        "Tibialis Raises": {
+          "Superset": "",
+          "Sets": 3,
+          "Reps": "Max Reps",
+          "Group": "Legs",
+          "Emphasis": "Shins",
+          "Time": "All Day"
+        },
+        "Dead Bugs": {
+          "Superset": "",
+          "Sets": 1,
+          "Reps": "2 mins",
+          "Group": "Core",
+          "Emphasis": "Stability",
+          "Time": "All Day",
+          "Unit":"Time"
+        },
+        "Hangs": {
+          "Superset": "",
+          "Sets": 2,
+          "Reps": "Max Time",
+          "Group": "Shoulders",
+          "Emphasis": "Mobility",
+          "Time": "All Day",
+          "Unit":"Time"
+        },
+        "Core (Random)": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Core",
+          "Emphasis": "",
+          "Time": "All Day"
+        },
+        "Cardio (Random)": {
+          "Superset": "",
+          "Sets": 0,
+          "Reps": "",
+          "Group": "Cardio",
+          "Emphasis": "",
+          "Time": "All Day"
+        }
+      }
+    }
+  },
+  "Workouts": [
+    {
+      "_id": {
+        "$oid": "671ab144929e187a7d8c5da2"
+      },
+      "Date": "2025-01-15",
+      "Day": "A",
+      "WorkoutName": "Heavy Upper",
+      "Exercises": {
+        "Lean-forward Dips": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 7,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 6,
+              "Weight": 0
+            }
+          ]
+        },
+        "DB Military Press": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 10,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 9,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 8,
+              "Weight": 0
+            }
+          ]
+        },
+        "Pull Ups": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 6,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 5,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 4,
+              "Weight": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671ab144929e187a7d8c5da3"
+      },
+      "Date": "2025-01-17",
+      "Day": "B",
+      "WorkoutName": "Back and Hips",
+      "Exercises": {
+        "DB Rows": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 6,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 5,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 4,
+              "Weight": 0
+            }
+          ]
+        },
+        "DB Deficit Deadlifts": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 7,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 6,
+              "Weight": 0
+            }
+          ]
+        },
+        "Split Squats": {
+          "ExerciseType": "Isolation",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 7,
+              "Weight": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671ab144929e187a7d8c5da4"
+      },
+      "Date": "2025-01-19",
+      "Day": "C",
+      "WorkoutName": "Leg Day",
+      "Exercises": {
+        "Sissy Squats": {
+          "ExerciseType": "Isolation",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 7,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 6,
+              "Weight": 0
+            }
+          ]
+        },
+        "Zercher Squat": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 7,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 4,
+              "Reps": 6,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 5,
+              "Reps": 6,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 6,
+              "Reps": 5,
+              "Weight": 0
+            }
+          ]
+        },
+        "Military Press": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 10,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 9,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 8,
+              "Weight": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "Date": "2025-06-28",
+      "Day": "B",
+      "WorkoutName": "Back and Hips",
+      "Exercises": {
+        "Hangs": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 3,
+              "Weight": 0.5
+            }
+          ]
+        },
+        "Deficit Decline Push Ups": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 8,
+              "Weight": 0
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 8,
+              "Weight": 0
+            }
+          ]
+        },
+        "DB Rows": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 8,
+              "Weight": 22.5
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 8,
+              "Weight": 30
+            },
+            {
+              "SetNumber": 3,
+              "Reps": 8,
+              "Weight": 35
+            }
+          ]
+        },
+        "DB Deficit Deadlifts": {
+          "ExerciseType": "Compound",
+          "Sets": [
+            {
+              "SetNumber": 1,
+              "Reps": 6,
+              "Weight": 80
+            },
+            {
+              "SetNumber": 2,
+              "Reps": 6,
+              "Weight": 90
+            }
+          ]
+        },
+        "Split Squats": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "MonkeyFoot Knee Raise": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "MonkeyFoot Hamstring Curl": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "MonkeyFoot Glute Kick": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "Monkeyfoot Laying Side Raise SS": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "Planks / Side Planks": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "Calves + Tibialias": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "Deep Squat Hold + Press": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        },
+        "90/90 Stretch": {
+          "ExerciseType": "Isolation",
+          "Sets": []
+        }
+      },
+      "_id": {
+        "$oid": "68605ce3ed9b1f2f022cffcd"
+      }
+    }
+  ]
+}

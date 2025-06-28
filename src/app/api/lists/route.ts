@@ -1,4 +1,4 @@
-import { getLists, getListByName, createList, addItemsToList } from "@/utils/mongoDB/listCRUD"
+import { getLists, getListByName, createList, addItemsToList, deleteList } from "@/utils/mongoDB/listCRUD"
 import { NextResponse } from "next/server"
 
 interface ListItem {
@@ -100,6 +100,26 @@ async function handleAddItems(body: any) {
     console.error("Error adding items:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Error adding items" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json()
+    const { listName } = body
+
+    if (!listName) {
+      return NextResponse.json({ error: "List name is required" }, { status: 400 })
+    }
+
+    await deleteList(listName)
+    return NextResponse.json({ success: true, message: "List deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting list:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to delete list" },
+      { status: 500 }
+    )
   }
 }
 

@@ -11,6 +11,8 @@ export default function Calendar() {
     location: '',
   });
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedEvent, setEditedEvent] = useState<any>(null);
 
   // Fetch events from MongoDB on component mount
   useEffect(() => {
@@ -88,6 +90,67 @@ export default function Calendar() {
     }
   };
 
+  const handleEditEvent = () => {
+    setIsEditing(true);
+    setEditedEvent({
+      ...selectedEvent,
+      date: selectedEvent.date ? new Date(selectedEvent.date).toISOString().split('T')[0] : ''
+    });
+  };
+
+  const handleSaveEvent = async () => {
+    if (editedEvent && editedEvent._id) {
+      try {
+        // Adjust the edited event date to remove timezone offset
+        const selectedDate = new Date(editedEvent.date);
+        const adjustedDate = new Date(
+          selectedDate.getUTCFullYear(),
+          selectedDate.getUTCMonth(),
+          selectedDate.getUTCDate()
+        );
+
+        const eventToUpdate = {
+          ...editedEvent,
+          date: adjustedDate.toISOString(),
+        };
+
+        const response = await fetch('/api/calendar', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: editedEvent._id,
+            updatedItem: {
+              title: eventToUpdate.title,
+              date: eventToUpdate.date,
+              description: eventToUpdate.description,
+              location: eventToUpdate.location,
+            }
+          }),
+        });
+
+        if (response.ok) {
+          const updatedEvent = await response.json();
+          // Update the event in the local state
+          setEvents(events.map(event => 
+            event._id === updatedEvent._id ? updatedEvent : event
+          ));
+          setSelectedEvent(updatedEvent);
+          setIsEditing(false);
+          setEditedEvent(null);
+        } else {
+          console.error('Failed to update event');
+        }
+      } catch (error) {
+        console.error('Error updating event:', error);
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedEvent(null);
+  };
+
   const getEventsForDate = (date: Date) => {
     return events.filter(
       (event) => {
@@ -126,7 +189,11 @@ export default function Calendar() {
                   <div
                     key={index}
                     className="text-xs bg-blue-100 text-blue-800 rounded px-1 mt-1 truncate cursor-pointer"
-                    onClick={() => setSelectedEvent(event)}
+                    onClick={() => {
+                      setSelectedEvent(event);
+                      setIsEditing(false);
+                      setEditedEvent(null);
+                    }}
                     title={event.title}
                   >
                     {event.title}
@@ -148,13 +215,98 @@ export default function Calendar() {
       </div>
       {selectedEvent && (
         <div className='bg-cyan-950 text-white rounded-lg p-4 w-full'>
-          <h3 className='font-semibold underline text-center'>{selectedEvent.title}</h3>
-          <p>{selectedEvent.description}</p>
-          <p>Location: {selectedEvent.location}</p>
-          <div className="flex justify-center mt-4">
-            <button className='mr-4 text-neutral-500 text-sm text-center hover:text-white cursor-pointer' onClick={() => setSelectedEvent(null)}>Close</button>
-            <button className='text-red-500 text-sm hover:text-white cursor-pointer' onClick={() => handleDeleteEvent()}>Delete Event</button>
-          </div>
+          {isEditing ? (
+            // Edit mode
+            <div>
+              <h3 className='font-semibold underline text-center mb-4'>Edit Event</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Title</label>
+                  <input
+                    type="text"
+                    value={editedEvent?.title || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, title: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={editedEvent?.date || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, date: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Description</label>
+                  <textarea
+                    value={editedEvent?.description || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, description: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black resize-none"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={editedEvent?.location || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, location: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-center mt-4 space-x-2">
+                <button
+                  className='bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm'
+                  onClick={handleSaveEvent}
+                >
+                  Save
+                </button>
+                <button
+                  className='bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm'
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            // View mode
+            <div>
+              <h3 className='font-semibold underline text-center'>{selectedEvent.title}</h3>
+              <p className="mt-2"><span className="font-medium">Date:</span> {selectedEvent.date ? new Date(selectedEvent.date).toLocaleDateString() : 'No date'}</p>
+              <p className="mt-1"><span className="font-medium">Location:</span> {selectedEvent.location || 'No location'}</p>
+              <p className="mt-1"><span className="font-medium">Description:</span> {selectedEvent.description || 'No description'}</p>
+              <div className="flex justify-center mt-4 space-x-2">
+                <button
+                  className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm'
+                  onClick={handleEditEvent}
+                >
+                  Edit
+                </button>
+                <button
+                  className='bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm'
+                  onClick={() => {
+                    setSelectedEvent(null);
+                    setIsEditing(false);
+                    setEditedEvent(null);
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  className='bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm'
+                  onClick={handleDeleteEvent}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

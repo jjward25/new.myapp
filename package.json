@@ -24,6 +24,7 @@
     "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
+    "recharts": "^3.0.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
