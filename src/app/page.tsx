@@ -2,7 +2,6 @@
 import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
-import TaskListWrapList from '../components/lists/TaskClientWrapList';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
@@ -12,11 +11,10 @@ import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
 import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
-import UpperTrend from '@/components/d3/workoutUpperTrend'
-import LowerTrend from '@/components/d3/workoutLowerTrend'
 import ChatComponent from '@/components/chatbot'
 import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
 import AvailableLists from '../components/lists/AvailableLists';
+import WorkoutTrendComponent from '../components/d3/WorkoutTrendComponent';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -109,11 +107,8 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full'>
-              <UpperTrend/>
-            </div>
-            <div className='bg-neutral-200 rounded-md border-2 border-black drop-shadow-sm w-full mt-6'>
-              <LowerTrend/>
+            <div className='bg-neutral-200 rounded-xl border-2 border-black drop-shadow-sm w-full'>
+              <WorkoutTrendComponent/>
             </div>              
           </div>
         </div>
