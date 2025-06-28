@@ -760,8 +760,7 @@ function ExerciseCard({
             <span className="text-xl text-gray-400">▶</span>
           </div>
         </div>
-
-        
+      </div>
 
       {/* Exercise Content - Collapsible */}
       <div className={`transition-all duration-300 ease-in-out ${isCollapsed ? 'max-h-0 opacity-0' : 'max-h-[1000px] opacity-100'} overflow-hidden`}>
@@ -794,126 +793,125 @@ function ExerciseCard({
           )}
         </div>
 
-          {/* Last Workout Detail */}
-          {lastWorkoutData && (
-            <div className="mb-4 p-3 bg-gray-800 rounded-lg">
-              <h6 className="text-sm font-medium text-yellow-400 mb-2">
-                Last Workout ({lastWorkoutData.workout.Date}):
-              </h6>
-              <div className="space-y-1">
-                {lastWorkoutData.exercise.Sets.map((set, index) => (
-                  <div key={index} className="text-xs text-gray-300">
-                    Set {set.SetNumber}: {set.Reps} × {set.Weight} {unit} = {set.Reps * set.Weight} {unit}
-                  </div>
-                ))}
+        {/* Last Workout Detail */}
+        {lastWorkoutData && (
+          <div className="mb-4 p-3 bg-gray-800 rounded-lg">
+            <h6 className="text-sm font-medium text-yellow-400 mb-2">
+              Last Workout ({lastWorkoutData.workout.Date}):
+            </h6>
+            <div className="space-y-1">
+              {lastWorkoutData.exercise.Sets.map((set, index) => (
+                <div key={index} className="text-xs text-gray-300">
+                  Set {set.SetNumber}: {set.Reps} × {set.Weight} {unit} = {set.Reps * set.Weight} {unit}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Existing Sets */}
+        <div className="mb-4">
+          <h5 className="font-medium mb-3">{`Today's Sets:`}</h5>
+          {exercise.Sets.length === 0 ? (
+            <p className="text-gray-400 text-sm">No sets completed yet</p>
+          ) : (
+            <div className="space-y-2">
+              {exercise.Sets.map((set, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-800 hover:bg-gray-600 p-3 rounded">
+                  {editingSetIndex === index ? (
+                    // Edit mode
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className="text-sm font-medium min-w-[60px]">Set {set.SetNumber}:</span>
+                      <input
+                        type="number"
+                        value={editReps}
+                        onChange={(e) => setEditReps(parseInt(e.target.value) || 0)}
+                        className="w-16 p-1 bg-gray-500 text-white rounded text-sm"
+                        placeholder="Reps"
+                      />
+                      <span className="text-sm">×</span>
+                      <input
+                        type="number"
+                        value={editWeight}
+                        onChange={(e) => setEditWeight(parseFloat(e.target.value) || 0)}
+                        className="w-16 p-1 bg-gray-500 text-white rounded text-sm"
+                        placeholder={timeBasedExercise ? "Mins" : "Weight"}
+                      />
+                      <span className="text-sm">{unit}</span>
+                      <div className="flex gap-1 ml-2">
+                        <button
+                          onClick={saveEditedSet}
+                          className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={cancelEditing}
+                          className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // Display mode
+                    <>
+                      <div className="text-sm flex-1">
+                        <strong>Set {set.SetNumber}:</strong> {set.Reps} reps × {set.Weight} {unit} = {set.Reps * set.Weight} {unit}
+                      </div>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => startEditingSet(index, set.Reps, set.Weight)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSet(index)}
+                          className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+              <div className="bg-gray-800 p-2 rounded text-center">
+                <div className="font-semibold text-cyan-400">
+                  Total: {calculateTotalReps()} reps • {calculateTotalWeight()} {unit}
+                </div>
               </div>
             </div>
           )}
+        </div>
 
-          {/* Existing Sets */}
-          <div className="mb-4">
-            <h5 className="font-medium mb-3">{`Today's Sets:`}</h5>
-            {exercise.Sets.length === 0 ? (
-              <p className="text-gray-400 text-sm">No sets completed yet</p>
-            ) : (
-              <div className="space-y-2">
-                {exercise.Sets.map((set, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-800 hover:bg-gray-600 p-3 rounded">
-                    {editingSetIndex === index ? (
-                      // Edit mode
-                      <div className="flex items-center gap-2 flex-1">
-                        <span className="text-sm font-medium min-w-[60px]">Set {set.SetNumber}:</span>
-                        <input
-                          type="number"
-                          value={editReps}
-                          onChange={(e) => setEditReps(parseInt(e.target.value) || 0)}
-                          className="w-16 p-1 bg-gray-500 text-white rounded text-sm"
-                          placeholder="Reps"
-                        />
-                        <span className="text-sm">×</span>
-                        <input
-                          type="number"
-                          value={editWeight}
-                          onChange={(e) => setEditWeight(parseFloat(e.target.value) || 0)}
-                          className="w-16 p-1 bg-gray-500 text-white rounded text-sm"
-                          placeholder={timeBasedExercise ? "Mins" : "Weight"}
-                        />
-                        <span className="text-sm">{unit}</span>
-                        <div className="flex gap-1 ml-2">
-                          <button
-                            onClick={saveEditedSet}
-                            className="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs"
-                          >
-                            ✓
-                          </button>
-                          <button
-                            onClick={cancelEditing}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      // Display mode
-                      <>
-                        <div className="text-sm flex-1">
-                          <strong>Set {set.SetNumber}:</strong> {set.Reps} reps × {set.Weight} {unit} = {set.Reps * set.Weight} {unit}
-                        </div>
-                        <div className="flex gap-1">
-                          <button
-                            onClick={() => startEditingSet(index, set.Reps, set.Weight)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeleteSet(index)}
-                            className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                ))}
-                <div className="bg-gray-800 p-2 rounded text-center">
-                  <div className="font-semibold text-cyan-400">
-                    Total: {calculateTotalReps()} reps • {calculateTotalWeight()} {unit}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Add New Set */}
-          <div className="bg-gray-600 p-3 rounded">
-            <h6 className="text-sm font-medium mb-2">Add Set:</h6>
-            <div className="flex gap-2 items-center">
-              <input
-                type="number"
-                value={newReps}
-                onChange={(e) => setNewReps(parseInt(e.target.value) || 0)}
-                placeholder="Reps"
-                className="w-20 p-2 bg-gray-500 text-white rounded text-sm"
-              />
-              <span className="text-sm">×</span>
-              <input
-                type="number"
-                value={newWeight}
-                onChange={(e) => setNewWeight(parseFloat(e.target.value) || 0)}
-                placeholder={timeBasedExercise ? "Minutes" : "Weight"}
-                className="w-20 p-2 bg-gray-500 text-white rounded text-sm"
-              />
-              <span className="text-sm">{unit}</span>
-              <button
-                onClick={handleAddSet}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium"
-              >
-                Add Set
-              </button>
-            </div>
+        {/* Add New Set */}
+        <div className="bg-gray-600 p-3 rounded">
+          <h6 className="text-sm font-medium mb-2">Add Set:</h6>
+          <div className="flex gap-2 items-center">
+            <input
+              type="number"
+              value={newReps}
+              onChange={(e) => setNewReps(parseInt(e.target.value) || 0)}
+              placeholder="Reps"
+              className="w-20 p-2 bg-gray-500 text-white rounded text-sm"
+            />
+            <span className="text-sm">×</span>
+            <input
+              type="number"
+              value={newWeight}
+              onChange={(e) => setNewWeight(parseFloat(e.target.value) || 0)}
+              placeholder={timeBasedExercise ? "Minutes" : "Weight"}
+              className="w-20 p-2 bg-gray-500 text-white rounded text-sm"
+            />
+            <span className="text-sm">{unit}</span>
+            <button
+              onClick={handleAddSet}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium"
+            >
+              Add Set
+            </button>
           </div>
         </div>
       </div>
