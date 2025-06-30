@@ -1,11 +1,33 @@
-// src/components/tasks/TaskList.js
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TaskCard from './TaskCard';
 
-const GenericListTemplate = ({
+interface Task {
+  _id: string;
+  "Complete Date": string | null;
+  "Due Date": string;
+  "Type": string;
+  "Priority": string;
+  "Session": string;
+  [key: string]: any;
+}
+
+interface GenericListTemplateProps {
+  sortOrder?: string;
+  dateOrder?: string;
+  priorityOrder?: string;
+  dueDateFilter?: string;
+  priorityFilter?: string[];
+  typeFilter?: string[];
+  completeDateFilter?: boolean | null;
+  dueDateFromFilter?: string;
+  dueDateBeforeFilter?: string;
+  sessionFilter?: string[];
+}
+
+const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
   sortOrder,
   dateOrder,
   priorityOrder,
@@ -17,9 +39,9 @@ const GenericListTemplate = ({
   dueDateBeforeFilter,
   sessionFilter = []
 }) => {
-  const [backlog, setBacklog] = useState([]);
+  const [backlog, setBacklog] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBacklog = async () => {
@@ -27,7 +49,7 @@ const GenericListTemplate = ({
         const response = await axios.get('/api/backlog');
         setBacklog(response.data);
       } catch (err) {
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
       }
@@ -36,13 +58,13 @@ const GenericListTemplate = ({
     fetchBacklog();
   }, []);
 
-  const handleEdit = (updatedItem) => {
+  const handleEdit = (updatedItem: Task) => {
     setBacklog(prevBacklog =>
       prevBacklog.map(item => item._id === updatedItem._id ? updatedItem : item)
     );
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: string) => {
     setBacklog(prevBacklog =>
       prevBacklog.filter(item => item._id !== id)
     );
@@ -70,14 +92,14 @@ const GenericListTemplate = ({
     return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSessionMatch;
   });
 
-  const priorityOrderMap = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  const priorityOrderMap: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };
   const sortedBacklog = [...filteredBacklog];
 
   if (sortOrder === 'date') {
     sortedBacklog.sort((a, b) => {
       const dateA = new Date(a['Due Date']);
       const dateB = new Date(b['Due Date']);
-      return dateOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      return dateOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     });
   } else if (sortOrder === 'priority') {
     sortedBacklog.sort((a, b) => {
@@ -101,4 +123,4 @@ const GenericListTemplate = ({
   );
 };
 
-export default GenericListTemplate;
+export default GenericListTemplate; 

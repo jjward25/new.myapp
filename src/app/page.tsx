@@ -3,6 +3,7 @@ import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
+import TaskListWrapOther from '../components/tasks/TaskClientWrapOther';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/dates/HomeDate'
@@ -55,8 +56,8 @@ export default async function Home() {
               <AddNewTaskForm onTaskAdded={''}/>
             </div>
             <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} dueDateBeforeFilter={tomorrow} title="Open Tasks" isOpen={true}/>              
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={yesterday} dueDateBeforeFilter={today} title="Yesterday's Tasks" isOpen={false}/>     
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={tomorrow} dueDateBeforeFilter={twoDays} title="Tomorrow's Tasks" isOpen={false}/>                       
+            <TaskListWrapOther completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={yesterday} dueDateBeforeFilter={today} title="Yesterday's Tasks" isOpen={false}/>     
+            <TaskListWrapOther completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={tomorrow} dueDateBeforeFilter={twoDays} title="Tomorrow's Tasks" isOpen={false}/>                       
           </div>
 
           <div className='mb-2 md:mb-4 pt-2 w-full flex flex-col'>

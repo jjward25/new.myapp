@@ -101,59 +101,18 @@ const ListWrap: React.FC<ListWrapProps> = ({
               </button>
             </div>
 
-
-            {/* Big Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Big Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Big"]}
-              />
-            </div>
-
-            {/* Next Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Next Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Next"]}
-              />
-            </div>
-
-            
-
-            {/* Small Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Small Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Small"]}
-              />
-            </div>
+            <ListTemplate
+              sortOrder={internalSortOrder}
+              dateOrder={internalDateOrder}
+              priorityOrder={internalPriorityOrder}
+              dueDateFilter={dueDateFilterDate}
+              priorityFilter={priorityFilter}
+              typeFilter={typeFilter}
+              completeDateFilter={completeDateFilterDate}
+              dueDateFromFilter={dueDateFromFilterDate}
+              dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sessionFilter={["Next","Big","Small"]}
+            />
         
           </div>
         )}
