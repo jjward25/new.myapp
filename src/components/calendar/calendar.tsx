@@ -7,6 +7,7 @@ export default function Calendar() {
   const [newEvent, setNewEvent] = useState({
     title: '',
     date: '',
+    time: '',
     description: '',
     location: '',
   });
@@ -58,7 +59,7 @@ export default function Calendar() {
         if (response.ok) {
           const addedEvent = await response.json();
           setEvents([...events, addedEvent]);
-          setNewEvent({ title: '', date: '', description: '', location: '' });
+          setNewEvent({ title: '', date: '', time: '', description: '', location: '' });
         } else {
           console.error('Failed to add event');
         }
@@ -94,7 +95,8 @@ export default function Calendar() {
     setIsEditing(true);
     setEditedEvent({
       ...selectedEvent,
-      date: selectedEvent.date ? new Date(selectedEvent.date).toISOString().split('T')[0] : ''
+      date: selectedEvent.date ? new Date(selectedEvent.date).toISOString().split('T')[0] : '',
+      time: selectedEvent.time || ''
     });
   };
 
@@ -122,6 +124,7 @@ export default function Calendar() {
             updatedItem: {
               title: eventToUpdate.title,
               date: eventToUpdate.date,
+              time: eventToUpdate.time,
               description: eventToUpdate.description,
               location: eventToUpdate.location,
             }
@@ -152,7 +155,7 @@ export default function Calendar() {
   };
 
   const getEventsForDate = (date: Date) => {
-    return events.filter(
+    const dayEvents = events.filter(
       (event) => {
         const eventDate = new Date(event.date);
         return (
@@ -162,6 +165,13 @@ export default function Calendar() {
         );
       }
     );
+
+    // Sort events by time
+    return dayEvents.sort((a, b) => {
+      const timeA = a.time || '23:59'; // Events without time go to end
+      const timeB = b.time || '23:59';
+      return timeA.localeCompare(timeB);
+    });
   };
 
   // Helper function to generate all calendar days (complete weeks)
@@ -186,6 +196,15 @@ export default function Calendar() {
     }
     
     return days;
+  };
+
+  // Helper function to format time for display
+  const formatTime = (time: string) => {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour12 = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+    return `${hour12}:${minutes} ${ampm}`;
   };
 
   return (
@@ -227,8 +246,9 @@ export default function Calendar() {
                       setIsEditing(false);
                       setEditedEvent(null);
                     }}
-                    title={event.title}
+                    title={`${event.time ? formatTime(event.time) + ' - ' : ''}${event.title}`}
                   >
+                    {event.time && <span className="font-semibold">{formatTime(event.time)} </span>}
                     {event.title}
                   </div>
                 ))}
@@ -241,6 +261,7 @@ export default function Calendar() {
         <form className='pl-4 w-full mx-auto flex flex-wrap justify-center items-center' onSubmit={handleAddEvent}>
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Title" required />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
+          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="time" value={newEvent.time} onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })} placeholder="Time" />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.description} onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} placeholder="Description" />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.location} onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })} placeholder="Location" />
           <button type="submit" className='mt-2 w-2/3 bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white dark:bg-cyan-950 dark:text-white dark:hover:text-cyan-200'>Add Event</button>
@@ -271,6 +292,15 @@ export default function Calendar() {
                     onChange={(e) => setEditedEvent({ ...editedEvent, date: e.target.value })}
                     className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
                     required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Time</label>
+                  <input
+                    type="time"
+                    value={editedEvent?.time || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, time: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
                   />
                 </div>
                 <div>
@@ -312,6 +342,9 @@ export default function Calendar() {
             <div>
               <h3 className='font-semibold underline text-center'>{selectedEvent.title}</h3>
               <p className="mt-2"><span className="font-medium">Date:</span> {selectedEvent.date ? new Date(selectedEvent.date).toLocaleDateString() : 'No date'}</p>
+              {selectedEvent.time && (
+                <p className="mt-1"><span className="font-medium">Time:</span> {formatTime(selectedEvent.time)}</p>
+              )}
               <p className="mt-1"><span className="font-medium">Location:</span> {selectedEvent.location || 'No location'}</p>
               <p className="mt-1"><span className="font-medium">Description:</span> {selectedEvent.description || 'No description'}</p>
               <div className="flex justify-center mt-4 space-x-2">
