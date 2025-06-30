@@ -164,6 +164,30 @@ export default function Calendar() {
     );
   };
 
+  // Helper function to generate all calendar days (complete weeks)
+  const generateCalendarDays = () => {
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    const startDate = new Date(firstDay);
+    const endDate = new Date(lastDay);
+    
+    // Move start date to the beginning of the week (Sunday)
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    
+    // Move end date to the end of the week (Saturday)
+    endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+    
+    const days = [];
+    const current = new Date(startDate);
+    
+    while (current <= endDate) {
+      days.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+    
+    return days;
+  };
+
   return (
     <div className="w-full mx-auto flex flex-col md:flex-row h-full">
       <div className="bg-transparent shadow md:rounded-bl-none md:rounded-br-none h-full">
@@ -176,19 +200,28 @@ export default function Calendar() {
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div key={day} className="text-center text-sm font-semibold text-cyan-950 bg-neutral-300 rounded-md">{day}</div>
           ))}
-          {[...Array(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay())].map((_, i) => (
-            <div key={`prev-${i}`} className="text-center py-2 text-gray-400"></div>
-          ))}
-          {Array.from({ length: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() }, (_, i) => i + 1).map((day) => {
-            const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+          {generateCalendarDays().map((date, index) => {
             const dayEvents = getEventsForDate(date);
+            const isCurrentMonth = date.getMonth() === currentDate.getMonth();
+            const isToday = date.toDateString() === new Date().toDateString();
+            
             return (
-              <div key={day} className="text-center py-2">
-                <span>{day}</span>
-                {dayEvents.map((event, index) => (
+              <div key={index} className="text-center py-2">
+                <span className={`${
+                  isCurrentMonth 
+                    ? (isToday ? 'bg-cyan-600 text-white rounded-full px-2 py-1' : 'text-black') 
+                    : 'text-gray-400'
+                }`}>
+                  {date.getDate()}
+                </span>
+                {dayEvents.map((event, eventIndex) => (
                   <div
-                    key={index}
-                    className="text-xs bg-blue-100 text-blue-800 rounded px-1 mt-1 truncate cursor-pointer"
+                    key={eventIndex}
+                    className={`text-xs rounded px-1 mt-1 truncate cursor-pointer ${
+                      isCurrentMonth 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-gray-100 text-gray-600'
+                    }`}
                     onClick={() => {
                       setSelectedEvent(event);
                       setIsEditing(false);
