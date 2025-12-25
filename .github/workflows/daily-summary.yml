@@ -1,0 +1,33 @@
+name: Daily Summary
+
+on:
+  schedule:
+    # Run at 7am EST (12:00 UTC)
+    # Note: GitHub Actions uses UTC timezone
+    - cron: '0 12 * * *'
+  workflow_dispatch: # Allow manual triggering for testing
+
+jobs:
+  send-summary:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install mongodb
+
+      - name: Run daily summary script
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node .github/scripts/daily-summary.js
+
+
