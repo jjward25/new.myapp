@@ -1,11 +1,18 @@
 // .github/scripts/event-reminder.js
-// Checks for calendar events starting within 45-75 minutes and sends Telegram notifications
+// Checks for calendar events and sends Telegram notifications
+// Tracks sent alerts to prevent duplicates
 
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+// Alert configuration: type, time window, and message prefix
+const ALERT_TYPES = [
+  { type: 'hour', minMinutes: 45, maxMinutes: 75, label: '1 Hour' },
+  { type: '15min', minMinutes: 10, maxMinutes: 20, label: '15 Minutes' }
+];
 
 async function sendTelegramMessage(message) {
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -26,6 +33,13 @@ async function sendTelegramMessage(message) {
   }
 
   return response.json();
+}
+
+async function markAlertSent(collection, eventId, alertType) {
+  await collection.updateOne(
+    { _id: new ObjectId(eventId) },
+    { $addToSet: { alertsSent: alertType } }
+  );
 }
 
 function formatTime(time) {
@@ -70,44 +84,55 @@ async function main() {
     console.log(`Current EST time: ${estNow.toISOString()}`);
     console.log(`Looking for events between ${todayStart.toISOString()} and ${todayEnd.toISOString()}`);
 
-    // Fetch all events for today
+    // Fetch all events for today that have a time set
     const events = await collection.find({
       date: {
         $gte: todayStart.toISOString(),
         $lt: todayEnd.toISOString()
-      }
+      },
+      time: { $exists: true, $ne: '' }
     }).toArray();
 
-    console.log(`Found ${events.length} events for today`);
+    console.log(`Found ${events.length} timed events for today`);
 
-    // Filter events that start within 45-75 minutes from now
-    const upcomingEvents = events.filter(event => {
-      if (!event.time) return false;
-      
+    let alertsSent = 0;
+
+    // Check each event against each alert type
+    for (const event of events) {
       const [eventHour, eventMinute] = event.time.split(':').map(Number);
       const eventTotalMinutes = eventHour * 60 + eventMinute;
       const minutesUntilEvent = eventTotalMinutes - currentTotalMinutes;
 
-      // Check if event is 45-75 minutes away (to account for 15-min cron interval)
-      return minutesUntilEvent >= 45 && minutesUntilEvent <= 75;
-    });
+      // Get existing alerts sent for this event
+      const existingAlerts = event.alertsSent || [];
 
-    console.log(`Found ${upcomingEvents.length} events starting in ~1 hour`);
+      for (const alertConfig of ALERT_TYPES) {
+        // Check if this alert type is already sent
+        if (existingAlerts.includes(alertConfig.type)) {
+          continue;
+        }
 
-    // Send notification for each upcoming event
-    for (const event of upcomingEvents) {
-      const message = `⏰ <b>Event Reminder</b>\n\n` +
-        `<b>${event.title}</b>\n` +
-        `🕐 ${formatTime(event.time)}\n` +
-        (event.location ? `📍 ${event.location}\n` : '') +
-        (event.description ? `\n${event.description}` : '');
+        // Check if event falls within this alert's time window
+        if (minutesUntilEvent >= alertConfig.minMinutes && minutesUntilEvent <= alertConfig.maxMinutes) {
+          const message = `⏰ <b>${alertConfig.label} Reminder</b>\n\n` +
+            `<b>${event.title}</b>\n` +
+            `🕐 ${formatTime(event.time)}\n` +
+            (event.location ? `📍 ${event.location}\n` : '') +
+            (event.description ? `\n${event.description}` : '');
 
-      await sendTelegramMessage(message);
-      console.log(`Sent reminder for: ${event.title}`);
+          await sendTelegramMessage(message);
+          await markAlertSent(collection, event._id, alertConfig.type);
+          
+          console.log(`Sent ${alertConfig.label} reminder for: ${event.title}`);
+          alertsSent++;
+        }
+      }
     }
 
-    if (upcomingEvents.length === 0) {
-      console.log('No events to notify about');
+    if (alertsSent === 0) {
+      console.log('No new alerts to send');
+    } else {
+      console.log(`Sent ${alertsSent} alert(s)`);
     }
 
   } catch (error) {
@@ -120,5 +145,3 @@ async function main() {
 }
 
 main();
-
-
