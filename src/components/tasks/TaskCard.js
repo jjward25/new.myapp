@@ -135,6 +135,18 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     }
   };
 
+  const markAsMissed = async (e) => {
+    e.stopPropagation();
+    const updatedTask = { ...editableTask, "Missed": true };
+    setEditableTask(updatedTask);
+    try {
+      await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
+      onEdit(updatedTask);
+    } catch (err) {
+      console.error('Error marking task as missed:', err);
+    }
+  };
+
   return (
     <div
       ref={cardRef}
@@ -180,6 +192,16 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v6h6" />
+              </svg>
+            </button>
+
+            <button
+              onClick={markAsMissed}
+              className="bg-amber-600 text-white rounded-lg px-2 hover:bg-amber-700 w-auto text-sm mt-2 mb-auto mr-2"
+              title="Mark as Missed"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </button>
 

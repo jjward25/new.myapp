@@ -25,6 +25,7 @@ interface GenericListTemplateProps {
   dueDateFromFilter?: string;
   dueDateBeforeFilter?: string;
   sessionFilter?: string[];
+  missedFilter?: boolean | null;
 }
 
 const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
@@ -37,7 +38,8 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
   completeDateFilter,
   dueDateFromFilter,
   dueDateBeforeFilter,
-  sessionFilter = []
+  sessionFilter = [],
+  missedFilter = null
 }) => {
   const [backlog, setBacklog] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,8 +90,15 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
     const isTypeMatch = typeFilter.length ? typeFilter.includes(item["Type"]) : true;
     const isPriorityMatch = priorityFilter.length ? priorityFilter.includes(item["Priority"]) : true;
     const isSessionMatch = sessionFilter.length ? sessionFilter.includes(item["Session"]) : true;
+    
+    // missedFilter: false = show non-missed, true = show missed, null = show all
+    const isMissedMatch = missedFilter === null
+      ? true
+      : missedFilter === true
+      ? item["Missed"] === true
+      : !item["Missed"]; // false or undefined/null
 
-    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSessionMatch;
+    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSessionMatch && isMissedMatch;
   });
 
   const priorityOrderMap: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };

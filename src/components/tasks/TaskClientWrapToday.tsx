@@ -17,11 +17,12 @@ interface ListWrapProps {
   dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
   sessionFilter?: string[] | null;
+  missedFilter?: boolean | null; // Optional: false = non-missed, true = missed, null = all
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
   title,
-  sortOrder = 'priority',
+  sortOrder = 'date',
   dateOrder = 'asc',
   priorityOrder = 'asc',
   dueDateFilter = null,
@@ -32,6 +33,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
   sessionFilter = [],
+  missedFilter = null,
 }) => {
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
   const [internalDateOrder, setInternalDateOrder] = useState(dateOrder);
@@ -116,6 +118,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
                 dueDateFromFilter={dueDateFromFilterDate}
                 dueDateBeforeFilter={dueDateBeforeFilterDate}
                 sessionFilter={["Big"]}
+                missedFilter={missedFilter}
               />
             </div>
 
@@ -133,6 +136,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
                 dueDateFromFilter={dueDateFromFilterDate}
                 dueDateBeforeFilter={dueDateBeforeFilterDate}
                 sessionFilter={["Next"]}
+                missedFilter={missedFilter}
               />
             </div>
 
@@ -152,6 +156,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
                 dueDateFromFilter={dueDateFromFilterDate}
                 dueDateBeforeFilter={dueDateBeforeFilterDate}
                 sessionFilter={["Small"]}
+                missedFilter={missedFilter}
               />
             </div>
         

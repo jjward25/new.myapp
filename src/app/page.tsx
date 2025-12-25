@@ -3,11 +3,9 @@ import React from 'react';
 import Routines from '../components/routines/Routines';
 import Weather from '../components/Weather';
 import TaskListWrapToday from '../components/tasks/TaskClientWrapToday';
-import TaskListWrapOther from '../components/tasks/TaskClientWrapOther';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/dates/HomeDate'
-import {getToday,getTomorrow, getYesterday, getDayAfterTomorrow} from '../utils/Date'
 import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
 import MilestoneList from '@/components/projects/homeList/MilestoneList';
@@ -20,12 +18,6 @@ import WorkoutTrendComponent from '../components/d3/WorkoutTrendComponent';
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
 export default async function Home() {
-  // Fetch dates on the server side
-  const today = await getToday();
-  const tomorrow = await getTomorrow();
-  const yesterday = await getYesterday();
-  const twoDays = await getDayAfterTomorrow();
-
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
       <h1 className="text-4xl font-semibold bg-clip-text text-transparent bg-cyan-700 hover:bg-gradient-to-r hover:from-pink-500 hover:to-violet-500 mt-6 md:mt-0 mb-10 md:mb-10 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat  transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms] text-center">
@@ -55,9 +47,7 @@ export default async function Home() {
             <div className='mb-2'>
               <AddNewTaskForm onTaskAdded={''}/>
             </div>
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={today} dueDateBeforeFilter={tomorrow} title="Open Tasks" isOpen={true}/>              
-            <TaskListWrapOther completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={yesterday} dueDateBeforeFilter={today} title="Yesterday's Tasks" isOpen={false}/>     
-            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} dueDateFromFilter={tomorrow} dueDateBeforeFilter={twoDays} title="Tomorrow's Tasks" isOpen={false}/>                       
+            <TaskListWrapToday completeDateFilter={null} typeFilter={['Task']} missedFilter={false} title="Open Tasks" isOpen={true}/>                       
           </div>
 
           <div className='mb-2 md:mb-4 pt-2 w-full flex flex-col'>

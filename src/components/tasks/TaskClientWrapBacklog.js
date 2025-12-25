@@ -17,6 +17,7 @@ const ListWrap = ({
   dueDateFromFilter,
   dueDateBeforeFilter,
   isOpen: initialIsOpen = false,
+  missedFilter = null,
 }) => {
   const [internalRefreshTrigger, setInternalRefreshTrigger] = useState(0);
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder || 'date');
@@ -89,6 +90,7 @@ const ListWrap = ({
               completeDateFilter={completeDateFilter}
               dueDateFromFilter={dueDateFromFilter}
               dueDateBeforeFilter={dueDateBeforeFilter}
+              missedFilter={missedFilter}
             />
           </>
         )}
