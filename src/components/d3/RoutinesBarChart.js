@@ -2,8 +2,9 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as d3 from "d3";
 
-const TrueValuesBarChart = () => {
+const RoutinesBarChart = () => {
   const [data, setData] = useState([]);
+  const [weeklyStats, setWeeklyStats] = useState(null);
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -17,6 +18,10 @@ const TrueValuesBarChart = () => {
 
         const processedData = processData(result);
         setData(processedData);
+        
+        // Calculate weekly stats
+        const stats = calculateWeeklyStats(result);
+        setWeeklyStats(stats);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -25,9 +30,42 @@ const TrueValuesBarChart = () => {
     fetchData();
   }, []);
 
+  const calculateWeeklyStats = (data) => {
+    // Get start of current week (Monday)
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Sunday
+    const startOfWeek = new Date(now.setDate(diff));
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    // Filter to this week's entries
+    const weekData = data.filter(d => {
+      const date = new Date(d.Date);
+      return date >= startOfWeek;
+    });
+
+    // Count completions
+    const mobility = weekData.filter(d => d.Mobility).length;
+    const lift = weekData.filter(d => d.Exercise === 'Lift').length;
+    const cardio = weekData.filter(d => d.Exercise === 'Cardio').length;
+    const language = weekData.filter(d => d.Language).length;
+    const piano = weekData.filter(d => d.Piano).length;
+    const readLearn = weekData.filter(d => d.ReadLearn && d.ReadLearn.length > 0).length;
+    const journal = weekData.filter(d => d.Journal && d.Journal.trim() !== '').length;
+
+    return {
+      mobility: { current: mobility, target: 5 },
+      lift: { current: lift, target: 2 },
+      cardio: { current: cardio, target: 3 },
+      language: { current: language, target: 5 },
+      piano: { current: piano, target: 5 },
+      readLearn: { current: readLearn, target: 7 },
+      journal: { current: journal, target: 7 }
+    };
+  };
+
   const processData = (data) => {
-    const mainFields = ["Morning Exercise", "Evening Exercise", "Applications", "Fresh Air"];
-    const bonusFields = ["Language", "Piano", "Reading", "Writing", "Social", "Cook/Meal Prep", "Coding", "Prof Dev"];
+    const fields = ["Mobility", "Exercise", "Language", "Piano", "ReadLearn", "Journal"];
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - 30);
   
@@ -36,45 +74,42 @@ const TrueValuesBarChart = () => {
         const parsedDate = d3.timeParse("%Y-%m-%d")(d.Date);
         const entry = { Date: parsedDate };
   
-        // Process main fields
-        mainFields.forEach((field) => {
-          let description = "";
-          switch (field) {
-            case "Morning Exercise":
-              description = "Morning Exercise completed";
-              break;
-            case "Evening Exercise":
-              description = "Evening Exercise completed";
-              break;
-            case "Applications":
-              description = "Job applications submitted";
-              break;
-            case "Fresh Air":
-              description = "Fresh air/outdoor time";
-              break;
-            default:
-              description = `${field} completed`;
-          }
-  
-          entry[field] = {
-            value: d[field] || false,
-            description: description,
-          };
-        });
-
-        // Process bonus activities as a combined category
-        const completedBonusActivities = bonusFields.filter(field => d[field]);
-        const hasBonusActivities = completedBonusActivities.length > 0;
-        
-        entry["Bonus"] = {
-          value: hasBonusActivities,
-          description: hasBonusActivities 
-            ? `Bonus: ${completedBonusActivities.join(", ")}`
-            : "No bonus activities",
-          completedActivities: completedBonusActivities
+        // Mobility
+        entry["Mobility"] = {
+          value: d.Mobility || false,
+          description: d.Mobility ? "Mobility completed" : "No mobility"
         };
 
-        // Journal field
+        // Exercise (Lift or Cardio)
+        entry["Exercise"] = {
+          value: !!d.Exercise,
+          description: d.Exercise ? `Exercise: ${d.Exercise}` : "No exercise",
+          type: d.Exercise
+        };
+
+        // Language
+        entry["Language"] = {
+          value: d.Language || false,
+          description: d.Language ? "Language study completed" : "No language study"
+        };
+
+        // Piano
+        entry["Piano"] = {
+          value: d.Piano || false,
+          description: d.Piano ? "Piano practice completed" : "No piano practice"
+        };
+
+        // ReadLearn
+        const readLearnItems = d.ReadLearn || [];
+        entry["ReadLearn"] = {
+          value: readLearnItems.length > 0,
+          description: readLearnItems.length > 0 
+            ? `Read/Learn: ${readLearnItems.map(item => item.text).join(", ")}`
+            : "No reading/learning",
+          items: readLearnItems
+        };
+
+        // Journal
         entry["Journal"] = {
           value: d.Journal && d.Journal.trim() !== "",
           description: d.Journal && d.Journal.trim() !== "" 
@@ -88,10 +123,9 @@ const TrueValuesBarChart = () => {
       .sort((a, b) => a.Date - b.Date);
   };
   
-
   const stackedData = useMemo(() => {
     if (data.length === 0) return [];
-    const fields = ["Morning Exercise", "Evening Exercise", "Applications", "Fresh Air", "Bonus", "Journal"];
+    const fields = ["Mobility", "Exercise", "Language", "Piano", "ReadLearn", "Journal"];
     const stack = d3.stack().keys(fields).value((d, key) => (d[key].value ? 1 : 0));
     return stack(data);
   }, [data]);
@@ -99,9 +133,8 @@ const TrueValuesBarChart = () => {
   useEffect(() => {
     if (stackedData.length === 0) return;
 
-    const fields = ["Morning Exercise", "Evening Exercise", "Applications", "Fresh Air", "Bonus", "Journal"];
+    const fields = ["Mobility", "Exercise", "Language", "Piano", "ReadLearn", "Journal"];
     const containerWidth = svgRef.current.clientWidth;
-    const containerHeight = svgRef.current.clientHeight;
     const margin = { top: 10, right: 15, bottom: 120, left: 30 };
     const width = containerWidth - margin.left - margin.right;
     const height = 250 - margin.top - margin.bottom;
@@ -141,12 +174,12 @@ const TrueValuesBarChart = () => {
     const color = d3.scaleOrdinal()
       .domain(fields)
       .range([
-        "#E74C3C", // Morning Exercise - Red
-        "#3498DB", // Evening Exercise - Blue  
-        "#E67E22", // Applications - Orange
-        "#27AE60", // Fresh Air - Green
-        "#9B59B6", // Bonus - Purple
-        "#F39C12"  // Journal - Amber
+        "#10B981", // Mobility - Emerald
+        "#F43F5E", // Exercise - Rose
+        "#0EA5E9", // Language - Sky  
+        "#8B5CF6", // Piano - Violet
+        "#F59E0B", // ReadLearn - Amber
+        "#14B8A6"  // Journal - Teal
       ]);
 
     svg
@@ -173,11 +206,16 @@ const TrueValuesBarChart = () => {
         
         let tooltipContent = `<strong>${fullDate}</strong><br/>${fieldData.description}`;
         
-        // Special handling for Bonus tooltip
-        if (field === "Bonus" && fieldData.completedActivities && fieldData.completedActivities.length > 0) {
+        // Special handling for ReadLearn tooltip
+        if (field === "ReadLearn" && fieldData.items && fieldData.items.length > 0) {
           tooltipContent = `<strong>${fullDate}</strong><br/>
-            <strong>Bonus Activities:</strong><br/>
-            ${fieldData.completedActivities.map(activity => `• ${activity}`).join('<br/>')}`;
+            <strong>Read/Learn:</strong><br/>
+            ${fieldData.items.map(item => `• ${item.text}`).join('<br/>')}`;
+        }
+        
+        // Special handling for Exercise tooltip
+        if (field === "Exercise" && fieldData.type) {
+          tooltipContent = `<strong>${fullDate}</strong><br/>Exercise: ${fieldData.type}`;
         }
         
         tooltip
@@ -263,11 +301,81 @@ const TrueValuesBarChart = () => {
     };
   }, [stackedData, data]);
 
+  const getProgressColor = (current, target) => {
+    // If 0, show gray (same as labels)
+    if (current === 0) return 'text-slate-400';
+    
+    // Calculate days remaining in the week (Mon-Sun)
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const daysRemaining = dayOfWeek === 0 ? 0 : 7 - dayOfWeek; // Days left including today
+    
+    // Check if still possible to hit target
+    const remaining = target - current;
+    if (remaining <= daysRemaining) {
+      return 'text-teal-400'; // On pace or ahead
+    }
+    
+    return 'text-yellow-400'; // Behind pace but not 0
+  };
+
   return (
-    <div style={{ overflowX: "none", padding: "10px 10px", maxWidth: "100%" }}>
+    <div style={{ padding: "10px 10px", maxWidth: "100%" }}>
+      {/* Weekly Summary */}
+      {weeklyStats && (
+        <div className="mb-4 p-3 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg border border-slate-700">
+          <h3 className="text-sm font-bold text-cyan-400 mb-2">This Week&apos;s Progress</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+            <div className="flex justify-between">
+              <span className="text-slate-400">Mobility:</span>
+              <span className={getProgressColor(weeklyStats.mobility.current, weeklyStats.mobility.target)}>
+                {weeklyStats.mobility.current}/{weeklyStats.mobility.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Lift:</span>
+              <span className={getProgressColor(weeklyStats.lift.current, weeklyStats.lift.target)}>
+                {weeklyStats.lift.current}/{weeklyStats.lift.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Cardio:</span>
+              <span className={getProgressColor(weeklyStats.cardio.current, weeklyStats.cardio.target)}>
+                {weeklyStats.cardio.current}/{weeklyStats.cardio.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Language:</span>
+              <span className={getProgressColor(weeklyStats.language.current, weeklyStats.language.target)}>
+                {weeklyStats.language.current}/{weeklyStats.language.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Piano:</span>
+              <span className={getProgressColor(weeklyStats.piano.current, weeklyStats.piano.target)}>
+                {weeklyStats.piano.current}/{weeklyStats.piano.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Read/Learn:</span>
+              <span className={getProgressColor(weeklyStats.readLearn.current, weeklyStats.readLearn.target)}>
+                {weeklyStats.readLearn.current}/{weeklyStats.readLearn.target}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Journal:</span>
+              <span className={getProgressColor(weeklyStats.journal.current, weeklyStats.journal.target)}>
+                {weeklyStats.journal.current}/{weeklyStats.journal.target}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Daily Chart */}
       <svg id="barchart" ref={svgRef} width="100%" height="100%" style={{ maxWidth: "100%" }}></svg>
     </div>
   );
 };
 
-export default TrueValuesBarChart;
+export default RoutinesBarChart;

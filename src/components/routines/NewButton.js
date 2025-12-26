@@ -17,20 +17,12 @@ const AddRoutineButton = () => {
     
     const newRoutine = {
       Date: adjustedToday.toISOString().split('T')[0],
-      "Morning Exercise": false,
-      "Evening Exercise": false,
-      "Applications": false,
-      "Fresh Air": false,
-      "Language": false,
-      "Piano": false,
-      "Reading": false,
-      "Writing": false,
-      "Social": false,
-      "Cook/Meal Prep": false,
-      "Coding": false,
-      "Prof Dev": false,
-      "Daily Score": 0,
-      "Journal": ""
+      Mobility: false,
+      Exercise: null, // "Lift" | "Cardio" | null
+      Language: false,
+      Piano: false,
+      ReadLearn: [], // Array of { text, link } objects
+      Journal: ""
     };
 
     try {

@@ -25,7 +25,21 @@ const RoutineCardList = () => {
   }, []);
 
   const handleInputChange = (e, key) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    // Handle different input types
+    let value;
+    
+    if (key === 'ReadLearn') {
+      // ReadLearn is passed as an array directly via e.target.value
+      value = e.target.value;
+    } else if (key === 'Exercise') {
+      // Exercise can be "Lift", "Cardio", or null
+      value = e.target.value;
+    } else if (e.target.type === 'checkbox') {
+      value = e.target.checked;
+    } else {
+      value = e.target.value;
+    }
+    
     setEditableRoutine((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -36,44 +50,9 @@ const RoutineCardList = () => {
 
   const handleSave = async () => {
     try {
-      // Calculate the daily score automatically before saving
-      const calculateDailyScore = (routineData) => {
-        const mainActivities = [
-          routineData["Morning Exercise"],
-          routineData["Evening Exercise"],
-          routineData["Applications"]
-        ];
-        
-        const bonusActivities = [
-          routineData["Language"],
-          routineData["Piano"],
-          routineData["Reading"],
-          routineData["Writing"],
-          routineData["Social"],
-          routineData["Cook/Meal Prep"],
-          routineData["Coding"],
-          routineData["Prof Dev"]
-        ];
-
-        const mainCount = mainActivities.filter(Boolean).length;
-        const bonusCount = bonusActivities.filter(Boolean).length;
-
-        if (mainCount === 0) return 0;
-        if (mainCount === 1) return 1;
-        if (mainCount === 2) return bonusCount > 0 ? 3 : 2;
-        if (mainCount === 3) return bonusCount > 0 ? 4 : 3;
-        
-        return 0;
-      };
-
-      const updatedRoutineWithScore = {
-        ...editableRoutine,
-        "Daily Score": calculateDailyScore(editableRoutine)
-      };
-
       await axios.put('/api/routines', { 
-        id: updatedRoutineWithScore._id, 
-        updatedItem: updatedRoutineWithScore 
+        id: editableRoutine._id, 
+        updatedItem: editableRoutine 
       }, {
         headers: {
           'Content-Type': 'application/json'
@@ -81,7 +60,7 @@ const RoutineCardList = () => {
       });
       
       setRoutines((prev) => 
-        prev.map((r, index) => (index === editingIndex ? updatedRoutineWithScore : r))
+        prev.map((r, index) => (index === editingIndex ? editableRoutine : r))
       );
       setEditingIndex(null);
       setEditableRoutine(null);

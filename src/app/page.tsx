@@ -10,7 +10,6 @@ import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
 import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
-import ChatComponent from '@/components/chatbot'
 import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
 import AvailableLists from '../components/lists/AvailableLists';
 import WorkoutTrendComponent from '../components/d3/WorkoutTrendComponent';
@@ -36,7 +35,7 @@ export default async function Home() {
         </div>          
         
         {/** Lists */}
-        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-md rounded-tl-none mb-4'>
+        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-xl md:rounded-tl-none mb-4'>
 
           <div className='hidden md:block mb-2 md:mb-4 pt-2 w-full'>
             <div className='h-12 pt-2 bg-transparent text-cyan-300 italic opacity-70 text-xl font-semibold text-center'>Tasks & Lists</div>
@@ -108,12 +107,7 @@ export default async function Home() {
 
       </div>
 
-      <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div> 
-          
-          {/** Chat */}
-          <div className='flex flex-col md:flex-row'>
-              <ChatComponent/>
-          </div>
+     
     </div>
   </main>
   );
