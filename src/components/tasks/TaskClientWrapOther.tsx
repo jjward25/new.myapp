@@ -111,7 +111,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
               dueDateBeforeFilter={dueDateBeforeFilterDate}
-              sizeFilter={sizeFilter}
+              sizeFilter={sizeFilter || []}
             />
         
           </div>
