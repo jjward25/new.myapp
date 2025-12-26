@@ -17,7 +17,7 @@ interface ListWrapProps {
   dueDateFromFilter?: string | null; // Allow null
   dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
-  sessionFilter?: string[] | null;
+  sizeFilter?: string[] | null;
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
@@ -32,7 +32,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   dueDateFromFilter = null,
   dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
-  sessionFilter = [],
+  sizeFilter = [],
 }) => {
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
   const [internalDateOrder, setInternalDateOrder] = useState(dateOrder);
@@ -76,7 +76,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
               completeDateFilter={completeDateFilterDate}
               dueDateFromFilter={dueDateFromFilterDate}
               dueDateBeforeFilter={dueDateBeforeFilterDate}
-              sessionFilter={sessionFilter || []}
+              sizeFilter={sizeFilter || []}
             />
           </div>
     </div>
