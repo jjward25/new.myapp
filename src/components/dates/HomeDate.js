@@ -30,7 +30,7 @@ const DateUpdater = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  return <p className="text-neutral-400 mb-3">{formattedDate}</p>;
+  return <p className="hidden md:block text-neutral-400 mb-3">{formattedDate}</p>;
 };
 
 export default DateUpdater;

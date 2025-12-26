@@ -14,6 +14,7 @@ export default function Calendar() {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedEvent, setEditedEvent] = useState<any>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   // Fetch events from MongoDB on component mount
   useEffect(() => {
@@ -258,7 +259,16 @@ export default function Calendar() {
         </div>
       </div>
       <div className="bg-neutral-100 w-full md:w-1/4 my-8 md:my-auto h-full">
-        <form className='pl-4 w-full mx-auto flex flex-wrap justify-center items-center' onSubmit={handleAddEvent}>
+        {/* Mobile toggle button */}
+        <button 
+          onClick={() => setIsFormOpen(!isFormOpen)}
+          className="md:hidden w-full py-2 bg-cyan-800 text-white font-semibold rounded-md mb-2"
+        >
+          {isFormOpen ? 'Hide Form' : 'Add Event'}
+        </button>
+        
+        {/* Form - always visible on desktop, toggle on mobile */}
+        <form className={`${isFormOpen ? 'block' : 'hidden'} md:block pl-4 w-full mx-auto flex flex-wrap justify-center items-center`} onSubmit={handleAddEvent}>
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Title" required />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
           <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="time" value={newEvent.time} onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })} placeholder="Time" />
