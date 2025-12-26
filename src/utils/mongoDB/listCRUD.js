@@ -9,6 +9,23 @@ export async function getLists() {
   return lists;
 }
 
+export async function updateListParent(listName, parentName) {
+  const client = await clientPromise;
+  const db = client.db('Personal');
+  const collection = db.collection('Lists');
+
+  const result = await collection.updateOne(
+    { name: listName },
+    { $set: { parent: parentName } }
+  );
+
+  if (result.matchedCount === 0) {
+    throw new Error('List not found');
+  }
+
+  return result;
+}
+
 export async function getListByName(listName) {
   const client = await clientPromise;
   const db = client.db('Personal');
@@ -162,7 +179,7 @@ export async function deleteListItem(listName, itemName) {
   return result;
 }
 
-export async function createList(name, list = []) {
+export async function createList(name, list = [], parent = null) {
   const client = await clientPromise;
   const db = client.db('Personal');
   const collection = db.collection('Lists');
@@ -175,7 +192,8 @@ export async function createList(name, list = []) {
   
   const result = await collection.insertOne({
     name,
-    list
+    list,
+    parent
   });
   
   return result;

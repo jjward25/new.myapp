@@ -28,7 +28,7 @@ const CATEGORIES = [
   { name: 'Shoulders', selector: 'intensity', exercises: ['DB Raises', 'Military Press', 'Face Pulls', 'Hangs', 'Pullover'], target: 2 },
   { name: 'Quads', selector: 'intensity', exercises: ['Sissy Squats', 'Leg Extensions', 'Squats'], target: 2 },
   { name: 'Hamstrings', selector: 'intensity', exercises: ['Jeffersons', 'RDLs', 'Hamstring Curls', 'Squats'], target: 2 },
-  { name: 'Glutes+Hips', selector: 'intensity', exercises: ['Thrusts', 'Cossack Squats', 'Leg Raises', 'L-Sit'], target: 2 },
+  { name: 'Hips', selector: 'intensity', exercises: ['Thrusts', 'Cossack Squats', 'Leg Raises', 'L-Sit'], target: 2 },
   { name: 'Back+Bis', selector: 'intensity', exercises: ['Curls', 'Pull-ups', 'Rows'], target: 2 },
   { name: 'Core', selector: 'none', exercises: ['Plank', 'Sit-ups'], target: 2 },
   { name: '1RM', selector: '1rm', exercises: ['Bench', 'Squat', 'Deadlift', 'Pull-Ups', '5k'], target: 0 },

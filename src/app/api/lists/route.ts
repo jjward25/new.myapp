@@ -1,4 +1,4 @@
-import { getLists, getListByName, createList, addItemsToList, deleteList } from "@/utils/mongoDB/listCRUD"
+import { getLists, getListByName, createList, addItemsToList, deleteList, updateListParent } from "@/utils/mongoDB/listCRUD"
 import { NextResponse } from "next/server"
 
 interface ListItem {
@@ -59,14 +59,14 @@ export async function POST(request: Request) {
 }
 
 async function handleCreateList(body: any) {
-  const { name } = body;
+  const { name, parent } = body;
 
   if (!name) {
     return NextResponse.json({ error: "List name is required" }, { status: 400 });
   }
 
   try {
-    const result = await createList(name);
+    const result = await createList(name, [], parent || null);
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error creating list:", error);
@@ -118,6 +118,29 @@ export async function DELETE(request: Request) {
     console.error("Error deleting list:", error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to delete list" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json()
+    const { action, listName, parent } = body
+
+    if (action === "updateParent") {
+      if (!listName) {
+        return NextResponse.json({ error: "List name is required" }, { status: 400 })
+      }
+      await updateListParent(listName, parent)
+      return NextResponse.json({ success: true, message: "List parent updated successfully" })
+    }
+
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 })
+  } catch (error) {
+    console.error("Error updating list:", error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to update list" },
       { status: 500 }
     )
   }

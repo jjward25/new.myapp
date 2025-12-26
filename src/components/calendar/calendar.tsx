@@ -4,17 +4,9 @@ import React, { useState, useEffect } from 'react';
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<any[]>([]);
-  const [newEvent, setNewEvent] = useState({
-    title: '',
-    date: '',
-    time: '',
-    description: '',
-    location: '',
-  });
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedEvent, setEditedEvent] = useState<any>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
 
   // Fetch events from MongoDB on component mount
   useEffect(() => {
@@ -33,42 +25,6 @@ export default function Calendar() {
   const handlePrevMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   const handleNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
-  const handleAddEvent = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (newEvent.title && newEvent.date) {
-      try {
-        // Adjust the newEvent date to remove timezone offset
-        const selectedDate = new Date(newEvent.date);
-        const adjustedDate = new Date(
-          selectedDate.getUTCFullYear(),
-          selectedDate.getUTCMonth(),
-          selectedDate.getUTCDate()
-        );
-
-        const eventToAdd = {
-          ...newEvent,
-          date: adjustedDate.toISOString(), // Store date as ISO string
-        };
-
-        const response = await fetch('/api/calendar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(eventToAdd),
-        });
-
-        if (response.ok) {
-          const addedEvent = await response.json();
-          setEvents([...events, addedEvent]);
-          setNewEvent({ title: '', date: '', time: '', description: '', location: '' });
-        } else {
-          console.error('Failed to add event');
-        }
-      } catch (error) {
-        console.error('Error adding event:', error);
-      }
-    }
-  };
 
   const handleDeleteEvent = async () => {
     if (selectedEvent && selectedEvent._id) {
@@ -210,8 +166,8 @@ export default function Calendar() {
 
   return (
     <div className="w-full mx-auto flex flex-col md:flex-row h-full">
-      <div className="bg-transparent shadow md:rounded-bl-none md:rounded-br-none h-full">
-        <div className="flex items-center justify-between px-6 pt-4 bg-cyan-950 rounded-tr-lg rounded-tl-lg">
+      <div className="bg-transparent shadow rounded-xl md:rounded-bl-none md:rounded-br-none w-full h-full">
+        <div className="flex items-center justify-between px-6 pt-4 bg-cyan-950 rounded-tr-xl rounded-tl-xl">
           <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
           <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
           <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
@@ -257,25 +213,6 @@ export default function Calendar() {
             );
           })}
         </div>
-      </div>
-      <div className="bg-neutral-100 w-full md:w-1/4 my-8 md:my-auto h-full">
-        {/* Mobile toggle button */}
-        <button 
-          onClick={() => setIsFormOpen(!isFormOpen)}
-          className="md:hidden w-full py-2 bg-cyan-800 text-white font-semibold rounded-md mb-2"
-        >
-          {isFormOpen ? 'Hide Form' : 'Add Event'}
-        </button>
-        
-        {/* Form - always visible on desktop, toggle on mobile */}
-        <form className={`${isFormOpen ? 'block' : 'hidden'} md:block pl-4 w-full mx-auto flex flex-wrap justify-center items-center`} onSubmit={handleAddEvent}>
-          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.title} onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Title" required />
-          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="date" value={newEvent.date} onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} required />
-          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="time" value={newEvent.time} onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })} placeholder="Time" />
-          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.description} onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} placeholder="Description" />
-          <input className='w-full border border-neutral-200 m-1 rounded-md px-1' type="text" value={newEvent.location} onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })} placeholder="Location" />
-          <button type="submit" className='mt-2 w-2/3 bg-neutral-200 rounded-md hover:bg-cyan-950 hover:text-white dark:bg-cyan-950 dark:text-white dark:hover:text-cyan-200'>Add Event</button>
-        </form>
       </div>
       {selectedEvent && (
         <div className='bg-cyan-950 text-white rounded-lg p-4 w-full'>

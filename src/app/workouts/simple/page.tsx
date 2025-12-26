@@ -28,7 +28,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Shoulders': 'bg-violet-600',
   'Quads': 'bg-amber-600',
   'Hamstrings': 'bg-orange-600',
-  'Glutes+Hips': 'bg-pink-600',
+  'Hips': 'bg-pink-600',
   'Back+Bis': 'bg-emerald-600',
   'Core': 'bg-teal-600',
 };

@@ -10,6 +10,7 @@ interface ListWrapProps {
 interface ListItemBase {
   name: string;
   done: boolean;
+  lastContactedDate?: string;
 }
 
 interface MovieItem extends ListItemBase {
@@ -18,7 +19,13 @@ interface MovieItem extends ListItemBase {
   notes?: string;
 }
 
-type ListItem = ListItemBase | MovieItem | string;
+interface TravelDestinationItem extends ListItemBase {
+  country?: string;
+  description?: string;
+  links?: { text: string; url: string }[];
+}
+
+type ListItem = ListItemBase | MovieItem | TravelDestinationItem | string;
 
 const ListWrap: React.FC<ListWrapProps> = ({
   listName,
@@ -93,10 +100,17 @@ const ListWrap: React.FC<ListWrapProps> = ({
       if (!itemToUpdate) return;
 
       const normalizedItem = normalizeItem(itemToUpdate);
-      const updatedItem = {
+      const newDoneState = !normalizedItem.done;
+      
+      const updatedItem: ListItemBase = {
         ...normalizedItem,
-        done: !normalizedItem.done
+        done: newDoneState
       };
+      
+      // For Call list, set lastContactedDate when marking as done
+      if (listName === 'Call' && newDoneState) {
+        updatedItem.lastContactedDate = new Date().toISOString().split('T')[0];
+      }
       
       const response = await fetch('/api/lists/items/update', {
         method: 'PUT',
@@ -280,6 +294,31 @@ const ListWrap: React.FC<ListWrapProps> = ({
   const toggleOpen = () => {
     setIsOpen(prev => !prev);
   };
+  
+  const handleDeleteList = async () => {
+    if (!confirm(`Are you sure you want to delete the "${listName}" list? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/lists', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ listName }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete list');
+      }
+
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting list:', error);
+      alert('Failed to delete list');
+    }
+  };
 
   const handleSortToggle = () => {
     if (sortBy === 'none') {
@@ -319,22 +358,40 @@ const ListWrap: React.FC<ListWrapProps> = ({
 
   return (
     <div className='flex flex-col w-full justify-start mb-2 h-fit'>
-      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} cursor-pointer relative w-full overflow-hidden h-full`} onClick={toggleOpen}>
+      <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} cursor-pointer relative w-full overflow-hidden h-full`}>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} absolute -inset-3 bg-cyan-700 blur opacity-20`}></div>
         <div className={`${isOpen ? 'rounded-tr-lg rounded-tl-lg' : 'rounded-lg'} relative flex justify-between px-1 py-1 border-2 border-cyan-800 text-cyan-950 dark:text-cyan-500 hover:text-cyan-600`}>
-          <p className={`text-lg font-semibold pl-1 my-0 text-white opacity-90`}>
-            {listName}
-          </p>
+          <div className="flex items-center flex-1" onClick={toggleOpen}>
+            <p className={`text-lg font-semibold pl-1 my-0 text-white opacity-90`}>
+              {listName}
+            </p>
+          </div>
           
-          <svg
-            className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-          >
-            <circle cx="12" cy="12" r="10" className={`fill-cyan-950`} />
-            <path d="M8 12l4 4 4-4" className="stroke-current text-cyan-200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteList();
+              }}
+              className="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-900/30"
+              title={`Delete ${listName} list`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+            <div onClick={toggleOpen}>
+              <svg
+                className={`w-6 h-6 mt-1 transition-transform duration-300 transform rotate-180 ${isOpen ? 'transform rotate-2' : ''}`}
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+              >
+                <circle cx="12" cy="12" r="10" className={`fill-cyan-950`} />
+                <path d="M8 12l4 4 4-4" className="stroke-current text-cyan-200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -466,7 +523,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
                     return (
                       <li key={normalizedItem.name} className="border rounded-lg p-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-2 flex-1">
                             <input
                               type="checkbox"
                               checked={normalizedItem.done}
@@ -481,6 +538,18 @@ const ListWrap: React.FC<ListWrapProps> = ({
                             >
                               {normalizedItem.name}
                             </span>
+                            {/* Show last contacted date for Call list */}
+                            {listName === 'Call' && normalizedItem.lastContactedDate && (
+                              <span className="text-xs text-gray-400 ml-2">
+                                (Last: {normalizedItem.lastContactedDate})
+                              </span>
+                            )}
+                            {/* Show Travel Destinations info */}
+                            {listName === 'Travel Destinations' && (
+                              <span className="text-xs text-gray-500 ml-2">
+                                {(item as TravelDestinationItem).country && `${(item as TravelDestinationItem).country}`}
+                              </span>
+                            )}
                           </div>
                           {isEditing && (
                             <button
@@ -559,6 +628,30 @@ const ListWrap: React.FC<ListWrapProps> = ({
                                 Save
                               </button>
                             </div>
+                          </div>
+                        )}
+                        
+                        {/* Travel Destinations expanded view */}
+                        {listName === 'Travel Destinations' && (
+                          <div className="mt-2 pl-6 text-sm">
+                            {(item as TravelDestinationItem).description && (
+                              <p className="text-gray-600 mb-1">{(item as TravelDestinationItem).description}</p>
+                            )}
+                            {(item as TravelDestinationItem).links && (item as TravelDestinationItem).links!.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {(item as TravelDestinationItem).links!.map((link, idx) => (
+                                  <a 
+                                    key={idx}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-cyan-600 hover:text-cyan-800 hover:underline"
+                                  >
+                                    {link.text}
+                                  </a>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         )}
                       </li>

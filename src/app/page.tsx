@@ -8,9 +8,9 @@ import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
 import DateUpdater from '../components/dates/HomeDate'
 import AddNewTaskForm from '../components/tasks/NewTaskButton';
 import Calendar from '@/components/calendar/calendar';
+import AddEventButton from '@/components/calendar/AddEventButton';
 import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
-import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
 import AvailableLists from '../components/lists/AvailableLists';
 import WorkoutSection from '../components/workouts/WorkoutSection';
 
@@ -30,12 +30,15 @@ export default async function Home() {
       <div className="flex flex-col w-full h-full mb-10 justify-center">
 
         {/** Calendar */}
-        <div className='flex flex-col md:flex-row rounded-md w-full h-full'>
+        <div className='flex flex-col rounded-xl w-full h-full'>
           <Calendar/>
+          <div className='border-t-2 border-cyan-800'>
+            <AddEventButton/>
+          </div>
         </div>          
         
         {/** Lists */}
-        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-xl md:rounded-tl-none mb-4'>
+        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-xl md:rounded-tl-none md:rounded-tr-none mb-4'>
 
           <div className='hidden md:block mb-2 md:mb-4 pt-2 w-full'>
             <div className='h-12 pt-2 bg-transparent text-cyan-300 italic opacity-70 text-xl font-semibold text-center'>Tasks & Lists</div>
@@ -63,8 +66,9 @@ export default async function Home() {
             <h1 className="text-xl font-semibold text-cyan-800">Tasks Completed by Day</h1>
             <TaskTrendChart/>
           </div>
-          <div className=' drop-shadow-sm w-full'>
-            <MilestoneTrendComponent/>
+          <div className='w-full h-fit bg-gradient-to-tr from-black to-slate-800 max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
+            <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
+            <RoutinesBooleanBar/>
           </div>
         </div>
 
@@ -80,10 +84,7 @@ export default async function Home() {
         {/** Column 2: Workout */}
         <div className='flex flex-col items-center mx-auto col-span-1 w-full md:px-4 md:pr-0'>
         
-        <div className='w-full h-fit bg-gradient-to-tr from-black to-slate-800 max-w-[750px] rounded-xl mb-4 border border-fuchsia-300 '>
-          <p className='ml-5 mt-3 text-white text-md'>Daily Routines</p>
-          <RoutinesBooleanBar/>
-        </div>
+        
           
         <WorkoutSection/>
         </div>

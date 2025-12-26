@@ -9,7 +9,7 @@ const CATEGORY_COLORS = {
   'Shoulders': '#8B5CF6',   // Violet
   'Quads': '#F59E0B',       // Amber
   'Hamstrings': '#F97316',  // Orange
-  'Glutes+Hips': '#EC4899', // Pink
+  'Hips': '#EC4899', // Pink
   'Back+Bis': '#10B981',    // Emerald
   'Core': '#14B8A6',        // Teal
 };
