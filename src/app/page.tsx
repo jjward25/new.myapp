@@ -38,7 +38,7 @@ export default async function Home() {
         </div>          
         
         {/** Lists */}
-        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-xl md:rounded-tl-none md:rounded-tr-none mb-4'>
+        <div className='flex flex-col md:flex-row gap-2 px-2 bg-cyan-950 rounded-xl mb-4'>
 
           <div className='hidden md:block mb-2 md:mb-4 pt-2 w-full'>
             <div className='h-12 pt-2 bg-transparent text-cyan-300 italic opacity-70 text-xl font-semibold text-center'>Tasks & Lists</div>
