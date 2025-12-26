@@ -65,7 +65,7 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
         </div>
         
         {/* Section Header */}
-        <p className='pl-1 mb-4 mx-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Routines</p>
+        <p className='pl-1 mb-4 mt-4 mx-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Routines</p>
         
         <div className='flex flex-col md:grid md:grid-cols-2 mb-2 overflow-hidden rounded-lg text-xs'>
           {/* Left Column - Boolean Activities */}
