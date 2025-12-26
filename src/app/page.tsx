@@ -12,7 +12,7 @@ import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
 import MilestoneTrendComponent from '@/components/d3/MilestoneTrendComponent';
 import AvailableLists from '../components/lists/AvailableLists';
-import WorkoutTrendComponent from '../components/d3/WorkoutTrendComponent';
+import WorkoutSection from '../components/workouts/WorkoutSection';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -85,22 +85,7 @@ export default async function Home() {
           <RoutinesBooleanBar/>
         </div>
           
-        <div className='w-full overflow-hidden '>
-            <div className='pb-2'>
-              <div className="cursor-pointer relative rounded-lg w-full overflow-hidden md:mt-1 mb-2">
-                <div className="absolute -inset-1 rounded-lg bg-yellow-700 blur opacity-20 overflow-hidden"></div>
-                <a href="/workouts" title="Workout">
-                  <div className="relative  rounded-lg flex justify-around border-2 border-yellow-950 dark:text-yellow-500 font-semibold overflow-hidden text-sm hover:tracking-widest hover:text-yellow-600 text-yellow-950">
-                      Workout
-                  </div>
-                </a>
-              </div>
-            </div>
-
-            <div className='bg-neutral-200 rounded-xl border-2 border-black drop-shadow-sm w-full'>
-              <WorkoutTrendComponent/>
-            </div>              
-          </div>
+        <WorkoutSection/>
         </div>
 
         
