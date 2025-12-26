@@ -31,7 +31,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
     "Notes": '',
     "Links": '',
     "Complete Date": '',
-    "Session": 'Small'
+    "Size": 'S'
   });
 
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -76,7 +76,7 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
           "Notes": '',
           "Links": '',
           "Complete Date": '',
-          "Session":'Small'
+          "Size": 'S'
         });
         setIsFormVisible(false);
         if (onTaskAdded) onTaskAdded(); // Trigger refresh in the parent component
@@ -149,19 +149,19 @@ const AddNewTaskForm = ({ onTaskAdded }) => {
             </label>
           </div>
           <div>
-            <label htmlFor="session" className="block mb-2 text-cyan-500">
-              Session:
+            <label htmlFor="size" className="block mb-2 text-cyan-500">
+              Size:
               <select
-                id="session"
-                name="Session"
-                value={formData["Session"]}
+                id="size"
+                name="Size"
+                value={formData["Size"]}
                 onChange={handleInputChange}
                 className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
               >
-                <option value="">Select Session</option>
-                <option value="Next">Next</option>
-                <option value="Big">Big</option>
-                <option value="Small">Small</option>
+                <option value="">Select Size</option>
+                <option value="L">L - Large</option>
+                <option value="M">M - Medium</option>
+                <option value="S">S - Small</option>
               </select>
             </label>
           </div>

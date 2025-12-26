@@ -10,7 +10,7 @@ interface Task {
   "Due Date": string;
   "Type": string;
   "Priority": string;
-  "Session": string;
+  "Size": string;
   [key: string]: any;
 }
 
@@ -24,12 +24,12 @@ interface GenericListTemplateProps {
   completeDateFilter?: boolean | null;
   dueDateFromFilter?: string;
   dueDateBeforeFilter?: string;
-  sessionFilter?: string[];
+  sizeFilter?: string[];
   missedFilter?: boolean | null;
 }
 
 const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
-  sortOrder,
+  sortOrder = 'priority',
   dateOrder,
   priorityOrder,
   dueDateFilter,
@@ -38,7 +38,7 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
   completeDateFilter,
   dueDateFromFilter,
   dueDateBeforeFilter,
-  sessionFilter = [],
+  sizeFilter = [],
   missedFilter = null
 }) => {
   const [backlog, setBacklog] = useState<Task[]>([]);
@@ -89,7 +89,7 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
     const isDueDateBeforeMatch = dueDateBeforeFilter ? new Date(item["Due Date"]) < new Date(dueDateBeforeFilter) : true;
     const isTypeMatch = typeFilter.length ? typeFilter.includes(item["Type"]) : true;
     const isPriorityMatch = priorityFilter.length ? priorityFilter.includes(item["Priority"]) : true;
-    const isSessionMatch = sessionFilter.length ? sessionFilter.includes(item["Session"]) : true;
+    const isSizeMatch = sizeFilter.length ? sizeFilter.includes(item["Size"]) : true;
     
     // missedFilter: false = show non-missed, true = show missed, null = show all
     const isMissedMatch = missedFilter === null
@@ -98,10 +98,11 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
       ? item["Missed"] === true
       : !item["Missed"]; // false or undefined/null
 
-    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSessionMatch && isMissedMatch;
+    return isCompleteDateMatch && isDueDateMatch && isTypeMatch && isDueDateFromMatch && isDueDateBeforeMatch && isPriorityMatch && isSizeMatch && isMissedMatch;
   });
 
   const priorityOrderMap: Record<string, number> = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  const sizeOrderMap: Record<string, number> = { L: 0, M: 1, S: 2 };
   const sortedBacklog = [...filteredBacklog];
 
   if (sortOrder === 'date') {
@@ -111,10 +112,18 @@ const GenericListTemplate: React.FC<GenericListTemplateProps> = ({
       return dateOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
     });
   } else if (sortOrder === 'priority') {
+    // Sort by Priority first, then by Size (L > M > S)
     sortedBacklog.sort((a, b) => {
       const priorityA = priorityOrderMap[a['Priority']] ?? Infinity;
       const priorityB = priorityOrderMap[b['Priority']] ?? Infinity;
-      return priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
+      const priorityCompare = priorityOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
+      
+      if (priorityCompare !== 0) return priorityCompare;
+      
+      // Secondary sort by Size (L first, then M, then S)
+      const sizeA = sizeOrderMap[a['Size']] ?? Infinity;
+      const sizeB = sizeOrderMap[b['Size']] ?? Infinity;
+      return sizeA - sizeB;
     });
   }
 

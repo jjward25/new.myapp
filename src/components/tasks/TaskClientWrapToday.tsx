@@ -16,13 +16,13 @@ interface ListWrapProps {
   dueDateFromFilter?: string | null; // Allow null
   dueDateBeforeFilter?: string | null; // Allow null
   isOpen?: boolean; // Optional
-  sessionFilter?: string[] | null;
+  sizeFilter?: string[] | null;
   missedFilter?: boolean | null; // Optional: false = non-missed, true = missed, null = all
 }
 
 const ListWrap: React.FC<ListWrapProps> = ({
   title,
-  sortOrder = 'date',
+  sortOrder = 'priority',
   dateOrder = 'asc',
   priorityOrder = 'asc',
   dueDateFilter = null,
@@ -32,7 +32,7 @@ const ListWrap: React.FC<ListWrapProps> = ({
   dueDateFromFilter = null,
   dueDateBeforeFilter = null,
   isOpen: initialIsOpen = false,
-  sessionFilter = [],
+  sizeFilter = [],
   missedFilter = null,
 }) => {
   const [internalSortOrder, setInternalSortOrder] = useState(sortOrder);
@@ -104,61 +104,20 @@ const ListWrap: React.FC<ListWrapProps> = ({
             </div>
 
 
-            {/* Big Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Big Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Big"]}
-                missedFilter={missedFilter}
-              />
-            </div>
-
-            {/* Next Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Next Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Next"]}
-                missedFilter={missedFilter}
-              />
-            </div>
-
-            
-
-            {/* Small Session Tasks */}
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-cyan-800 mb-2">Small Session</h3>
-              <ListTemplate
-                sortOrder={internalSortOrder}
-                dateOrder={internalDateOrder}
-                priorityOrder={internalPriorityOrder}
-                dueDateFilter={dueDateFilterDate}
-                priorityFilter={priorityFilter}
-                typeFilter={typeFilter}
-                completeDateFilter={completeDateFilterDate}
-                dueDateFromFilter={dueDateFromFilterDate}
-                dueDateBeforeFilter={dueDateBeforeFilterDate}
-                sessionFilter={["Small"]}
-                missedFilter={missedFilter}
-              />
-            </div>
+            {/* All Tasks - sorted by Priority then Size */}
+            <ListTemplate
+              sortOrder={internalSortOrder}
+              dateOrder={internalDateOrder}
+              priorityOrder={internalPriorityOrder}
+              dueDateFilter={dueDateFilterDate}
+              priorityFilter={priorityFilter}
+              typeFilter={typeFilter}
+              completeDateFilter={completeDateFilterDate}
+              dueDateFromFilter={dueDateFromFilterDate}
+              dueDateBeforeFilter={dueDateBeforeFilterDate}
+              sizeFilter={sizeFilter}
+              missedFilter={missedFilter}
+            />
         
           </div>
         )}

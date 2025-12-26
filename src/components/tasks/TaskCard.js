@@ -165,64 +165,61 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           {/** Front Card Content */}
           <div className='flex flex-col justify-start items-center text-black pb-2'>
           {/** Action Buttons */}
-          <div className='flex flex-row w-full justify-between md:justify-start'>
-            <p className='mx-2 mt-[9px] mb-auto bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 rounded-lg px-1 font-semibold text-white text-xs border border-neutral-400 drop-shadow-md'>{editableTask["Priority"]}</p>
+          <div className='flex flex-row w-full justify-between md:justify-start items-center gap-1 px-2 pt-2'>
+            {/* Priority Badge */}
+            <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-cyan-800 border border-cyan-600'>{editableTask["Priority"]}</span>
             
+            {/* Size Badge */}
+            <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-fuchsia-800 border border-fuchsia-600'>{editableTask["Size"]}</span>
+            
+            {/* Checkbox */}
             <input
               type="checkbox"
               checked={editableTask["Complete Date"] === today}
               onChange={setCompleteDateToToday}
-              className="bg-cyan-700 text-white rounded-lg hover:bg-cyan-800 w-auto mr-2 text-sm transform scale-150 cursor-grab mt-3 mb-auto"
+              className="h-4 w-4 cursor-pointer accent-cyan-600 mx-1"
               title="Mark Completed Today"
             />
 
+            {/* +1 Button */}
             <button
               onClick={DueDatePlusOne}
-              className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
+              className="h-5 px-1.5 flex items-center justify-center rounded text-white text-[10px] font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-500"
               title="Move to Tomorrow"
             >
               +1
             </button>
 
+            {/* Copy Button */}
             <button
               onClick={repeatTask}
-              className="bg-cyan-700 text-white rounded-lg px-2 hover:bg-cyan-800 w-auto text-sm mt-2 mb-auto mr-2"
+              className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-slate-600 border border-slate-500"
               title="Duplicate Task Tomorrow"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v6h6" />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
             </button>
 
+            {/* Missed Button */}
             <button
               onClick={markAsMissed}
-              className="bg-amber-600 text-white rounded-lg px-2 hover:bg-amber-700 w-auto text-sm mt-2 mb-auto mr-2"
+              className="h-5 w-5 flex items-center justify-center rounded text-white bg-[#8C4C1F] hover:bg-slate-600 border border-slate-500"
               title="Mark as Missed"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </button>
 
+            {/* Delete Button */}
             <button
               onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="mt-2 mb-auto mr-2 bg-gradient-conic from-slate-900 via-cyan-900 to-slate-900 hover:text-cyan-200 border border-cyan-200 text-white rounded-lg cursor-pointer"
+              className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-red-600 border border-slate-500"
               title="Delete Task"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
