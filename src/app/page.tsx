@@ -13,6 +13,7 @@ import MilestoneList from '@/components/projects/homeList/MilestoneList';
 import AddListItemButton from '@/components/lists/AddListItemButton';
 import AvailableLists from '../components/lists/AvailableLists';
 import WorkoutSection from '../components/workouts/WorkoutSection';
+import KPIDashboard from '../components/kpis/KPIDashboard';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -25,7 +26,8 @@ export default async function Home() {
       
       <DateUpdater/>
       <Weather/>
-
+      
+      <KPIDashboard/>
 
       <div className="flex flex-col w-full h-full mb-10 justify-center">
 
