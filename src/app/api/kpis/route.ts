@@ -1,6 +1,9 @@
 // src/app/api/kpis/route.ts
 import { NextResponse } from 'next/server';
-import clientPromise from '@/utils/mongoDB/mongoConnect';
+import { MongoClient } from 'mongodb';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const clientPromise: Promise<MongoClient> = require('@/utils/mongoDB/mongoConnect').default;
 
 // Helper to get week boundaries (Monday to Sunday)
 function getWeekBounds(date: Date): { start: Date; end: Date } {
