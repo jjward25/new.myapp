@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const clientPromise: Promise<MongoClient> = require('@/utils/mongoDB/mongoConnect').default;
 
 // Helper to get week boundaries (Monday to Sunday)

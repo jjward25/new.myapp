@@ -72,6 +72,14 @@ function formatDateStr(date) {
   return date.toISOString().split('T')[0];
 }
 
+function formatTime(time) {
+  if (!time) return 'All day';
+  const [hours, minutes] = time.split(':');
+  const hour12 = parseInt(hours) % 12 || 12;
+  const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+  return `${hour12}:${minutes} ${ampm}`;
+}
+
 function getDaysRemainingInWeek(now) {
   const day = now.getDay();
   // Sunday = 0, so remaining = 0; Monday = 1, remaining = 6; etc.
@@ -221,15 +229,32 @@ async function main() {
       });
     }
 
-    // 4. Events this week
+    // 4. Events this week and today
     const events = await db.collection('Calendar').find({}).toArray();
     let eventsThisWeek = 0;
+    const todayStr = formatDateStr(estNow);
+    const todaysEvents = [];
     
     events.forEach(event => {
       const eventDate = event.date;
       if (eventDate && eventDate >= thisWeekStartStr && eventDate <= thisWeekEndStr) {
         eventsThisWeek++;
       }
+      // Today's events
+      if (eventDate === todayStr) {
+        todaysEvents.push({
+          title: event.title || event.name || 'Untitled',
+          time: event.time,
+          location: event.location
+        });
+      }
+    });
+    
+    // Sort today's events by time
+    todaysEvents.sort((a, b) => {
+      const timeA = a.time || '23:59';
+      const timeB = b.time || '23:59';
+      return timeA.localeCompare(timeB);
     });
 
     // 5. P0 Milestones completed this week
@@ -281,6 +306,19 @@ async function main() {
     // ============ BUILD MESSAGE ============
 
     let message = `☀️ <b>Good Morning! Here's your status report, Mr. Ward:</b>\n\n`;
+
+    // Today's Events (first section)
+    if (todaysEvents.length > 0) {
+      message += `<b>📆 Today's Events:</b>\n`;
+      todaysEvents.forEach(event => {
+        message += `• ${formatTime(event.time)} - <b>${event.title}</b>`;
+        if (event.location) {
+          message += ` (${event.location})`;
+        }
+        message += `\n`;
+      });
+      message += `\n`;
+    }
 
     // Goal Warnings
     const workoutFailPercent = workoutGoalsFailing / workoutGoalsTotal;
