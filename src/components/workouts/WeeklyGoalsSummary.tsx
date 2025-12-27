@@ -24,13 +24,13 @@ interface Workout {
 
 const WEEKLY_TARGETS: Record<string, number> = {
   'Cardio': 3,
-  'Chest+Tris': 2,
-  'Shoulders': 2,
-  'Quads': 2,
-  'Hamstrings': 2,
-  'Hips': 2,
-  'Back+Bis': 2,
-  'Core': 2,
+  'Chest+Tris': 8,
+  'Shoulders': 8,
+  'Quads': 8,
+  'Hamstrings': 8,
+  'Hips': 8,
+  'Back+Bis': 8,
+  'Core': 8,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -77,7 +77,7 @@ export default function WeeklyGoalsSummary() {
     fetchWeeklyWorkouts();
   }, [fetchWeeklyWorkouts]);
   
-  // Calculate counts per category
+  // Calculate counts per category (summing sets, not exercise entries)
   const getCounts = () => {
     const counts: Record<string, number> = {};
     Object.keys(WEEKLY_TARGETS).forEach(cat => { counts[cat] = 0; });
@@ -85,7 +85,8 @@ export default function WeeklyGoalsSummary() {
     weeklyWorkouts.forEach(workout => {
       workout.Exercises?.forEach(ex => {
         if (counts[ex.Category] !== undefined) {
-          counts[ex.Category]++;
+          // Count actual sets, default to 1 if Sets field is missing
+          counts[ex.Category] += (ex.Sets || 1);
         }
       });
     });

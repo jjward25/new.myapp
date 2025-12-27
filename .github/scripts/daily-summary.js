@@ -7,16 +7,16 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-// Workout targets (from SimpleWorkoutModal)
+// Workout targets (counting sets, not exercise entries)
 const WORKOUT_TARGETS = {
   'Cardio': 3,
-  'Chest+Tris': 2,
-  'Shoulders': 2,
-  'Quads': 2,
-  'Hamstrings': 2,
-  'Hips': 2,
-  'Back+Bis': 2,
-  'Core': 2
+  'Chest+Tris': 8,
+  'Shoulders': 8,
+  'Quads': 8,
+  'Hamstrings': 8,
+  'Hips': 8,
+  'Back+Bis': 8,
+  'Core': 8
 };
 
 // Routine targets
@@ -159,7 +159,8 @@ async function main() {
         // This week workouts
         if (workoutDate >= thisWeekStartStr && workoutDate <= thisWeekEndStr) {
           if (workoutCounts[ex.Category] !== undefined) {
-            workoutCounts[ex.Category]++;
+            // Count actual sets, default to 1 if Sets field is missing
+            workoutCounts[ex.Category] += (ex.Sets || 1);
           }
           if (ex.Category === 'Cardio' && ex.Miles) {
             milesThisWeek += Number(ex.Miles) || 0;

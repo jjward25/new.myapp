@@ -24,13 +24,13 @@ interface Workout {
 
 const CATEGORIES = [
   { name: 'Cardio', selector: 'type', exercises: [], target: 3 },
-  { name: 'Chest+Tris', selector: 'intensity', exercises: ['Push ups', 'Flies', 'Bench', 'Dips'], target: 2 },
-  { name: 'Shoulders', selector: 'intensity', exercises: ['DB Raises', 'Military Press', 'Face Pulls', 'Hangs', 'Pullover'], target: 2 },
-  { name: 'Quads', selector: 'intensity', exercises: ['Sissy Squats', 'Leg Extensions', 'Squats'], target: 2 },
-  { name: 'Hamstrings', selector: 'intensity', exercises: ['Jeffersons', 'RDLs', 'Hamstring Curls', 'Squats'], target: 2 },
-  { name: 'Hips', selector: 'intensity', exercises: ['Thrusts', 'Cossack Squats', 'Leg Raises', 'L-Sit'], target: 2 },
-  { name: 'Back+Bis', selector: 'intensity', exercises: ['Curls', 'Pull-ups', 'Rows'], target: 2 },
-  { name: 'Core', selector: 'none', exercises: ['Plank', 'Sit-ups'], target: 2 },
+  { name: 'Chest+Tris', selector: 'intensity', exercises: ['Push ups', 'Flies', 'Bench', 'Dips'], target: 8 },
+  { name: 'Shoulders', selector: 'intensity', exercises: ['DB Raises', 'Military Press', 'Face Pulls', 'Hangs', 'Pullover'], target: 8 },
+  { name: 'Quads', selector: 'intensity', exercises: ['Sissy Squats', 'Leg Extensions', 'Squats'], target: 8 },
+  { name: 'Hamstrings', selector: 'intensity', exercises: ['Jeffersons', 'RDLs', 'Hamstring Curls', 'Squats'], target: 8 },
+  { name: 'Hips', selector: 'intensity', exercises: ['Thrusts', 'Cossack Squats', 'Leg Raises', 'L-Sit'], target: 8 },
+  { name: 'Back+Bis', selector: 'intensity', exercises: ['Curls', 'Pull-ups', 'Rows'], target: 8 },
+  { name: 'Core', selector: 'none', exercises: ['Plank', 'Sit-ups'], target: 8 },
   { name: '1RM', selector: '1rm', exercises: ['Bench', 'Squat', 'Deadlift', 'Pull-Ups', '5k'], target: 0 },
 ];
 
