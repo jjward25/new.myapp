@@ -28,13 +28,13 @@ interface PastWorkoutsSectionProps {
 
 export default function PastWorkoutsSection({ workouts }: PastWorkoutsSectionProps) {
   const [showArchive, setShowArchive] = useState(false);
-  const [currentWorkouts, setCurrentWorkouts] = useState(workouts);
+  const [currentWorkouts, setCurrentWorkouts] = useState(workouts || []);
 
   const handleDeleteWorkout = (workoutId: string) => {
-    setCurrentWorkouts(prev => prev.filter(workout => workout._id !== workoutId));
+    setCurrentWorkouts(prev => (prev || []).filter(workout => workout._id !== workoutId));
   };
 
-  if (!currentWorkouts || currentWorkouts.length === 0) {
+  if (!currentWorkouts || !Array.isArray(currentWorkouts) || currentWorkouts.length === 0) {
     return (
       <div className="text-center text-gray-400 py-8">
         No previous workouts found. Start tracking your first workout above!
@@ -46,8 +46,9 @@ export default function PastWorkoutsSection({ workouts }: PastWorkoutsSectionPro
   const today = new Date().toISOString().split('T')[0];
   
   // Separate recent workouts (today + last 4) from archive
-  const recentWorkouts = currentWorkouts.slice(0, 5); // Today + previous 4
-  const archivedWorkouts = currentWorkouts.slice(5);
+  const safeWorkouts = currentWorkouts || [];
+  const recentWorkouts = safeWorkouts.slice(0, 5); // Today + previous 4
+  const archivedWorkouts = safeWorkouts.slice(5);
 
   return (
     <div className="workout-list mt-8 w-full">

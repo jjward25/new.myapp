@@ -10,11 +10,20 @@ import PastWorkoutsSection from '@/components/workouts/PastWorkoutsSection';
 
 export default async function WorkoutHome() {
   // Fetch today's date and all workouts
-  const today = await getToday();
-  const workouts = await getWorkout();
+  let today;
+  let workouts = [];
+  
+  try {
+    today = await getToday();
+    workouts = await getWorkout();
+  } catch (error) {
+    console.error('Error fetching workout data:', error);
+  }
 
-  // Sort workouts by Date in descending order
-  const sortedWorkouts = workouts ? [...workouts].sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()) : [];
+  // Sort workouts by Date in descending order (with extra safety checks)
+  const sortedWorkouts = Array.isArray(workouts) 
+    ? [...workouts].sort((a, b) => new Date(b.Date).getTime() - new Date(a.Date).getTime()) 
+    : [];
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-12 w-full h-full">
