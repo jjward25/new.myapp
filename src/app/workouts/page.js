@@ -5,8 +5,8 @@ import WorkoutTracker from '@/components/workouts/WorkoutTracker';
 import WorkoutProgressionChart from '@/components/workouts/WorkoutProgressionChart';
 import PastWorkoutsSection from '@/components/workouts/PastWorkoutsSection';
 
-
-//export const revalidate = 60 * 60; // Regenerate the page every hour
+// Force dynamic rendering - don't prerender this page
+export const dynamic = 'force-dynamic';
 
 export default async function WorkoutHome() {
   // Fetch today's date and all workouts
