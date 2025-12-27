@@ -1,12 +1,9 @@
-// src/app/api/kpis/route.ts
+// src/app/api/kpis/route.js
 import { NextResponse } from 'next/server';
-import type { MongoClient } from 'mongodb';
-import clientPromiseImport from '@/utils/mongoDB/mongoConnect';
-
-const clientPromise = clientPromiseImport as Promise<MongoClient>;
+import clientPromise from '@/utils/mongoDB/mongoConnect';
 
 // Helper to get week boundaries (Monday to Sunday)
-function getWeekBounds(date: Date): { start: Date; end: Date } {
+function getWeekBounds(date) {
   const d = new Date(date);
   const day = d.getDay();
   const diff = day === 0 ? 6 : day - 1; // Monday = 0
@@ -23,7 +20,7 @@ function getWeekBounds(date: Date): { start: Date; end: Date } {
 }
 
 // Format date as YYYY-MM-DD for comparison
-function formatDate(date: Date): string {
+function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
@@ -44,11 +41,11 @@ export async function GET() {
     let p0ThisWeek = 0;
     let p0LastWeek = 0;
     
-    projects.forEach((project: Record<string, unknown>) => {
-      const milestones = project.Milestones as Record<string, Record<string, unknown>> || {};
+    projects.forEach((project) => {
+      const milestones = project.Milestones || {};
       Object.values(milestones).forEach((milestone) => {
         if (Number(milestone['Milestone Priority']) === 0 && milestone['Complete Date']) {
-          const completeDate = new Date(milestone['Complete Date'] as string);
+          const completeDate = new Date(milestone['Complete Date']);
           if (completeDate >= thisWeek.start && completeDate <= thisWeek.end) {
             p0ThisWeek++;
           } else if (completeDate >= lastWeek.start && completeDate <= lastWeek.end) {
@@ -61,7 +58,7 @@ export async function GET() {
     // 2. Cardio Miles from Simple Workouts
     const workoutData = await db.collection('Workouts').find({}).toArray();
     const allWorkouts = workoutData[0]?.Workouts || [];
-    const simpleWorkouts = allWorkouts.filter((w: Record<string, unknown>) => w.Type === 'simple');
+    const simpleWorkouts = allWorkouts.filter((w) => w.Type === 'simple');
     
     let milesThisWeek = 0;
     let milesLastWeek = 0;
@@ -71,9 +68,9 @@ export async function GET() {
     const lastWeekStartStr = formatDate(lastWeek.start);
     const lastWeekEndStr = formatDate(lastWeek.end);
     
-    simpleWorkouts.forEach((workout: Record<string, unknown>) => {
-      const workoutDate = workout.Date as string;
-      const exercises = workout.Exercises as Array<Record<string, unknown>> || [];
+    simpleWorkouts.forEach((workout) => {
+      const workoutDate = workout.Date;
+      const exercises = workout.Exercises || [];
       
       exercises.forEach((ex) => {
         if (ex.Category === 'Cardio' && ex.Miles) {
@@ -91,8 +88,8 @@ export async function GET() {
     
     let eventsThisWeek = 0;
     
-    events.forEach((event: Record<string, unknown>) => {
-      const eventDate = event.date as string;
+    events.forEach((event) => {
+      const eventDate = event.date;
       if (eventDate && eventDate >= thisWeekStartStr && eventDate <= thisWeekEndStr) {
         eventsThisWeek++;
       }
@@ -101,7 +98,7 @@ export async function GET() {
     // 4. Open Tasks Count
     const tasks = await db.collection('Backlog').find({}).toArray();
     
-    const openTasks = tasks.filter((task: Record<string, unknown>) => {
+    const openTasks = tasks.filter((task) => {
       const hasNoCompleteDate = !task['Complete Date'];
       const isNotMissed = task.Missed !== true;
       return hasNoCompleteDate && isNotMissed;
