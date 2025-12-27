@@ -1,0 +1,394 @@
+{"location":"TaskCard.js:setCompleteDateToToday","message":"Function entry - marking task complete","data":{"taskId":"694f3a207b3f0fede0878231","taskName":"Test","currentShowSuccess":false},"timestamp":1766799914107,"sessionId":"debug-session","hypothesisId":"H2,H5"}
+{"location":"TaskCard.js:setCompleteDateToToday","message":"Setting showSuccess to true","data":{"taskId":"694f3a207b3f0fede0878231"},"timestamp":1766799914108,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"TaskCard.js:setCompleteDateToToday","message":"API call succeeded","data":{"taskId":"694f3a207b3f0fede0878231"},"timestamp":1766799915182,"sessionId":"debug-session","hypothesisId":"H4"}
+{"location":"TaskCard.js:setCompleteDateToToday","message":"Timeout fired - setting showSuccess to false","data":{"taskId":"694f3a207b3f0fede0878231"},"timestamp":1766799916123,"sessionId":"debug-session","hypothesisId":"H3"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890358,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890358,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890360,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890361,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890359,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890366,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890367,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890386,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890386,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890387,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890387,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890388,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890388,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890389,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890389,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890389,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890389,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890390,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800890390,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890433,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800890434,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900682,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900682,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900683,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900683,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900684,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900684,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900684,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900684,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900685,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900685,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900685,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900685,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900686,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800900686,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900712,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900713,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900713,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900713,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900713,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900714,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800900714,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927561,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927561,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927563,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927563,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927564,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927564,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927565,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927565,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927565,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927566,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927566,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927566,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927567,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927567,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927568,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800927568,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927569,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927569,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927572,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927573,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927573,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927573,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927573,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927573,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927574,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927575,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927575,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927576,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927576,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927577,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927577,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927577,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927577,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927578,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927579,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927579,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800927579,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800927579,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766800930014,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":false},"timestamp":1766800930014,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":false,"willTrigger":true},"timestamp":1766800930014,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Setting isVisible to true","data":{},"timestamp":1766800930015,"sessionId":"debug-session","hypothesisId":"H3"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766800930014,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800930016,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800930017,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":true},"timestamp":1766800930018,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":true,"willTrigger":false},"timestamp":1766800930018,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930202,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930202,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930203,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930203,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930203,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930204,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930204,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930204,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930204,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930205,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930205,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930205,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800930206,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800930206,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930207,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800930207,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":true,"willTrigger":false},"timestamp":1766800930208,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800930209,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931216,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931217,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931217,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931217,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931218,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931218,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931218,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931218,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931219,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931219,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931219,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931219,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931220,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800931220,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931225,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800931226,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800937024,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800937024,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800937024,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800937026,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800937024,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800937025,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938583,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938583,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938583,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938583,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938584,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938584,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938789,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938789,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938790,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938790,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938790,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938790,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938973,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938974,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938974,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938974,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800938974,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800938974,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800939152,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800939153,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800939153,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800939153,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800939153,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800939153,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940241,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940241,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940242,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940242,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940242,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940242,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800940266,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800940267,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800941545,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800941545,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800941546,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800946946,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800946947,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800946947,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948121,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948121,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800948122,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948179,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948180,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948180,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800948180,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800948180,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800948180,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952067,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800952069,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766800952068,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800953143,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800953143,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800953144,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800954913,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800954913,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800954913,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956478,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956478,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800956479,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956538,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956539,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956539,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956539,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956539,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800956539,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800956540,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800956540,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800956540,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800957462,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800957463,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800957462,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800960100,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800960100,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800960101,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766800961261,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766800961261,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":false},"timestamp":1766800961262,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Setting isVisible to true","data":{},"timestamp":1766800961262,"sessionId":"debug-session","hypothesisId":"H3"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":false,"willTrigger":true},"timestamp":1766800961262,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800961264,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766800961264,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":true},"timestamp":1766800961265,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":true,"willTrigger":false},"timestamp":1766800961265,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766800961319,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801007841,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801007842,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801007842,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801007841,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801007841,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801007842,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801008006,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801008007,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801008007,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801008006,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801008010,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801008010,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801015184,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801015184,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801015185,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801015185,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801015194,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801015194,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032343,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032343,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":false,"isVisible":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801032345,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032343,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032343,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801032344,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801033538,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801033538,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801033539,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801035095,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801035095,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801035095,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"MilestoneCard.js:handleSave","message":"Save triggered","data":{"isNewlyCompleted":"","isP0":false,"priority":"","oldComplete":"","newComplete":""},"timestamp":1766801036807,"sessionId":"debug-session","hypothesisId":"M1"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036807,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036807,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801036808,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801036860,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801036861,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801036861,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801036861,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801037714,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801037714,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801037715,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801041899,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801041899,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801041900,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"MilestoneCard.js:handleSave","message":"Setting showSuccess to true","data":{},"timestamp":1766801042933,"sessionId":"debug-session","hypothesisId":"M2"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":false},"timestamp":1766801042934,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"MilestoneCard.js:handleSave","message":"Save triggered","data":{"isNewlyCompleted":"12/26/2025","isP0":true,"priority":"0","oldComplete":"","newComplete":"12/26/2025"},"timestamp":1766801042933,"sessionId":"debug-session","hypothesisId":"M1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":false,"willTrigger":true},"timestamp":1766801042934,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Setting isVisible to true","data":{},"timestamp":1766801042934,"sessionId":"debug-session","hypothesisId":"H3"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766801042933,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":true,"isVisible":false},"timestamp":1766801042933,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766801042936,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Rendering animation","data":{"show":true,"isVisible":true},"timestamp":1766801042936,"sessionId":"debug-session","hypothesisId":"H6"}
+{"location":"SuccessCheckmark.tsx","message":"Effect triggered","data":{"show":true,"isVisible":true},"timestamp":1766801042937,"sessionId":"debug-session","hypothesisId":"H1"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":true,"isVisible":true,"willTrigger":false},"timestamp":1766801042937,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801042986,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801042987,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801042987,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801042987,"sessionId":"debug-session","hypothesisId":"H2"}
+{"location":"SuccessCheckmark.tsx","message":"Returning null - not visible","data":{"show":false,"isVisible":false},"timestamp":1766801042987,"sessionId":"debug-session","hypothesisId":"H5"}
+{"location":"SuccessCheckmark.tsx","message":"Main effect check","data":{"show":false,"isVisible":false,"willTrigger":false},"timestamp":1766801042988,"sessionId":"debug-session","hypothesisId":"H2"}

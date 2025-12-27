@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { triggerAchievementAnimation, triggerParticleAnimation } from '@/components/animations/GlobalAnimationProvider';
 
 interface Exercise {
   _id?: string;
@@ -58,6 +59,7 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
   // 1RM form state
   const [oneRmExercise, setOneRmExercise] = useState('Bench');
   const [oneRmValue, setOneRmValue] = useState<number | ''>('');
+  
   
   const today = new Date().toISOString().split('T')[0];
   
@@ -142,6 +144,30 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
     }
   };
   
+  
+  // Check if 1RM is a new personal best
+  const checkFor1RMPersonalBest = (exerciseName: string, newValue: number): boolean => {
+    // Get all previous 1RM values for this exercise
+    const previous1RMs: number[] = [];
+    
+    weeklyWorkouts.forEach(workout => {
+      workout.Exercises?.forEach(ex => {
+        if (ex.Category === '1RM' && ex.ExerciseName === exerciseName) {
+          const value = exerciseName === '5k' ? ex.Time : ex.Weight;
+          if (value) previous1RMs.push(value);
+        }
+      });
+    });
+    
+    // For 5k, lower is better; for others, higher is better
+    if (exerciseName === '5k') {
+      return previous1RMs.length === 0 || newValue < Math.min(...previous1RMs);
+    } else {
+      return previous1RMs.length === 0 || newValue > Math.max(...previous1RMs);
+    }
+  };
+  
+  
   const handleAddExercise = async () => {
     setIsLoading(true);
     
@@ -183,6 +209,34 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
       });
       
       if (response.ok) {
+        // Check for 1RM personal best BEFORE fetching updated data
+        if (selectedCategory.name === '1RM' && oneRmValue) {
+          const isNewPB = checkFor1RMPersonalBest(oneRmExercise, Number(oneRmValue));
+          if (isNewPB) {
+            // Increment workouts level for 1RM personal best
+            try {
+              const achieveResponse = await fetch('/api/achievements', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pool: 'workouts' }),
+              });
+              if (achieveResponse.ok) {
+                const { level } = await achieveResponse.json();
+                triggerAchievementAnimation(`💉💪 New 1 Rep Max! 💪💉`, level);
+              } else {
+                // Still show achievement even if level fetch fails
+                triggerAchievementAnimation(`💉💪 New 1 Rep Max! 💪💉`);
+              }
+            } catch (achieveError) {
+              console.error('Error incrementing achievement:', achieveError);
+              triggerAchievementAnimation(`💉💪 New 1 Rep Max! 💪💉`);
+            }
+          }
+        } else {
+          // Trigger particle explosion for regular exercises
+          triggerParticleAnimation();
+        }
+        
         await fetchTodaysWorkout();
         await fetchWeeklyWorkouts();
         resetForm();

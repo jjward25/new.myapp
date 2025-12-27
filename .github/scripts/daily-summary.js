@@ -200,19 +200,25 @@ async function main() {
     routines.forEach(r => {
       const routineDate = r.Date;
       
-      // This week routines
+      // This week routines - ONLY count true completions, NOT "Pass" values
       if (routineDate >= thisWeekStartStr && routineDate <= thisWeekEndStr) {
-        if (r.Mobility) routineCounts.mobility++;
+        // Mobility: only count true, not "Pass"
+        if (r.Mobility === true) routineCounts.mobility++;
+        // Exercise: only count Lift/Cardio, not "Pass"
         if (r.Exercise === 'Lift') routineCounts.lift++;
         if (r.Exercise === 'Cardio') routineCounts.cardio++;
-        if (r.Language) routineCounts.language++;
-        if (r.Piano) routineCounts.piano++;
-        if (r.ReadLearn && r.ReadLearn.length > 0) routineCounts.readLearn++;
-        if (r.Journal && r.Journal.trim()) routineCounts.journal++;
+        // Language: only count true, not "Pass"
+        if (r.Language === true) routineCounts.language++;
+        // Piano: only count true, not "Pass"
+        if (r.Piano === true) routineCounts.piano++;
+        // ReadLearn: only count arrays with items, not "Pass"
+        if (Array.isArray(r.ReadLearn) && r.ReadLearn.length > 0) routineCounts.readLearn++;
+        // Journal: only count actual text, not "Pass"
+        if (r.Journal && typeof r.Journal === 'string' && r.Journal.trim() && r.Journal !== 'Pass') routineCounts.journal++;
       }
       
-      // Yesterday's journal
-      if (routineDate === yesterdayStr && r.Journal && r.Journal.trim()) {
+      // Yesterday's journal (only if actual journal, not "Pass")
+      if (routineDate === yesterdayStr && r.Journal && typeof r.Journal === 'string' && r.Journal.trim() && r.Journal !== 'Pass') {
         yesterdayJournal = r.Journal;
       }
     });

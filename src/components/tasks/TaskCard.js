@@ -2,6 +2,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { triggerSuccessAnimation } from '@/components/animations/GlobalAnimationProvider';
 
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -87,6 +88,10 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     e.stopPropagation();
     const updatedTask = { ...editableTask, "Complete Date": today };
     setEditableTask(updatedTask);
+    
+    // Trigger global success animation
+    triggerSuccessAnimation('Task Complete!');
+    
     try {
       await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
       onEdit(updatedTask);
@@ -113,15 +118,12 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     const updatedTask = { ...editableTask, "Due Date": newDueDate };
     
     try {
-        const response = await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
+        await axios.put('/api/backlog', { id: task._id, updatedItem: updatedTask });
         onEdit(updatedTask);
     } catch (err) {
         console.error('Error setting due date to tomorrow:', err);
     }
-};
-
-
-  
+  };
 
   const repeatTask = async (e) => {
     e.stopPropagation();
@@ -148,163 +150,165 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   };
 
   return (
-    <div
-      ref={cardRef}
-      className="flip-card relative w-full max-w-[1000px] mx-auto border border-neutral-200 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden mb-2"
-      onClick={handleCardClick}
-    >
+    <>
       <div
-        className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
-        style={{ transformStyle: 'preserve-3d' }}
+        ref={cardRef}
+        className="flip-card relative w-full max-w-[1000px] mx-auto border border-neutral-200 rounded-xl cursor-pointer perspective-1000 shadow-sm shadow-neutral-400 overflow-hidden mb-2"
+        onClick={handleCardClick}
       >
-        {/* Front Face */}
         <div
-          className={`flip-card-face flip-card-front bg-slate-200 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
-          style={{ backfaceVisibility: 'hidden' }}
+          className={`flip-card-inner text-black transition-transform duration-700 h-full p-1 relative ${isFlipped ? 'rotate-x-180' : ''}`}
+          style={{ transformStyle: 'preserve-3d' }}
         >
-          {/** Front Card Content */}
-          <div className='flex flex-col justify-start items-center text-black pb-2'>
-          {/** Action Buttons */}
-          <div className='flex flex-row w-full justify-between md:justify-start items-center gap-1 px-2 pt-2'>
-            {/* Priority Badge */}
-            <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-cyan-800 border border-cyan-600'>{editableTask["Priority"]}</span>
-            
-            {/* Size Badge */}
-            <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-fuchsia-800 border border-fuchsia-600'>{editableTask["Size"]}</span>
-            
-            {/* Checkbox */}
-            <input
-              type="checkbox"
-              checked={editableTask["Complete Date"] === today}
-              onChange={setCompleteDateToToday}
-              className="h-4 w-4 cursor-pointer accent-cyan-600 mx-1"
-              title="Mark Completed Today"
-            />
-
-            {/* +1 Button */}
-            <button
-              onClick={DueDatePlusOne}
-              className="h-5 px-1.5 flex items-center justify-center rounded text-white text-[10px] font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-500"
-              title="Move to Tomorrow"
-            >
-              +1
-            </button>
-
-            {/* Copy Button */}
-            <button
-              onClick={repeatTask}
-              className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-slate-600 border border-slate-500"
-              title="Duplicate Task Tomorrow"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </button>
-
-            {/* Missed Button */}
-            <button
-              onClick={markAsMissed}
-              className="h-5 w-5 flex items-center justify-center rounded text-white bg-[#8C4C1F] hover:bg-slate-600 border border-slate-500"
-              title="Mark as Missed"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </button>
-
-            {/* Delete Button */}
-            <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-red-600 border border-slate-500"
-              title="Delete Task"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-          </div>
-
-            <h2 className="font-bold text-sm flex-1 text-black ml-3 mr-2 mt-[6px] w-full pl-2">{isEditing ? (
+          {/* Front Face */}
+          <div
+            className={`flip-card-face flip-card-front bg-slate-200 rounded-xl shadow-lg absolute inset-0 border border-slate-900 ${isFlipped ? 'hidden' : 'block'} bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[1500ms]`}
+            style={{ backfaceVisibility: 'hidden' }}
+          >
+            {/** Front Card Content */}
+            <div className='flex flex-col justify-start items-center text-black pb-2'>
+            {/** Action Buttons */}
+            <div className='flex flex-row w-full justify-between md:justify-start items-center gap-1 px-2 pt-2'>
+              {/* Priority Badge */}
+              <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-cyan-800 border border-cyan-600'>{editableTask["Priority"]}</span>
+              
+              {/* Size Badge */}
+              <span className='h-5 px-1.5 flex items-center justify-center rounded font-semibold text-white text-[10px] bg-fuchsia-800 border border-fuchsia-600'>{editableTask["Size"]}</span>
+              
+              {/* Checkbox */}
               <input
-                type="text"
-                value={editableTask["Task Name"] || ''}
-                onChange={(e) => handleInputChange(e, "Task Name")}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-auto text-left"
-                onClick={(e) => e.stopPropagation()}
+                type="checkbox"
+                checked={editableTask["Complete Date"] === today}
+                onChange={setCompleteDateToToday}
+                className="h-4 w-4 cursor-pointer accent-cyan-600 mx-1"
+                title="Mark Completed Today"
               />
-            ) : editableTask["Task Name"]}</h2>
 
-            
-          </div>
-          
-
-        </div>
-
-        
-        {/* Back Face */}
-        <div
-          className={`flip-card-face flip-card-back bg-slate-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
-          style={{ backfaceVisibility: 'hidden' }}
-        >
-          <div className='flex flex-row justify-between items-center border-b border-cyan-600 mb-3 pb-3'>
-            <h2 className="font-bold text-black text-md flex-1">{editableTask["Task Name"]}</h2>
-            <button
-              onClick={(e) => { e.stopPropagation(); handleDelete(); }}
-              className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white  rounded-lg"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              {/* +1 Button */}
+              <button
+                onClick={DueDatePlusOne}
+                className="h-5 px-1.5 flex items-center justify-center rounded text-white text-[10px] font-semibold bg-slate-700 hover:bg-slate-600 border border-slate-500"
+                title="Move to Tomorrow"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+                +1
+              </button>
+
+              {/* Copy Button */}
+              <button
+                onClick={repeatTask}
+                className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-slate-600 border border-slate-500"
+                title="Duplicate Task Tomorrow"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+
+              {/* Missed Button */}
+              <button
+                onClick={markAsMissed}
+                className="h-5 w-5 flex items-center justify-center rounded text-white bg-[#8C4C1F] hover:bg-slate-600 border border-slate-500"
+                title="Mark as Missed"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+
+              {/* Delete Button */}
+              <button
+                onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                className="h-5 w-5 flex items-center justify-center rounded text-white bg-slate-700 hover:bg-red-600 border border-slate-500"
+                title="Delete Task"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+            </div>
+
+              <h2 className="font-bold text-sm flex-1 text-black ml-3 mr-2 mt-[6px] w-full pl-2">{isEditing ? (
+                <input
+                  type="text"
+                  value={editableTask["Task Name"] || ''}
+                  onChange={(e) => handleInputChange(e, "Task Name")}
+                  className="input input-bordered bg-neutral-100 text-cyan-700 w-auto text-left"
+                  onClick={(e) => e.stopPropagation()}
                 />
-              </svg>
-            </button>
+              ) : editableTask["Task Name"]}</h2>
+
+              
+            </div>
+            
+
           </div>
-          <div className="flex flex-col flex-1 overflow-auto text-sm">
-            {Object.keys(editableTask).map((key, index) => (
-              key !== "Task Name" && key !== "_id" && key !== 'Project' && key !== 'Start Date' && (
-                <p className='text-left mb-2 text-black' key={index}>
-                  <strong>{key}:</strong> {isEditing ?
-                    <input
-                      type="text"
-                      value={editableTask[key] || ''}
-                      onChange={(e) => handleInputChange(e, key)}
-                      className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    : editableTask[key]}
-                </p>
-              )
-            ))}
-            {isEditing ? (
+
+          
+          {/* Back Face */}
+          <div
+            className={`flip-card-face flip-card-back bg-slate-100 p-4 rounded-lg shadow-lg absolute inset-0 ${isFlipped ? 'block' : 'hidden'}`}
+            style={{ backfaceVisibility: 'hidden' }}
+          >
+            <div className='flex flex-row justify-between items-center border-b border-cyan-600 mb-3 pb-3'>
+              <h2 className="font-bold text-black text-md flex-1">{editableTask["Task Name"]}</h2>
               <button
-                onClick={handleSave}
-                className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
+                onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                className="absolute top-4 right-5 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:text-black border border-cyan-200 text-white  rounded-lg"
               >
-                Save
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
-            ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
-              >
-                Edit
-              </button>
-            )}
-            <div className='h-5'></div>
+            </div>
+            <div className="flex flex-col flex-1 overflow-auto text-sm">
+              {Object.keys(editableTask).map((key, index) => (
+                key !== "Task Name" && key !== "_id" && key !== 'Project' && key !== 'Start Date' && (
+                  <p className='text-left mb-2 text-black' key={index}>
+                    <strong>{key}:</strong> {isEditing ?
+                      <input
+                        type="text"
+                        value={editableTask[key] || ''}
+                        onChange={(e) => handleInputChange(e, key)}
+                        className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      : editableTask[key]}
+                  </p>
+                )
+              ))}
+              {isEditing ? (
+                <button
+                  onClick={handleSave}
+                  className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="mt-3 bg-cyan-700 text-white rounded-lg px-4 py-2 hover:bg-cyan-800"
+                >
+                  Edit
+                </button>
+              )}
+              <div className='h-5'></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

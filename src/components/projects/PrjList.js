@@ -2,6 +2,7 @@
 'use client'; // Ensure this component runs in the client
 import React, { useState, useEffect } from 'react';
 import MilestoneCard from './MilestoneCard';
+import { triggerAchievementAnimation } from '@/components/animations/GlobalAnimationProvider';
 
 const PrjList = () => {
   const [projects, setProjects] = useState([]);
@@ -261,6 +262,22 @@ const PrjList = () => {
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
+      }
+
+      // Increment projects achievement level
+      try {
+        const achieveResponse = await fetch('/api/achievements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pool: 'projects' }),
+        });
+        if (achieveResponse.ok) {
+          const { level } = await achieveResponse.json();
+          // Trigger global achievement animation
+          triggerAchievementAnimation('📝🤓 Project Complete! 🤓📝', level);
+        }
+      } catch (achieveError) {
+        console.error('Error incrementing achievement:', achieveError);
       }
 
       // Refetch projects to update state

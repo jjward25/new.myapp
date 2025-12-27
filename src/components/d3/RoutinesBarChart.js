@@ -44,14 +44,14 @@ const RoutinesBarChart = () => {
       return date >= startOfWeek;
     });
 
-    // Count completions
-    const mobility = weekData.filter(d => d.Mobility).length;
+    // Count completions - EXCLUDE "Pass" values (only count true completions)
+    const mobility = weekData.filter(d => d.Mobility === true).length;
     const lift = weekData.filter(d => d.Exercise === 'Lift').length;
     const cardio = weekData.filter(d => d.Exercise === 'Cardio').length;
-    const language = weekData.filter(d => d.Language).length;
-    const piano = weekData.filter(d => d.Piano).length;
-    const readLearn = weekData.filter(d => d.ReadLearn && d.ReadLearn.length > 0).length;
-    const journal = weekData.filter(d => d.Journal && d.Journal.trim() !== '').length;
+    const language = weekData.filter(d => d.Language === true).length;
+    const piano = weekData.filter(d => d.Piano === true).length;
+    const readLearn = weekData.filter(d => d.ReadLearn && Array.isArray(d.ReadLearn) && d.ReadLearn.length > 0).length;
+    const journal = weekData.filter(d => d.Journal && typeof d.Journal === 'string' && d.Journal.trim() !== '' && d.Journal !== 'Pass').length;
 
     return {
       mobility: { current: mobility, target: 5 },
@@ -74,33 +74,37 @@ const RoutinesBarChart = () => {
         const parsedDate = d3.timeParse("%Y-%m-%d")(d.Date);
         const entry = { Date: parsedDate };
   
-        // Mobility
+        // Mobility - true counts as completed, "Pass" counts as addressed but not completed
         entry["Mobility"] = {
-          value: d.Mobility || false,
-          description: d.Mobility ? "Mobility completed" : "No mobility"
+          value: d.Mobility === true, // Only true, not "Pass"
+          passed: d.Mobility === 'Pass',
+          description: d.Mobility === true ? "Mobility completed" : d.Mobility === 'Pass' ? "Mobility: Pass" : "No mobility"
         };
 
-        // Exercise (Lift or Cardio)
+        // Exercise (Lift or Cardio) - "Pass" counts as addressed but not completed
         entry["Exercise"] = {
-          value: !!d.Exercise,
-          description: d.Exercise ? `Exercise: ${d.Exercise}` : "No exercise",
+          value: d.Exercise === 'Lift' || d.Exercise === 'Cardio',
+          passed: d.Exercise === 'Pass',
+          description: d.Exercise && d.Exercise !== 'Pass' ? `Exercise: ${d.Exercise}` : d.Exercise === 'Pass' ? "Exercise: Pass" : "No exercise",
           type: d.Exercise
         };
 
-        // Language
+        // Language - true counts as completed, "Pass" counts as addressed but not completed
         entry["Language"] = {
-          value: d.Language || false,
-          description: d.Language ? "Language study completed" : "No language study"
+          value: d.Language === true,
+          passed: d.Language === 'Pass',
+          description: d.Language === true ? "Language study completed" : d.Language === 'Pass' ? "Language: Pass" : "No language study"
         };
 
-        // Piano
+        // Piano - true counts as completed, "Pass" counts as addressed but not completed
         entry["Piano"] = {
-          value: d.Piano || false,
-          description: d.Piano ? "Piano practice completed" : "No piano practice"
+          value: d.Piano === true,
+          passed: d.Piano === 'Pass',
+          description: d.Piano === true ? "Piano practice completed" : d.Piano === 'Pass' ? "Piano: Pass" : "No piano practice"
         };
 
         // ReadLearn
-        const readLearnItems = d.ReadLearn || [];
+        const readLearnItems = Array.isArray(d.ReadLearn) ? d.ReadLearn : [];
         entry["ReadLearn"] = {
           value: readLearnItems.length > 0,
           description: readLearnItems.length > 0 
@@ -110,9 +114,10 @@ const RoutinesBarChart = () => {
         };
 
         // Journal
+        const hasJournal = d.Journal && typeof d.Journal === 'string' && d.Journal.trim() !== '' && d.Journal !== 'Pass';
         entry["Journal"] = {
-          value: d.Journal && d.Journal.trim() !== "",
-          description: d.Journal && d.Journal.trim() !== "" 
+          value: hasJournal,
+          description: hasJournal 
             ? `Journal: "${d.Journal.substring(0, 50)}${d.Journal.length > 50 ? '...' : ''}"`
             : "No journal entry"
         };

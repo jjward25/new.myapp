@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from '../components/Navbar'
+import GlobalAnimationProvider from '@/components/animations/GlobalAnimationProvider'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,17 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <GlobalAnimationProvider>
+          <div className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-400 to-cyan-950">
 
-     
-        <div className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-400 to-cyan-950">
+            <div className="w-full mx-auto justify-evenly min-h-screen bg-neutral-100 dark:bg-black max-w-[1400px] shadow-2xl shadow-cyan-950 border-l-2 border-r-2 border-cyan-950">
+              <Navbar/>
+              {children}
+            </div>
 
-          <div className="w-full mx-auto justify-evenly min-h-screen bg-neutral-100 dark:bg-black max-w-[1400px] shadow-2xl shadow-cyan-950 border-l-2 border-r-2 border-cyan-950">
-            <Navbar/>
-            {children}
           </div>
-
-        </div>
-
+        </GlobalAnimationProvider>
       </body>
     </html>
   );

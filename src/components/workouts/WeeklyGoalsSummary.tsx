@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { triggerAchievementAnimation } from '@/components/animations/GlobalAnimationProvider';
 
 interface Exercise {
   _id?: string;
@@ -44,9 +45,16 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Core': 'bg-teal-600',
 };
 
+// Miles goal for weekly completion
+const MILES_GOAL = 6;
+
+// Lift categories for counting lift sessions
+const LIFT_CATEGORIES = ['Chest+Tris', 'Shoulders', 'Quads', 'Hamstrings', 'Hips', 'Back+Bis', 'Core'];
+
 export default function WeeklyGoalsSummary() {
   const [weeklyWorkouts, setWeeklyWorkouts] = useState<Workout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const hasCheckedCompletion = useRef(false);
   
   // Get start of current week (Monday)
   const getWeekStart = () => {
@@ -57,6 +65,11 @@ export default function WeeklyGoalsSummary() {
     monday.setDate(now.getDate() - diff);
     monday.setHours(0, 0, 0, 0);
     return monday.toISOString().split('T')[0];
+  };
+  
+  // Get unique week identifier for tracking completion
+  const getWeekIdentifier = () => {
+    return getWeekStart();
   };
   
   const fetchWeeklyWorkouts = useCallback(async () => {
@@ -94,7 +107,78 @@ export default function WeeklyGoalsSummary() {
     return counts;
   };
   
+  // Calculate total miles for the week
+  const getTotalMiles = () => {
+    let totalMiles = 0;
+    weeklyWorkouts.forEach(workout => {
+      workout.Exercises?.forEach(ex => {
+        if (ex.Category === 'Cardio' && ex.Miles) {
+          totalMiles += ex.Miles;
+        }
+      });
+    });
+    return totalMiles;
+  };
+  
+  // Count number of lift sessions (any workout with lift exercises)
+  const getLiftSessions = () => {
+    let liftSessions = 0;
+    weeklyWorkouts.forEach(workout => {
+      const hasLift = workout.Exercises?.some(ex => LIFT_CATEGORIES.includes(ex.Category));
+      if (hasLift) liftSessions++;
+    });
+    return liftSessions;
+  };
+  
+  // Count cardio sessions
+  const getCardioSessions = () => {
+    let cardioSessions = 0;
+    weeklyWorkouts.forEach(workout => {
+      const hasCardio = workout.Exercises?.some(ex => ex.Category === 'Cardio');
+      if (hasCardio) cardioSessions++;
+    });
+    return cardioSessions;
+  };
+  
   const counts = getCounts();
+  const totalMiles = getTotalMiles();
+  const liftSessions = getLiftSessions();
+  const cardioSessions = getCardioSessions();
+  
+  // Check if weekly workout is complete (2 lift, 3 cardio, 6 miles)
+  const isWeeklyComplete = liftSessions >= 2 && cardioSessions >= 3 && totalMiles >= MILES_GOAL;
+  
+  // Check for weekly completion and trigger achievement
+  useEffect(() => {
+    const checkAndTriggerAchievement = async () => {
+      if (isWeeklyComplete && !hasCheckedCompletion.current && !isLoading) {
+        hasCheckedCompletion.current = true;
+        
+        try {
+          const response = await fetch('/api/achievements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              pool: 'weeklyWorkout',
+              weekIdentifier: getWeekIdentifier()
+            }),
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            // Only show achievement if this is a new completion (not already completed this week)
+            if (!result.alreadyCompleted) {
+              triggerAchievementAnimation('💉💪 Iron Throne will be yours - weekly workout complete 💪💉', result.level);
+            }
+          }
+        } catch (error) {
+          console.error('Error checking weekly workout achievement:', error);
+        }
+      }
+    };
+    
+    checkAndTriggerAchievement();
+  }, [isWeeklyComplete, isLoading]);
   
   // Calculate days remaining in week
   const now = new Date();
@@ -114,6 +198,29 @@ export default function WeeklyGoalsSummary() {
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-white">Weekly Workout Goals</h3>
         <span className="text-xs text-slate-400">{daysRemaining} days left</span>
+      </div>
+      
+      {/* Weekly completion summary */}
+      {isWeeklyComplete && (
+        <div className="bg-teal-900/50 border border-teal-600 rounded p-2 mb-3 text-center">
+          <span className="text-teal-400 text-xs font-semibold">Week Complete!</span>
+        </div>
+      )}
+      
+      {/* Miles progress */}
+      <div className="mb-3 p-2 rounded bg-slate-900 border border-slate-600">
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-xs text-slate-400">Miles This Week</span>
+          <span className={`text-sm font-bold ${totalMiles >= MILES_GOAL ? 'text-teal-400' : 'text-white'}`}>
+            {totalMiles.toFixed(1)}/{MILES_GOAL}
+          </span>
+        </div>
+        <div className="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
+          <div 
+            className="h-full rounded-full transition-all bg-rose-600"
+            style={{ width: `${Math.min((totalMiles / MILES_GOAL) * 100, 100)}%` }}
+          />
+        </div>
       </div>
       
       <div className="grid grid-cols-4 gap-2">

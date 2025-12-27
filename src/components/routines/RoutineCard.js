@@ -2,9 +2,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, onDelete }) => {
+const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, onDelete, weeklyCounts = {}, weeklyTargets = {}, remainingDays = 7 }) => {
   const [newReadLearnText, setNewReadLearnText] = useState('');
   const [newReadLearnLink, setNewReadLearnLink] = useState('');
+
+  // Check if Pass button should be shown for a routine
+  // Pass is only available if: target < 7 AND remainingDays > (target - currentCount)
+  const canPass = (key) => {
+    const target = weeklyTargets[key] || 7;
+    const current = weeklyCounts[key] || 0;
+    const remaining = target - current;
+    // Can only pass if there are more days remaining than needed to complete the goal
+    return target < 7 && remainingDays > remaining;
+  };
+
+  // Handle setting a routine to "Pass"
+  const handlePass = (key) => {
+    onInputChange({ target: { value: 'Pass', type: 'pass' } }, key);
+  };
 
   const handleDelete = async () => {
     try {
@@ -77,17 +92,28 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Mobility (5x/wk):</label>
                 </div>
-                <div className="w-auto">
+                <div className="w-auto flex items-center gap-2">
                   {isEditing ? (
-                    <input
-                      type="checkbox"
-                      checked={routine.Mobility || false}
-                      onChange={(e) => onInputChange(e, 'Mobility')}
-                      className="checkbox checkbox-primary"
-                    />
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={routine.Mobility === true}
+                        onChange={(e) => onInputChange(e, 'Mobility')}
+                        className="checkbox checkbox-primary"
+                        disabled={routine.Mobility === 'Pass'}
+                      />
+                      {canPass('Mobility') && routine.Mobility !== true && (
+                        <button
+                          onClick={() => handlePass('Mobility')}
+                          className={`px-2 py-0.5 text-xs rounded ${routine.Mobility === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
+                        >
+                          {routine.Mobility === 'Pass' ? 'Passed' : 'Pass'}
+                        </button>
+                      )}
+                    </>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Mobility ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Mobility ? 'Yes' : 'No'}
+                    <p className={`px-3 inline-block ${routine.Mobility === true ? 'text-cyan-500' : routine.Mobility === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine.Mobility === true ? 'Yes' : routine.Mobility === 'Pass' ? 'Pass' : 'No'}
                     </p>
                   )}
                 </div>
@@ -98,17 +124,28 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Language (5x/wk):</label>
                 </div>
-                <div className="w-auto">
+                <div className="w-auto flex items-center gap-2">
                   {isEditing ? (
-                    <input
-                      type="checkbox"
-                      checked={routine.Language || false}
-                      onChange={(e) => onInputChange(e, 'Language')}
-                      className="checkbox checkbox-primary"
-                    />
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={routine.Language === true}
+                        onChange={(e) => onInputChange(e, 'Language')}
+                        className="checkbox checkbox-primary"
+                        disabled={routine.Language === 'Pass'}
+                      />
+                      {canPass('Language') && routine.Language !== true && (
+                        <button
+                          onClick={() => handlePass('Language')}
+                          className={`px-2 py-0.5 text-xs rounded ${routine.Language === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
+                        >
+                          {routine.Language === 'Pass' ? 'Passed' : 'Pass'}
+                        </button>
+                      )}
+                    </>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Language ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Language ? 'Yes' : 'No'}
+                    <p className={`px-3 inline-block ${routine.Language === true ? 'text-cyan-500' : routine.Language === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine.Language === true ? 'Yes' : routine.Language === 'Pass' ? 'Pass' : 'No'}
                     </p>
                   )}
                 </div>
@@ -119,17 +156,28 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Piano (5x/wk):</label>
                 </div>
-                <div className="w-auto">
+                <div className="w-auto flex items-center gap-2">
                   {isEditing ? (
-                    <input
-                      type="checkbox"
-                      checked={routine.Piano || false}
-                      onChange={(e) => onInputChange(e, 'Piano')}
-                      className="checkbox checkbox-primary"
-                    />
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={routine.Piano === true}
+                        onChange={(e) => onInputChange(e, 'Piano')}
+                        className="checkbox checkbox-primary"
+                        disabled={routine.Piano === 'Pass'}
+                      />
+                      {canPass('Piano') && routine.Piano !== true && (
+                        <button
+                          onClick={() => handlePass('Piano')}
+                          className={`px-2 py-0.5 text-xs rounded ${routine.Piano === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
+                        >
+                          {routine.Piano === 'Pass' ? 'Passed' : 'Pass'}
+                        </button>
+                      )}
+                    </>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Piano ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Piano ? 'Yes' : 'No'}
+                    <p className={`px-3 inline-block ${routine.Piano === true ? 'text-cyan-500' : routine.Piano === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                      {routine.Piano === true ? 'Yes' : routine.Piano === 'Pass' ? 'Pass' : 'No'}
                     </p>
                   )}
                 </div>
@@ -147,19 +195,30 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
                 <div className="w-auto mr-2">
                   <label className="block text-sm text-black font-semibold">Exercise (2L/3C):</label>
                 </div>
-                <div className="w-auto">
+                <div className="w-auto flex items-center gap-2">
                   {isEditing ? (
-                    <select
-                      value={routine.Exercise || ''}
-                      onChange={(e) => onInputChange({ target: { value: e.target.value || null } }, 'Exercise')}
-                      className="select select-bordered select-sm bg-neutral-100 text-cyan-700"
-                    >
-                      <option value="">None</option>
-                      <option value="Lift">Lift</option>
-                      <option value="Cardio">Cardio</option>
-                    </select>
+                    <>
+                      <select
+                        value={routine.Exercise === 'Pass' ? '' : (routine.Exercise || '')}
+                        onChange={(e) => onInputChange({ target: { value: e.target.value || null } }, 'Exercise')}
+                        className="select select-bordered select-sm bg-neutral-100 text-cyan-700"
+                        disabled={routine.Exercise === 'Pass'}
+                      >
+                        <option value="">None</option>
+                        <option value="Lift">Lift</option>
+                        <option value="Cardio">Cardio</option>
+                      </select>
+                      {canPass('Exercise') && !routine.Exercise && (
+                        <button
+                          onClick={() => handlePass('Exercise')}
+                          className={`px-2 py-0.5 text-xs rounded ${routine.Exercise === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
+                        >
+                          {routine.Exercise === 'Pass' ? 'Passed' : 'Pass'}
+                        </button>
+                      )}
+                    </>
                   ) : (
-                    <p className={`px-3 inline-block ${routine.Exercise ? 'text-cyan-500' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
+                    <p className={`px-3 inline-block ${routine.Exercise && routine.Exercise !== 'Pass' ? 'text-cyan-500' : routine.Exercise === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
                       {routine.Exercise || 'None'}
                     </p>
                   )}
