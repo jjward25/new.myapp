@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as d3 from "d3";
+import { getWeekStartEST } from '@/utils/dateUtils';
 
 const RoutinesBarChart = () => {
   const [data, setData] = useState([]);
@@ -31,18 +32,11 @@ const RoutinesBarChart = () => {
   }, []);
 
   const calculateWeeklyStats = (data) => {
-    // Get start of current week (Monday)
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Sunday
-    const startOfWeek = new Date(now.setDate(diff));
-    startOfWeek.setHours(0, 0, 0, 0);
+    // Get start of current week (Monday) in EST
+    const weekStart = getWeekStartEST();
     
-    // Filter to this week's entries
-    const weekData = data.filter(d => {
-      const date = new Date(d.Date);
-      return date >= startOfWeek;
-    });
+    // Filter to this week's entries (Date is stored as YYYY-MM-DD string)
+    const weekData = data.filter(d => d.Date >= weekStart);
 
     // Count completions - EXCLUDE "Pass" values (only count true completions)
     const mobility = weekData.filter(d => d.Mobility === true).length;

@@ -25,6 +25,12 @@ const WoWIndicator: React.FC<{ current: number; previous: number }> = ({ current
   
   const isPositive = delta > 0;
   
+  // Format delta: round to 2 decimal places and remove trailing zeros
+  const formatDelta = (num: number) => {
+    const rounded = Math.round(Math.abs(num) * 100) / 100;
+    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2).replace(/\.?0+$/, '');
+  };
+  
   return (
     <span className={`text-xs ml-1 flex items-center ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
       {isPositive ? (
@@ -36,7 +42,7 @@ const WoWIndicator: React.FC<{ current: number; previous: number }> = ({ current
           <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
         </svg>
       )}
-      {Math.abs(delta)}
+      {formatDelta(delta)}
     </span>
   );
 };
