@@ -4,14 +4,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 const CATEGORY_COLORS = {
-  'Cardio': '#F43F5E',      // Rose
-  'Chest+Tris': '#3B82F6',  // Blue
+  'Cardio': '#21bce3',      // Rose
+  'Chest+Tris': '#712014',  // Blue
   'Shoulders': '#8B5CF6',   // Violet
   'Quads': '#F59E0B',       // Amber
   'Hamstrings': '#F97316',  // Orange
-  'Hips': '#EC4899', // Pink
-  'Back+Bis': '#10B981',    // Emerald
-  'Core': '#14B8A6',        // Teal
+  'Hips': '#fb2be9', // Pink
+  'Back+Bis': '#195c0e',    // Emerald
+  'Core': '#3B82F6',        // Teal
 };
 
 const CATEGORIES = Object.keys(CATEGORY_COLORS);

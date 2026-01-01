@@ -173,12 +173,12 @@ const RoutinesBarChart = () => {
     const color = d3.scaleOrdinal()
       .domain(fields)
       .range([
-        "#10B981", // Mobility - Emerald
-        "#F43F5E", // Exercise - Rose
-        "#0EA5E9", // Language - Sky  
-        "#8B5CF6", // Piano - Violet
-        "#F59E0B", // ReadLearn - Amber
-        "#14B8A6"  // Journal - Teal
+        "#9d5b96", // Mobility - Emerald
+        "#5f0b00", // Exercise - Rose
+        "#05779f", // Language - Sky  
+        "#20005f", // Piano - Violet
+        "#5b9d7e", // ReadLearn - Amber
+        "#e3e3e2"  // Journal - Teal
       ]);
 
     svg

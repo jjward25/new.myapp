@@ -36,14 +36,14 @@ const WEEKLY_TARGETS: Record<string, number> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Cardio': 'bg-rose-600',
-  'Chest+Tris': 'bg-blue-600',
+  'Cardio': '#21bce3',
+  'Chest+Tris': '#712014',
   'Shoulders': 'bg-violet-600',
   'Quads': 'bg-amber-600',
   'Hamstrings': 'bg-orange-600',
-  'Hips': 'bg-pink-600',
-  'Back+Bis': 'bg-emerald-600',
-  'Core': 'bg-teal-600',
+  'Hips': '#fb2be9',
+  'Back+Bis': '#195c0e',
+  'Core': '#3B82F6',
 };
 
 // Miles goal for weekly completion
