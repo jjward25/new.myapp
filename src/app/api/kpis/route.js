@@ -1,39 +1,27 @@
 // src/app/api/kpis/route.js
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
-
-// Helper to get week boundaries (Monday to Sunday)
-function getWeekBounds(date) {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = day === 0 ? 6 : day - 1; // Monday = 0
-  
-  const start = new Date(d);
-  start.setDate(d.getDate() - diff);
-  start.setHours(0, 0, 0, 0);
-  
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  end.setHours(23, 59, 59, 999);
-  
-  return { start, end };
-}
-
-// Format date as YYYY-MM-DD for comparison
-function formatDate(date) {
-  return date.toISOString().split('T')[0];
-}
+import { getWeekBoundsEST, formatDateEST, getNowEST } from '@/utils/dateUtils';
 
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db('Personal');
     
-    const now = new Date();
-    const thisWeek = getWeekBounds(now);
-    const lastWeekDate = new Date(now);
+    // Get current time in EST
+    const nowEST = getNowEST();
+    const thisWeek = getWeekBoundsEST(nowEST);
+    
+    // Get last week bounds
+    const lastWeekDate = new Date(nowEST);
     lastWeekDate.setDate(lastWeekDate.getDate() - 7);
-    const lastWeek = getWeekBounds(lastWeekDate);
+    const lastWeek = getWeekBoundsEST(lastWeekDate);
+    
+    // Week bounds as strings for comparison
+    const thisWeekStartStr = thisWeek.start;
+    const thisWeekEndStr = thisWeek.end;
+    const lastWeekStartStr = lastWeek.start;
+    const lastWeekEndStr = lastWeek.end;
     
     // 1. P0 Milestones Completed
     const projects = await db.collection('Projects').find({}).toArray();
@@ -45,10 +33,10 @@ export async function GET() {
       const milestones = project.Milestones || {};
       Object.values(milestones).forEach((milestone) => {
         if (Number(milestone['Milestone Priority']) === 0 && milestone['Complete Date']) {
-          const completeDate = new Date(milestone['Complete Date']);
-          if (completeDate >= thisWeek.start && completeDate <= thisWeek.end) {
+          const completeDateStr = milestone['Complete Date']; // Already stored as YYYY-MM-DD
+          if (completeDateStr >= thisWeekStartStr && completeDateStr <= thisWeekEndStr) {
             p0ThisWeek++;
-          } else if (completeDate >= lastWeek.start && completeDate <= lastWeek.end) {
+          } else if (completeDateStr >= lastWeekStartStr && completeDateStr <= lastWeekEndStr) {
             p0LastWeek++;
           }
         }
@@ -63,13 +51,8 @@ export async function GET() {
     let milesThisWeek = 0;
     let milesLastWeek = 0;
     
-    const thisWeekStartStr = formatDate(thisWeek.start);
-    const thisWeekEndStr = formatDate(thisWeek.end);
-    const lastWeekStartStr = formatDate(lastWeek.start);
-    const lastWeekEndStr = formatDate(lastWeek.end);
-    
     simpleWorkouts.forEach((workout) => {
-      const workoutDate = workout.Date;
+      const workoutDate = workout.Date; // Already stored as YYYY-MM-DD
       const exercises = workout.Exercises || [];
       
       exercises.forEach((ex) => {
@@ -89,7 +72,7 @@ export async function GET() {
     let eventsThisWeek = 0;
     
     events.forEach((event) => {
-      const eventDate = event.date;
+      const eventDate = event.date; // Already stored as YYYY-MM-DD
       if (eventDate && eventDate >= thisWeekStartStr && eventDate <= thisWeekEndStr) {
         eventsThisWeek++;
       }
@@ -123,4 +106,3 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch KPIs' }, { status: 500 });
   }
 }
-

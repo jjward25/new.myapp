@@ -1,12 +1,19 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface KPIData {
   p0Completed: { thisWeek: number; lastWeek: number };
   cardioMiles: { thisWeek: number; lastWeek: number; goal: number };
   eventsThisWeek: number;
   openTasks: number;
+}
+
+// Global function to trigger KPI refresh from anywhere
+export function refreshKPIs() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('kpi-refresh'));
+  }
 }
 
 const WoWIndicator: React.FC<{ current: number; previous: number }> = ({ current, previous }) => {
@@ -38,22 +45,33 @@ const KPIDashboard: React.FC = () => {
   const [data, setData] = useState<KPIData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchKPIs = useCallback(async () => {
+    try {
+      const response = await fetch('/api/kpis');
+      if (!response.ok) throw new Error('Failed to fetch KPIs');
+      const kpiData = await response.json();
+      setData(kpiData);
+    } catch (error) {
+      console.error('Error fetching KPIs:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Initial fetch
   useEffect(() => {
-    const fetchKPIs = async () => {
-      try {
-        const response = await fetch('/api/kpis');
-        if (!response.ok) throw new Error('Failed to fetch KPIs');
-        const kpiData = await response.json();
-        setData(kpiData);
-      } catch (error) {
-        console.error('Error fetching KPIs:', error);
-      } finally {
-        setLoading(false);
-      }
+    fetchKPIs();
+  }, [fetchKPIs]);
+
+  // Listen for refresh events
+  useEffect(() => {
+    const handleRefresh = () => {
+      fetchKPIs();
     };
 
-    fetchKPIs();
-  }, []);
+    window.addEventListener('kpi-refresh', handleRefresh);
+    return () => window.removeEventListener('kpi-refresh', handleRefresh);
+  }, [fetchKPIs]);
 
   if (loading) {
     return (

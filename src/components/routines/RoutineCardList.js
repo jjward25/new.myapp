@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import RoutineCard from './RoutineCard';
 import { triggerAchievementAnimation } from '@/components/animations/GlobalAnimationProvider';
+import { getWeekStartEST, getRemainingDaysEST } from '@/utils/dateUtils';
 
 // Weekly targets for routines (Pass is only available for < 7)
 const WEEKLY_TARGETS = {
@@ -20,26 +21,6 @@ const RoutineCardList = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editableRoutine, setEditableRoutine] = useState(null);
 
-  // Get start of current week (Monday)
-  const getWeekStart = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - diff);
-    monday.setHours(0, 0, 0, 0);
-    return monday.toISOString().split('T')[0];
-  };
-
-  // Calculate remaining days in the week (including today)
-  const getRemainingDays = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    // Sunday = 0, Monday = 1, ..., Saturday = 6
-    // Remaining days including today: Sunday has 1, Saturday has 2, Monday has 7
-    return dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
-  };
-
   const fetchMostRecentRoutines = async () => {
     try {
       const response = await axios.get('/api/routines/recent');
@@ -56,7 +37,7 @@ const RoutineCardList = () => {
   const fetchWeeklyRoutines = async () => {
     try {
       const response = await axios.get('/api/routines');
-      const weekStart = getWeekStart();
+      const weekStart = getWeekStartEST();
       const filtered = response.data.filter(r => r.Date >= weekStart);
       setWeeklyRoutines(filtered);
     } catch (err) {
@@ -93,7 +74,7 @@ const RoutineCardList = () => {
     return counts;
   }, [weeklyRoutines]);
 
-  const remainingDays = getRemainingDays();
+  const remainingDays = getRemainingDaysEST();
 
   const handleInputChange = (e, key) => {
     // Handle different input types

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { triggerAchievementAnimation } from '@/components/animations/GlobalAnimationProvider';
+import { getWeekStartEST, getRemainingDaysEST } from '@/utils/dateUtils';
 
 interface Exercise {
   _id?: string;
@@ -56,27 +57,16 @@ export default function WeeklyGoalsSummary() {
   const [isLoading, setIsLoading] = useState(true);
   const hasCheckedCompletion = useRef(false);
   
-  // Get start of current week (Monday)
-  const getWeekStart = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - diff);
-    monday.setHours(0, 0, 0, 0);
-    return monday.toISOString().split('T')[0];
-  };
-  
-  // Get unique week identifier for tracking completion
+  // Get unique week identifier for tracking completion (uses EST)
   const getWeekIdentifier = () => {
-    return getWeekStart();
+    return getWeekStartEST();
   };
   
   const fetchWeeklyWorkouts = useCallback(async () => {
     try {
       const response = await fetch('/api/workouts/simple');
       const data = await response.json();
-      const weekStart = getWeekStart();
+      const weekStart = getWeekStartEST();
       const filtered = data.filter((w: Workout) => w.Date >= weekStart);
       setWeeklyWorkouts(filtered);
     } catch (error) {
@@ -180,10 +170,8 @@ export default function WeeklyGoalsSummary() {
     checkAndTriggerAchievement();
   }, [isWeeklyComplete, isLoading]);
   
-  // Calculate days remaining in week
-  const now = new Date();
-  const dayOfWeek = now.getDay();
-  const daysRemaining = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+  // Calculate days remaining in week (using EST)
+  const daysRemaining = getRemainingDaysEST() - 1; // -1 because getRemainingDaysEST includes today
   
   if (isLoading) {
     return (

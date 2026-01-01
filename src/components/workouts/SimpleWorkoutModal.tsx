@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { triggerAchievementAnimation, triggerParticleAnimation } from '@/components/animations/GlobalAnimationProvider';
+import { refreshKPIs } from '@/components/kpis/KPIDashboard';
+import { getTodayEST, getWeekStartEST } from '@/utils/dateUtils';
 
 interface Exercise {
   _id?: string;
@@ -61,18 +63,8 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
   const [oneRmValue, setOneRmValue] = useState<number | ''>('');
   
   
-  const today = new Date().toISOString().split('T')[0];
-  
-  // Get start of current week (Monday)
-  const getWeekStart = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay();
-    const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Monday = 0
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - diff);
-    monday.setHours(0, 0, 0, 0);
-    return monday.toISOString().split('T')[0];
-  };
+  // Use EST timezone for consistent date handling
+  const today = getTodayEST();
   
   // Calculate weekly counts per category
   const getWeeklyCounts = () => {
@@ -104,7 +96,7 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
     try {
       const response = await fetch('/api/workouts/simple');
       const data = await response.json();
-      const weekStart = getWeekStart();
+      const weekStart = getWeekStartEST();
       const filtered = data.filter((w: Workout) => w.Date >= weekStart);
       setWeeklyWorkouts(filtered);
     } catch (error) {
@@ -240,6 +232,9 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
         await fetchTodaysWorkout();
         await fetchWeeklyWorkouts();
         resetForm();
+        
+        // Refresh KPI dashboard to show updated miles
+        refreshKPIs();
       }
     } catch (error) {
       console.error('Error adding exercise:', error);
