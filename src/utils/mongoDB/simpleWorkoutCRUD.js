@@ -34,8 +34,9 @@ export async function addExerciseToWorkout(date, exercise) {
     
     if (existingWorkout) {
       // Add exercise to existing workout
+      // Use $elemMatch to ensure both conditions match the same array element
       const result = await collection.updateOne(
-        { "Workouts.Date": date, "Workouts.Type": "simple" },
+        { "Workouts": { $elemMatch: { Date: date, Type: "simple" } } },
         { 
           $push: { 
             "Workouts.$.Exercises": {
@@ -78,8 +79,9 @@ export async function deleteExercise(date, exerciseId) {
     const db = client.db('Personal');
     const collection = db.collection('Workouts');
     
+    // Use $elemMatch to ensure both conditions match the same array element
     const result = await collection.updateOne(
-      { "Workouts.Date": date, "Workouts.Type": "simple" },
+      { "Workouts": { $elemMatch: { Date: date, Type: "simple" } } },
       { 
         $pull: { 
           "Workouts.$.Exercises": { _id: new ObjectId(exerciseId) }

@@ -66,7 +66,7 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
   // Use EST timezone for consistent date handling
   const today = getTodayEST();
   
-  // Calculate weekly counts per category
+  // Calculate weekly counts per category (summing sets, not exercise entries)
   const getWeeklyCounts = () => {
     const counts: Record<string, number> = {};
     CATEGORIES.forEach(cat => { counts[cat.name] = 0; });
@@ -74,7 +74,8 @@ export default function SimpleWorkoutModal({ isOpen, onClose }: SimpleWorkoutMod
     weeklyWorkouts.forEach(workout => {
       workout.Exercises?.forEach(ex => {
         if (counts[ex.Category] !== undefined) {
-          counts[ex.Category]++;
+          // Count actual sets, default to 1 if Sets field is missing
+          counts[ex.Category] += (ex.Sets || 1);
         }
       });
     });

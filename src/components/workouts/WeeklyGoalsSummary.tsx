@@ -38,9 +38,9 @@ const WEEKLY_TARGETS: Record<string, number> = {
 const CATEGORY_COLORS: Record<string, string> = {
   'Cardio': '#21bce3',
   'Chest+Tris': '#712014',
-  'Shoulders': 'bg-violet-600',
-  'Quads': 'bg-amber-600',
-  'Hamstrings': 'bg-orange-600',
+  'Shoulders': '#7c3aed',
+  'Quads': '#d97706',
+  'Hamstrings': '#ea580c',
   'Hips': '#fb2be9',
   'Back+Bis': '#195c0e',
   'Core': '#3B82F6',
@@ -234,8 +234,11 @@ export default function WeeklyGoalsSummary() {
                 {/* Progress bar */}
                 <div className="w-full h-1 bg-slate-700 rounded-full mt-1 overflow-hidden">
                   <div 
-                    className={`h-full rounded-full transition-all ${CATEGORY_COLORS[category] || 'bg-slate-500'}`}
-                    style={{ width: `${percentage}%` }}
+                    className="h-full rounded-full transition-all"
+                    style={{ 
+                      width: `${percentage}%`,
+                      backgroundColor: CATEGORY_COLORS[category] || '#64748b'
+                    }}
                   />
                 </div>
               </div>
