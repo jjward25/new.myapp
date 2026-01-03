@@ -33,18 +33,18 @@ const MilestoneCard = ({ milestone }) => {
 
   return (
     <div className='w-full'>
-      <div className="prj-card p-[2px] rounded-lg text-black">
-        <div className='rounded-lg '>
-    
-            <div className='flex-col bg-cyan-900 px-2 py-1 rounded-lg'>
-              <p className='font-semibold text-neutral-300 text-sm my-auto pr-4'>
-                {milestone.milestoneName}
-              </p>
+      <div className="prj-card p-[2px] rounded-r-lg text-black">
+        <div className='rounded-r-lg'>
+          <div className='flex-col bg-cyan-900 px-2 py-1 rounded-r-lg'>
+            <p className='font-semibold text-neutral-300 text-sm my-auto pr-4'>
+              {milestone.milestoneName}
+            </p>
+            {milestone.Notes && (
               <p className='text-xs text-cyan-600'>
                 {milestone.Notes}
               </p>
-            </div>
-          
+            )}
+          </div>
         </div>
       </div>
     </div>
