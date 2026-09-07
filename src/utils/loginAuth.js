@@ -85,7 +85,22 @@ export const SESSION_COOKIE = "site_session";
 // server-side in Mongo by IP (src/utils/mongoDB/loginAttempts.js), not in a
 // cookie — a cookie-based version was tried first and found to be trivially
 // bypassable by simply not sending the cookie back.
-export const MAX_ATTEMPTS = 5;
+//
+// Lowered 5 -> 3 on 2026-09-07: the puzzle is now 3 steps (icon, icon
+// again, colour order) = 16 x 16 x 6 = 1536 combinations, so a legitimate
+// owner who knows the answer effectively never fumbles it 3x, and a tighter
+// per-IP cap means the "use a backup code" path surfaces sooner.
+export const MAX_ATTEMPTS = 3;
+
+// Every non-success response from /api/login (wrong puzzle answer, wrong
+// backup code, or a lockout rejection) is held for this long before
+// returning. A fixed server-side delay is the cheapest possible brute-force
+// brake: it caps guess throughput per connection regardless of how fast the
+// attacker's client is, and it's applied after the lockout gate so the
+// number of delayed invocations is itself bounded (MAX_ATTEMPTS per IP +
+// GLOBAL_MAX_ATTEMPTS across all sources, per window). Kept modest so a
+// burst of junk requests can't pin serverless concurrency for long.
+export const FAILURE_DELAY_MS = 1500;
 
 // GLOBAL_MAX_ATTEMPTS covers the gap MAX_ATTEMPTS alone can't: a client
 // can't spoof its IP on Vercel (confirmed against Vercel's own docs — they

@@ -13,12 +13,12 @@ interface IconDef {
   color: string;
 }
 
-// 16 icons (4x4 grid) — widened from 9 on 2026-09-07 to raise the puzzle's
-// combinatorial space (16 x 3! = 96 combinations, up from 54). Which one is
-// "correct" and what color order follows it are never encoded here or
-// anywhere else client-side — this component only ever reports back exactly
-// what was clicked; the actual answer lives only in server env vars (see
-// /api/login/route.js).
+// 16 icons (4x4 grid). The puzzle is 3 steps: pick the target icon, pick it
+// again from a reshuffled grid, then click the 3 colors in order —
+// 16 x 16 x 3! = 1536 combinations. Which icon is "correct" and what color
+// order follows are never encoded here or anywhere else client-side — this
+// component only ever reports back exactly what was clicked; the actual
+// answer lives only in server env vars (see /api/login/route.js).
 const ICONS: IconDef[] = [
   { id: "trafficlight", emoji: "🚦", label: "Traffic light", color: "#94a3b8" },
   { id: "wave", emoji: "🌊", label: "Wave", color: "#3b82f6" },
@@ -55,9 +55,10 @@ function shuffled<T>(arr: T[]): T[] {
 
 export default function LoginPage() {
   const [grid, setGrid] = useState<IconDef[]>(ICONS);
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [step1Choice, setStep1Choice] = useState<string | null>(null);
-  const [step1Color, setStep1Color] = useState<string | null>(null);
+  const [step2Choice, setStep2Choice] = useState<string | null>(null);
+  const [lastColor, setLastColor] = useState<string | null>(null);
   const [sequence, setSequence] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "checking" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
@@ -82,7 +83,8 @@ export default function LoginPage() {
     setGrid(shuffled(ICONS));
     setStep(1);
     setStep1Choice(null);
-    setStep1Color(null);
+    setStep2Choice(null);
+    setLastColor(null);
     setSequence([]);
   };
 
@@ -104,6 +106,10 @@ export default function LoginPage() {
 
       setStatus("error");
       setMessage(data?.error || "Incorrect — try again.");
+      // Server says this IP (or the whole site) is now locked out — the
+      // puzzle won't help until the window clears, so surface the backup
+      // code path instead of leaving the user to hunt for it.
+      if (data?.lockedOut) setShowOverride(true);
       reset();
     } catch {
       setStatus("error");
@@ -114,9 +120,16 @@ export default function LoginPage() {
 
   const handleIconClick = (icon: IconDef) => {
     if (status === "checking") return;
-    setStep1Choice(icon.id);
-    setStep1Color(icon.color);
-    setStep(2);
+    if (step === 1) {
+      setStep1Choice(icon.id);
+      setLastColor(icon.color);
+      setGrid(shuffled(ICONS));
+      setStep(2);
+    } else if (step === 2) {
+      setStep2Choice(icon.id);
+      setLastColor(icon.color);
+      setStep(3);
+    }
   };
 
   const handleColorClick = (colorId: string) => {
@@ -124,7 +137,7 @@ export default function LoginPage() {
     const nextSequence = [...sequence, colorId];
     setSequence(nextSequence);
     if (nextSequence.length < 3) return;
-    submitLogin({ step1: step1Choice, sequence: nextSequence });
+    submitLogin({ step1: step1Choice, step2: step2Choice, sequence: nextSequence });
   };
 
   const handleOverrideSubmit = () => {
@@ -137,11 +150,13 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-black">
       <div className="w-full max-w-sm flex flex-col items-center gap-6">
-        <h1 className="text-2xl font-semibold text-cyan-300">Joe's Life</h1>
+        <h1 className="text-2xl font-semibold text-cyan-300">Joe&apos;s Life</h1>
 
-        {step === 1 && (
+        {(step === 1 || step === 2) && (
           <>
-            <p className="text-slate-400 text-sm text-center">Pick the right icon.</p>
+            <p className="text-slate-400 text-sm text-center">
+              {step === 1 ? "Pick the right icon." : "Pick it again."}
+            </p>
             <div className="grid grid-cols-4 gap-2.5">
               {grid.map((icon) => (
                 <button
@@ -157,13 +172,13 @@ export default function LoginPage() {
           </>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <>
             <div className="flex items-center gap-2 text-sm text-slate-400">
               <span>You picked</span>
               <span
                 className="inline-block w-4 h-4 rounded-full"
-                style={{ backgroundColor: step1Color || "#666" }}
+                style={{ backgroundColor: lastColor || "#666" }}
               />
             </div>
             <p className="text-slate-400 text-sm text-center">Now click the three circles in order.</p>

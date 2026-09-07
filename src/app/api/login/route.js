@@ -7,13 +7,29 @@ import {
   GLOBAL_MAX_ATTEMPTS,
   WINDOW_MS,
   SESSION_MAX_AGE_MS,
+  FAILURE_DELAY_MS,
 } from "@/utils/loginAuth"
 import { getAttempts, getGlobalAttempts, recordFailedAttempt, clearAttempts } from "@/utils/mongoDB/loginAttempts"
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// Every rejection goes through here so wrong answers, wrong backup codes and
+// lockout responses all share the same fixed delay — no path returns a
+// "no" faster than another, and guess throughput is capped server-side.
+async function reject(bodyObj, status) {
+  await sleep(FAILURE_DELAY_MS)
+  return NextResponse.json(bodyObj, { status })
+}
 
 // Verifies the icon-puzzle login. The correct icon id and color order live
 // only here (server-side env vars) — the client never receives them; it
 // just relays whatever the user clicked, the same way a normal password
 // form relays whatever was typed.
+//
+// The puzzle is 3 steps: pick the target icon, pick it again from a
+// reshuffled grid, then click the 3 colors in order. Both icon picks are
+// checked against the same LOGIN_ICON_KEY (optionally LOGIN_ICON_KEY_2 for
+// a different second icon). 16 x 16 x 3! = 1536 combinations.
 //
 // Two independent lockouts, not one: per-IP (MAX_ATTEMPTS) stops one
 // source hammering the puzzle; global (GLOBAL_MAX_ATTEMPTS) stops an
@@ -61,10 +77,10 @@ export async function POST(req) {
         })
         return res
       }
-      // Wrong override value — fall through to the generic "Incorrect."
-      // response below rather than a distinct error, so a wrong override
-      // guess doesn't confirm the field exists/behaves specially.
-      return NextResponse.json({ ok: false, error: "Incorrect." }, { status: 401 })
+      // Wrong override value — generic "Incorrect." (same as a wrong puzzle
+      // answer, same delay) so a wrong override guess doesn't confirm the
+      // field exists or behaves specially.
+      return reject({ ok: false, error: "Incorrect." }, 401)
     }
 
     // -- Lockout checks, before even looking at the submitted answer --
@@ -74,30 +90,42 @@ export async function POST(req) {
     const globalWithinWindow = now - globalAttempts.windowStart < WINDOW_MS
     if (globalWithinWindow && globalAttempts.count >= GLOBAL_MAX_ATTEMPTS) {
       const waitSeconds = Math.ceil((globalAttempts.windowStart + WINDOW_MS - now) / 1000)
-      return NextResponse.json(
-        { error: `Too many attempts across all sources. Try again in ${Math.ceil(waitSeconds / 60)} minute(s).` },
-        { status: 429 }
+      return reject(
+        {
+          error: `Too many attempts across all sources. Try again in ${Math.ceil(waitSeconds / 60)} minute(s).`,
+          lockedOut: true,
+        },
+        429
       )
     }
 
     const withinWindow = now - attempts.windowStart < WINDOW_MS
     if (withinWindow && attempts.count >= MAX_ATTEMPTS) {
       const waitSeconds = Math.ceil((attempts.windowStart + WINDOW_MS - now) / 1000)
-      return NextResponse.json(
-        { error: `Too many attempts. Try again in ${Math.ceil(waitSeconds / 60)} minute(s).` },
-        { status: 429 }
+      return reject(
+        {
+          error: `Too many attempts. Try again in ${Math.ceil(waitSeconds / 60)} minute(s), or use a backup code.`,
+          lockedOut: true,
+        },
+        429
       )
     }
 
     // -- Check the answer --
-    const { step1, sequence } = body
+    const { step1, step2, sequence } = body
 
     const expectedIcon = process.env.LOGIN_ICON_KEY || ""
+    // Second icon defaults to the same one — "pick the stoplight twice" —
+    // unless LOGIN_ICON_KEY_2 is set to make the two picks different.
+    const expectedIcon2 = process.env.LOGIN_ICON_KEY_2 || expectedIcon
     const expectedSequence = (process.env.LOGIN_COLOR_SEQUENCE || "").split(",").filter(Boolean)
 
     const submittedSequence = Array.isArray(sequence) ? sequence : []
     const isCorrect =
+      expectedIcon !== "" &&
       step1 === expectedIcon &&
+      step2 === expectedIcon2 &&
+      expectedSequence.length > 0 &&
       submittedSequence.length === expectedSequence.length &&
       submittedSequence.every((v, i) => v === expectedSequence[i])
 
@@ -116,8 +144,16 @@ export async function POST(req) {
       return res
     }
 
-    await recordFailedAttempt(ip, attempts, globalAttempts)
-    return NextResponse.json({ ok: false, error: "Incorrect." }, { status: 401 })
+    const { next: nextAttempts } = await recordFailedAttempt(ip, attempts, globalAttempts)
+    const atLimit = nextAttempts.count >= MAX_ATTEMPTS
+    return reject(
+      {
+        ok: false,
+        error: atLimit ? "Incorrect. Too many attempts — use a backup code." : "Incorrect.",
+        lockedOut: atLimit,
+      },
+      401
+    )
   } catch (error) {
     console.error(error)
     return NextResponse.json({ error: "Error processing login" }, { status: 500 })
