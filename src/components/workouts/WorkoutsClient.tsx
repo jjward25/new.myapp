@@ -47,9 +47,19 @@ function useSparkleTrail() {
   }, []);
 }
 
+function useChromeTint() {
+  useEffect(() => {
+    document.body.dataset.route = "baddie";
+    return () => {
+      delete document.body.dataset.route;
+    };
+  }, []);
+}
+
 export default function WorkoutsClient({ workouts }: { workouts: any[] }) {
   const [tab, setTab] = useState<TabId>("program");
   useSparkleTrail();
+  useChromeTint();
 
   return (
     <div className="baddie">

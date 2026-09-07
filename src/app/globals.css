@@ -41,3 +41,24 @@ body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
 }
+
+/* /workouts ("SLUT" funhouse) re-tints the app chrome — set by
+   WorkoutsClient via document.body.dataset.route = "baddie". */
+body[data-route="baddie"] #app-frame {
+  background-image: linear-gradient(135deg, #3d0e4e, #ff3d9a 50%, #3d0e4e);
+}
+body[data-route="baddie"] #app-panel {
+  background-color: #3d0e4e;
+  border-color: #ff3d9a;
+  --tw-shadow-color: #ff3d9a80;
+}
+body[data-route="baddie"] #app-nav .nav-blur {
+  background-image: linear-gradient(to top right, #ff8fc7, #ffe1ef, #ff8fc7);
+}
+body[data-route="baddie"] #app-nav .nav-bar {
+  border-color: #ff8fc7;
+  background-color: #fff7fb;
+}
+body[data-route="baddie"] #app-nav a {
+  color: #7a1a5c;
+}
