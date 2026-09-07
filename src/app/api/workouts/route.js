@@ -1,11 +1,15 @@
 //src/app/api/workouts/route.js
 import { ObjectId } from 'mongodb';
 import { getWorkout, addWorkout, updateWorkout, deleteWorkout } from '../../../utils/mongoDB/workoutsCRUD';
+import { USE_MOCK_WORKOUTS, mockWorkouts } from '../../../utils/mockWorkoutData';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
+    if (USE_MOCK_WORKOUTS) {
+      return new Response(JSON.stringify(mockWorkouts), { status: 200 });
+    }
     const backlog = await getWorkout();
     return new Response(JSON.stringify(backlog), { status: 200 });
   } catch (error) {

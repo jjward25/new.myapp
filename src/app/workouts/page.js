@@ -1,6 +1,7 @@
 import React from 'react';
 import { getToday } from '../../utils/Date';
 import { getWorkout } from '../../utils/mongoDB/workoutsCRUD';
+import { USE_MOCK_WORKOUTS, mockWorkouts } from '../../utils/mockWorkoutData';
 import WorkoutTracker from '@/components/workouts/WorkoutTracker';
 import WorkoutProgressionChart from '@/components/workouts/WorkoutProgressionChart';
 import PastWorkoutsSection from '@/components/workouts/PastWorkoutsSection';
@@ -11,11 +12,11 @@ export const dynamic = 'force-dynamic';
 export default async function WorkoutHome() {
   // Fetch today's date and all workouts
   let today;
-  let workouts = [];
-  
+  let workouts = USE_MOCK_WORKOUTS ? mockWorkouts : [];
+
   try {
     today = await getToday();
-    workouts = await getWorkout();
+    if (!USE_MOCK_WORKOUTS) workouts = await getWorkout();
   } catch (error) {
     console.error('Error fetching workout data:', error);
   }

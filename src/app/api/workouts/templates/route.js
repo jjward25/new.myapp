@@ -1,11 +1,12 @@
 import { getWorkoutTemplates } from '../../../../utils/mongoDB/workoutsCRUD';
+import { USE_MOCK_WORKOUTS, mockTemplates } from '../../../../utils/mockWorkoutData';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
-    const templates = await getWorkoutTemplates();
-    
+    const templates = USE_MOCK_WORKOUTS ? mockTemplates : await getWorkoutTemplates();
+
     if (templates) {
       return new Response(JSON.stringify({ Templates: templates }), { status: 200 });
     } else {
