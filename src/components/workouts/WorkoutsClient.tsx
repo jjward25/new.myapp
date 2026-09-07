@@ -18,8 +18,8 @@ const TABS: { id: TabId; label: string }[] = [
 function useSparkleTrail() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const glyphs = ["✦", "✧", "✩", "ᐧ"];
-    const colors = ["#FF3D9A", "#B98CFF", "#57C7FF", "#C9FF3D"];
+    const glyphs = ["✦", "✧"];
+    const colors = ["#FF1E7A", "#FF7DB0", "#d8dbea"];
     let last = 0;
     const onMove = (e: PointerEvent) => {
       const t = Date.now();
@@ -81,7 +81,7 @@ export default function WorkoutsClient({ workouts }: { workouts: any[] }) {
           <h1 className="baddie-wordmark">
             SLUT<span>.</span>
           </h1>
-          <div className="baddie-tagline">for girls who work their ass off — literally 🍑</div>
+          <div className="baddie-tagline">for women who train their ass off — and mean it</div>
         </header>
 
         <nav className="baddie-tabs">

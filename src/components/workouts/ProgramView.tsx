@@ -101,12 +101,11 @@ function Bike() {
       </svg>
       <div className="baddie-assmeter">
         <div className="cap">
-          <span>🍑 Ass growth</span>
-          <span>Week 4 · +72%</span>
+          <span>Glute volume · wk 4</span>
+          <b>+72%</b>
         </div>
         <div className="track">
           <i />
-          <span className="peach">🍑</span>
         </div>
       </div>
     </div>

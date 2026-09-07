@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Modak, Fredoka, Nunito } from "next/font/google";
+import { Inter, Unbounded, Archivo } from "next/font/google";
 import "./globals.css";
 import Navbar from '../components/Navbar'
 import GlobalAnimationProvider from '@/components/animations/GlobalAnimationProvider'
 
 const inter = Inter({ subsets: ["latin"] });
-const modak = Modak({ weight: "400", subsets: ["latin"], variable: "--font-modak", display: "swap" });
-const fredoka = Fredoka({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-fredoka", display: "swap" });
-const nunito = Nunito({ weight: ["400", "600", "700", "800"], subsets: ["latin"], variable: "--font-nunito", display: "swap" });
+const unbounded = Unbounded({ weight: ["600", "700", "900"], subsets: ["latin"], variable: "--font-display", display: "swap" });
+const archivo = Archivo({ weight: ["400", "500", "600", "700"], subsets: ["latin"], variable: "--font-ui", display: "swap" });
 
 export const metadata: Metadata = {
   title: "Joe's Life",
@@ -20,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${modak.variable} ${fredoka.variable} ${nunito.variable}`}>
+    <html lang="en" className={`${unbounded.variable} ${archivo.variable}`}>
       <body className={inter.className}>
         <GlobalAnimationProvider>
           <div id="app-frame" className="w-full h-full bg-gradient-to-r from-cyan-950 via-neutral-400 to-cyan-950">
