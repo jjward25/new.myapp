@@ -1,7 +1,7 @@
 /* SLUT — the /workouts training funhouse. Y2K bimbo maximalism.
-   Everything scoped under .baddie so it never touches the rest of the app. */
-
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Modak&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap");
+   Everything scoped under .baddie so it never touches the rest of the app.
+   Fonts (Modak / Fredoka / Nunito) are loaded via <link> in app/layout.tsx —
+   a remote @import here breaks Next's dev CSS pipeline. */
 
 .baddie {
   --bubblegum: #ff3d9a;
@@ -23,9 +23,9 @@
 
   --chrome: linear-gradient(180deg, #ffffff 0%, #e7e9fb 34%, #a9afe0 52%, #ffffff 70%, #c9cef0 100%);
 
-  --f-display: "Modak", system-ui, sans-serif;
-  --f-head: "Fredoka", system-ui, sans-serif;
-  --f-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-display: var(--font-modak), "Modak", system-ui, sans-serif;
+  --f-head: var(--font-fredoka), "Fredoka", system-ui, sans-serif;
+  --f-body: var(--font-nunito), "Nunito", "Segoe UI", system-ui, sans-serif;
 
   --shadow-puff: 0 6px 0 rgba(61, 14, 78, 0.14), 0 16px 30px rgba(255, 61, 154, 0.28);
   --shadow-card: 0 10px 0 rgba(61, 14, 78, 0.1), 0 26px 50px rgba(255, 61, 154, 0.24);
