@@ -2,46 +2,65 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 
+interface Swatch {
+  id: string;
+  css: string;
+}
+
 interface IconDef {
   id: string;
   emoji: string;
   label: string;
-  // Color shown as feedback when this icon is clicked in step 1. Every icon
-  // gets one (including the "correct" one) so no icon behaves differently
-  // from the others — the puzzle's answer is never inferable from the UI's
-  // own behavior, only from knowing it in advance.
-  color: string;
+  // The 3 colors shown on the final step when THIS icon is the one picked
+  // in step 2. Each icon has its own trio, so the final screen doesn't
+  // always show red/yellow/green — which would telegraph "pick the traffic
+  // light." Order here is irrelevant; the circles are reshuffled on render.
+  colors: Swatch[];
 }
 
+const PALETTE: Record<string, string> = {
+  red: "#ef4444",
+  orange: "#f97316",
+  yellow: "#eab308",
+  green: "#22c55e",
+  teal: "#14b8a6",
+  cyan: "#06b6d4",
+  blue: "#3b82f6",
+  indigo: "#6366f1",
+  purple: "#a855f7",
+  pink: "#ec4899",
+  rose: "#f43f5e",
+  brown: "#92400e",
+  slate: "#64748b",
+};
+
+const trio = (...ids: string[]): Swatch[] => ids.map((id) => ({ id, css: PALETTE[id] }));
+
 // 16 icons (4x4 grid). The puzzle is 3 steps: pick the target icon, pick it
-// again from a reshuffled grid, then click the 3 colors in order —
+// again from a reshuffled grid, then click that icon's 3 colors in order —
 // 16 x 16 x 3! = 1536 combinations. Which icon is "correct" and what color
 // order follows are never encoded here or anywhere else client-side — this
 // component only ever reports back exactly what was clicked; the actual
-// answer lives only in server env vars (see /api/login/route.js).
+// answer lives only in server env vars (see /api/login/route.js). Only the
+// traffic light carries {red,yellow,green} together, so those colors only
+// appear once you've actually picked it in step 2.
 const ICONS: IconDef[] = [
-  { id: "trafficlight", emoji: "🚦", label: "Traffic light", color: "#94a3b8" },
-  { id: "wave", emoji: "🌊", label: "Wave", color: "#3b82f6" },
-  { id: "grapes", emoji: "🍇", label: "Grapes", color: "#a855f7" },
-  { id: "blossom", emoji: "🌸", label: "Blossom", color: "#ec4899" },
-  { id: "moon", emoji: "🌙", label: "Moon", color: "#6366f1" },
-  { id: "snowflake", emoji: "❄️", label: "Snowflake", color: "#06b6d4" },
-  { id: "chocolate", emoji: "🍫", label: "Chocolate", color: "#92400e" },
-  { id: "elephant", emoji: "🐘", label: "Elephant", color: "#6b7280" },
-  { id: "butterfly", emoji: "🦋", label: "Butterfly", color: "#14b8a6" },
-  { id: "galaxy", emoji: "🌌", label: "Galaxy", color: "#7c3aed" },
-  { id: "unicorn", emoji: "🦄", label: "Unicorn", color: "#d946ef" },
-  { id: "dolphin", emoji: "🐬", label: "Dolphin", color: "#0ea5e9" },
-  { id: "candy", emoji: "🍬", label: "Candy", color: "#db2777" },
-  { id: "rock", emoji: "🪨", label: "Rock", color: "#475569" },
-  { id: "anchor", emoji: "⚓", label: "Anchor", color: "#1e3a8a" },
-  { id: "balloon", emoji: "🎈", label: "Balloon", color: "#c026d3" },
-];
-
-const COLORS = [
-  { id: "red", css: "#ef4444" },
-  { id: "yellow", css: "#eab308" },
-  { id: "green", css: "#22c55e" },
+  { id: "trafficlight", emoji: "🚦", label: "Traffic light", colors: trio("green", "yellow", "red") },
+  { id: "unicorn", emoji: "🦄", label: "Unicorn", colors: trio("pink", "purple", "cyan") },
+  { id: "rainbow", emoji: "🌈", label: "Rainbow", colors: trio("red", "green", "blue") },
+  { id: "fire", emoji: "🔥", label: "Fire", colors: trio("red", "orange", "yellow") },
+  { id: "wave", emoji: "🌊", label: "Wave", colors: trio("blue", "teal", "cyan") },
+  { id: "grapes", emoji: "🍇", label: "Grapes", colors: trio("purple", "green", "pink") },
+  { id: "blossom", emoji: "🌸", label: "Blossom", colors: trio("pink", "rose", "purple") },
+  { id: "leaf", emoji: "🍃", label: "Leaf", colors: trio("green", "teal", "brown") },
+  { id: "snowflake", emoji: "❄️", label: "Snowflake", colors: trio("cyan", "blue", "slate") },
+  { id: "chocolate", emoji: "🍫", label: "Chocolate", colors: trio("brown", "orange", "yellow") },
+  { id: "moon", emoji: "🌙", label: "Moon", colors: trio("indigo", "slate", "yellow") },
+  { id: "butterfly", emoji: "🦋", label: "Butterfly", colors: trio("teal", "orange", "purple") },
+  { id: "galaxy", emoji: "🌌", label: "Galaxy", colors: trio("indigo", "purple", "pink") },
+  { id: "dolphin", emoji: "🐬", label: "Dolphin", colors: trio("blue", "cyan", "slate") },
+  { id: "candy", emoji: "🍬", label: "Candy", colors: trio("pink", "teal", "yellow") },
+  { id: "balloon", emoji: "🎈", label: "Balloon", colors: trio("red", "blue", "yellow") },
 ];
 
 function shuffled<T>(arr: T[]): T[] {
@@ -58,7 +77,7 @@ export default function LoginPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [step1Choice, setStep1Choice] = useState<string | null>(null);
   const [step2Choice, setStep2Choice] = useState<string | null>(null);
-  const [lastColor, setLastColor] = useState<string | null>(null);
+  const [colorChoices, setColorChoices] = useState<Swatch[]>([]);
   const [sequence, setSequence] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "checking" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
@@ -84,7 +103,7 @@ export default function LoginPage() {
     setStep(1);
     setStep1Choice(null);
     setStep2Choice(null);
-    setLastColor(null);
+    setColorChoices([]);
     setSequence([]);
   };
 
@@ -122,12 +141,15 @@ export default function LoginPage() {
     if (status === "checking") return;
     if (step === 1) {
       setStep1Choice(icon.id);
-      setLastColor(icon.color);
       setGrid(shuffled(ICONS));
       setStep(2);
     } else if (step === 2) {
       setStep2Choice(icon.id);
-      setLastColor(icon.color);
+      // Final step shows the colors that belong to the icon just picked,
+      // in a random position order so the answer can't be memorised as
+      // "left, middle, right."
+      setColorChoices(shuffled(icon.colors));
+      setSequence([]);
       setStep(3);
     }
   };
@@ -174,22 +196,16 @@ export default function LoginPage() {
 
         {step === 3 && (
           <>
-            <div className="flex items-center gap-2 text-sm text-slate-400">
-              <span>You picked</span>
-              <span
-                className="inline-block w-4 h-4 rounded-full"
-                style={{ backgroundColor: lastColor || "#666" }}
-              />
-            </div>
             <p className="text-slate-400 text-sm text-center">Now click the three circles in order.</p>
             <div className="flex gap-4">
-              {COLORS.map((c) => {
+              {colorChoices.map((c) => {
                 const pickedIndex = sequence.indexOf(c.id);
                 return (
                   <button
                     key={c.id}
                     onClick={() => handleColorClick(c.id)}
                     disabled={pickedIndex !== -1 || status === "checking"}
+                    aria-label={c.id}
                     className="w-16 h-16 rounded-full border-4 flex items-center justify-center text-white font-bold disabled:opacity-40"
                     style={{ backgroundColor: c.css, borderColor: pickedIndex !== -1 ? "#fff" : "transparent" }}
                   >

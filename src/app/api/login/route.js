@@ -4,52 +4,53 @@ import {
   constantTimeEqual,
   SESSION_COOKIE,
   MAX_ATTEMPTS,
-  GLOBAL_MAX_ATTEMPTS,
   WINDOW_MS,
   SESSION_MAX_AGE_MS,
   FAILURE_DELAY_MS,
 } from "@/utils/loginAuth"
-import { getAttempts, getGlobalAttempts, recordFailedAttempt, clearAttempts } from "@/utils/mongoDB/loginAttempts"
+import { getAttempts, recordFailedAttempt, clearAttempts } from "@/utils/mongoDB/loginAttempts"
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// Every rejection goes through here so wrong answers, wrong backup codes and
-// lockout responses all share the same fixed delay — no path returns a
+// Every rejection goes through here so a wrong answer, a wrong backup code
+// and a lockout response all share the same fixed delay — no path returns a
 // "no" faster than another, and guess throughput is capped server-side.
 async function reject(bodyObj, status) {
   await sleep(FAILURE_DELAY_MS)
   return NextResponse.json(bodyObj, { status })
 }
 
-// Verifies the icon-puzzle login. The correct icon id and color order live
-// only here (server-side env vars) — the client never receives them; it
-// just relays whatever the user clicked, the same way a normal password
-// form relays whatever was typed.
-//
-// The puzzle is 3 steps: pick the target icon, pick it again from a
-// reshuffled grid, then click the 3 colors in order. Both icon picks are
-// checked against the same LOGIN_ICON_KEY (optionally LOGIN_ICON_KEY_2 for
-// a different second icon). 16 x 16 x 3! = 1536 combinations.
-//
-// Two independent lockouts, not one: per-IP (MAX_ATTEMPTS) stops one
-// source hammering the puzzle; global (GLOBAL_MAX_ATTEMPTS) stops an
-// attacker spreading guesses across many real IPs, which per-IP tracking
-// alone can't catch (see loginAttempts.js for why). Both are tracked
-// server-side in Mongo, keyed by IP/a fixed global id — not in a cookie, a
-// first version of which was found live to be trivially bypassable by
-// simply not sending the cookie back.
-//
-// A separate, independent override secret (LOGIN_OVERRIDE_SECRET) bypasses
-// both lockouts entirely — the answer to "how do I get back in if the
-// global breaker trips on me too." It isn't subject to either lockout
-// because its own entropy (a 32-byte random token) makes brute-forcing it
-// through this endpoint practically meaningless regardless.
-function getClientIp(req) {
-  const forwarded = req.headers.get("x-forwarded-for")
-  if (forwarded) return forwarded.split(",")[0].trim()
-  return req.headers.get("x-real-ip") || "unknown"
+function setSession(res, secret) {
+  const expiresAt = Date.now() + SESSION_MAX_AGE_MS
+  return signPayload(String(expiresAt), secret).then((sessionValue) => {
+    res.cookies.set(SESSION_COOKIE, sessionValue, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_MAX_AGE_MS / 1000,
+    })
+    return res
+  })
 }
 
+// Verifies the icon-puzzle login. The correct icons and colour order live
+// only here (server-side env vars) — the client never receives them; it
+// just relays whatever was clicked, the same way a password form relays
+// whatever was typed.
+//
+// Puzzle: pick the target icon, pick a second target from a reshuffled
+// grid, then click that second icon's 3 colours in order. step1 checks
+// against LOGIN_ICON_KEY, step2 against LOGIN_ICON_KEY_2 (falls back to
+// LOGIN_ICON_KEY if unset), the colour order against LOGIN_COLOR_SEQUENCE.
+// 16 x 16 x 3! = 1536 combinations.
+//
+// Lockout: a single GLOBAL counter (see loginAttempts.js). MAX_ATTEMPTS
+// well-formed wrong answers in one window locks the whole login until it
+// clears — no per-IP tier, so guesses can't be spread across many IPs to
+// dodge it. LOGIN_OVERRIDE_SECRET (kept in a password manager) bypasses the
+// lockout entirely; it isn't rate-limited because a 32-byte token can't be
+// brute-forced through here anyway.
 export async function POST(req) {
   try {
     const secret = process.env.LOGIN_COOKIE_SECRET
@@ -57,99 +58,71 @@ export async function POST(req) {
       return NextResponse.json({ error: "Login not configured" }, { status: 500 })
     }
 
-    const ip = getClientIp(req)
-    const body = await req.json()
+    const body = await req.json().catch(() => null)
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Bad request" }, { status: 400 })
+    }
 
-    // -- Override backdoor, checked first, ahead of any lockout --
+    // -- Backup code, checked first, ahead of the lockout --
     const overrideSecret = process.env.LOGIN_OVERRIDE_SECRET
-    if (overrideSecret && typeof body.override === "string" && body.override.length > 0) {
-      if (constantTimeEqual(body.override, overrideSecret)) {
-        await clearAttempts(ip)
-        const expiresAt = Date.now() + SESSION_MAX_AGE_MS
-        const sessionValue = await signPayload(String(expiresAt), secret)
-        const res = NextResponse.json({ ok: true })
-        res.cookies.set(SESSION_COOKIE, sessionValue, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          path: "/",
-          maxAge: SESSION_MAX_AGE_MS / 1000,
-        })
-        return res
+    if (typeof body.override === "string" && body.override.length > 0) {
+      if (overrideSecret && constantTimeEqual(body.override, overrideSecret)) {
+        await clearAttempts()
+        return setSession(NextResponse.json({ ok: true }), secret)
       }
-      // Wrong override value — generic "Incorrect." (same as a wrong puzzle
-      // answer, same delay) so a wrong override guess doesn't confirm the
-      // field exists or behaves specially.
+      // Wrong code — generic "Incorrect.", same as a wrong puzzle answer and
+      // the same delay, so probing this field tells an attacker nothing.
       return reject({ ok: false, error: "Incorrect." }, 401)
     }
 
-    // -- Lockout checks, before even looking at the submitted answer --
-    const [attempts, globalAttempts] = await Promise.all([getAttempts(ip), getGlobalAttempts()])
-    const now = Date.now()
-
-    const globalWithinWindow = now - globalAttempts.windowStart < WINDOW_MS
-    if (globalWithinWindow && globalAttempts.count >= GLOBAL_MAX_ATTEMPTS) {
-      const waitSeconds = Math.ceil((globalAttempts.windowStart + WINDOW_MS - now) / 1000)
-      return reject(
-        {
-          error: `Too many attempts across all sources. Try again in ${Math.ceil(waitSeconds / 60)} minute(s).`,
-          lockedOut: true,
-        },
-        429
-      )
+    // -- Shape check: only a complete, well-formed submission counts as an
+    //    attempt. Junk/partial posts 400 without spending one of the 3. --
+    const { step1, step2, sequence } = body
+    const wellFormed =
+      typeof step1 === "string" &&
+      typeof step2 === "string" &&
+      Array.isArray(sequence) &&
+      sequence.length === 3 &&
+      sequence.every((s) => typeof s === "string")
+    if (!wellFormed) {
+      return NextResponse.json({ error: "Bad request" }, { status: 400 })
     }
 
-    const withinWindow = now - attempts.windowStart < WINDOW_MS
-    if (withinWindow && attempts.count >= MAX_ATTEMPTS) {
-      const waitSeconds = Math.ceil((attempts.windowStart + WINDOW_MS - now) / 1000)
+    // -- Lockout check, before looking at the answer --
+    const attempts = await getAttempts()
+    const now = Date.now()
+    const lockedOut = now - attempts.windowStart < WINDOW_MS && attempts.count >= MAX_ATTEMPTS
+    if (lockedOut) {
+      const waitMin = Math.ceil((attempts.windowStart + WINDOW_MS - now) / 60000)
       return reject(
-        {
-          error: `Too many attempts. Try again in ${Math.ceil(waitSeconds / 60)} minute(s), or use a backup code.`,
-          lockedOut: true,
-        },
+        { error: `Too many attempts. Locked for ${waitMin} minute(s) — use a backup code.`, lockedOut: true },
         429
       )
     }
 
     // -- Check the answer --
-    const { step1, step2, sequence } = body
-
     const expectedIcon = process.env.LOGIN_ICON_KEY || ""
-    // Second icon defaults to the same one — "pick the stoplight twice" —
-    // unless LOGIN_ICON_KEY_2 is set to make the two picks different.
     const expectedIcon2 = process.env.LOGIN_ICON_KEY_2 || expectedIcon
     const expectedSequence = (process.env.LOGIN_COLOR_SEQUENCE || "").split(",").filter(Boolean)
 
-    const submittedSequence = Array.isArray(sequence) ? sequence : []
     const isCorrect =
       expectedIcon !== "" &&
+      expectedSequence.length === 3 &&
       step1 === expectedIcon &&
       step2 === expectedIcon2 &&
-      expectedSequence.length > 0 &&
-      submittedSequence.length === expectedSequence.length &&
-      submittedSequence.every((v, i) => v === expectedSequence[i])
+      sequence.every((v, i) => v === expectedSequence[i])
 
     if (isCorrect) {
-      await clearAttempts(ip)
-      const expiresAt = now + SESSION_MAX_AGE_MS
-      const sessionValue = await signPayload(String(expiresAt), secret)
-      const res = NextResponse.json({ ok: true })
-      res.cookies.set(SESSION_COOKIE, sessionValue, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: SESSION_MAX_AGE_MS / 1000,
-      })
-      return res
+      await clearAttempts()
+      return setSession(NextResponse.json({ ok: true }), secret)
     }
 
-    const { next: nextAttempts } = await recordFailedAttempt(ip, attempts, globalAttempts)
-    const atLimit = nextAttempts.count >= MAX_ATTEMPTS
+    const next = await recordFailedAttempt(attempts)
+    const atLimit = next.count >= MAX_ATTEMPTS
     return reject(
       {
         ok: false,
-        error: atLimit ? "Incorrect. Too many attempts — use a backup code." : "Incorrect.",
+        error: atLimit ? "Incorrect. Locked — use a backup code." : "Incorrect.",
         lockedOut: atLimit,
       },
       401

@@ -79,40 +79,30 @@ export function constantTimeEqual(a, b) {
 
 export const SESSION_COOKIE = "site_session";
 
-// Lockout policy: once MAX_ATTEMPTS wrong guesses from one IP land inside
-// one WINDOW_MS sliding window, that IP is rejected outright — without even
-// checking the submitted answer — until the window elapses. Tracked
-// server-side in Mongo by IP (src/utils/mongoDB/loginAttempts.js), not in a
-// cookie — a cookie-based version was tried first and found to be trivially
-// bypassable by simply not sending the cookie back.
+// Lockout policy (single-user site): once MAX_ATTEMPTS well-formed wrong
+// answers land inside one WINDOW_MS window — counted GLOBALLY, every source
+// combined, NOT per-IP — the whole login is rejected outright, without even
+// checking the submitted answer, until the window elapses. Only the backup
+// code (LOGIN_OVERRIDE_SECRET) gets in during a lockout.
 //
-// Lowered 5 -> 3 on 2026-09-07: the puzzle is now 3 steps (icon, icon
-// again, colour order) = 16 x 16 x 6 = 1536 combinations, so a legitimate
-// owner who knows the answer effectively never fumbles it 3x, and a tighter
-// per-IP cap means the "use a backup code" path surfaces sooner.
+// 3, global, deliberately tight: the owner is the only legitimate user,
+// knows the answer, and keeps the backup code in a password manager — so a
+// hard lock costs the owner one click. In return, distributed guessing
+// (many IPs, each under a per-IP cap) is impossible because there is no
+// per-IP cap — every wrong guess anywhere spends one of the same 3.
+// Tracked server-side in Mongo (src/utils/mongoDB/loginAttempts.js), not a
+// cookie — a cookie counter was found live to be bypassable by simply not
+// sending the cookie back.
 export const MAX_ATTEMPTS = 3;
 
 // Every non-success response from /api/login (wrong puzzle answer, wrong
-// backup code, or a lockout rejection) is held for this long before
-// returning. A fixed server-side delay is the cheapest possible brute-force
-// brake: it caps guess throughput per connection regardless of how fast the
-// attacker's client is, and it's applied after the lockout gate so the
-// number of delayed invocations is itself bounded (MAX_ATTEMPTS per IP +
-// GLOBAL_MAX_ATTEMPTS across all sources, per window). Kept modest so a
-// burst of junk requests can't pin serverless concurrency for long.
+// backup code, or a lockout rejection) is held this long before returning —
+// the cheapest brute-force brake there is: it caps guess throughput per
+// connection regardless of client speed. Only well-formed submissions get
+// this far (malformed ones 400 immediately without counting), so the number
+// of delayed invocations per window is bounded by MAX_ATTEMPTS. Kept modest
+// so a burst of junk can't pin serverless concurrency for long.
 export const FAILURE_DELAY_MS = 1500;
 
-// GLOBAL_MAX_ATTEMPTS covers the gap MAX_ATTEMPTS alone can't: a client
-// can't spoof its IP on Vercel (confirmed against Vercel's own docs — they
-// overwrite x-forwarded-for and don't relay a client-supplied value), but a
-// real attacker can still spread guesses across many genuinely different
-// real IPs (rotating proxies, VPN exit nodes, a cheap IPv6 block), each
-// staying under MAX_ATTEMPTS individually. This counts failures across every
-// source combined in the same window — set well above what one legitimate,
-// fumbling owner could rack up from a single IP (which caps at
-// MAX_ATTEMPTS=5 anyway) but low enough to actually stop a distributed
-// attempt before it clears the puzzle's 96-combination space (16 icons x 3!
-// orderings, after the icon grid was widened the same day).
-export const GLOBAL_MAX_ATTEMPTS = 20;
 export const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 export const SESSION_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
