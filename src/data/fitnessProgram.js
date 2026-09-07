@@ -7,14 +7,14 @@
 export const PROGRAM_UPDATED = "2026-09-06";
 
 export const mission = {
-  headline: "Build the ass. Open the hips. Own the fold. Move like an athlete.",
+  headline: "A body that folds in half, holds any position as long as it wants to, and looks obscene doing it.",
   body: "An exceptionally round, firm, athletic physique with glutes as the centerpiece — plus the flexibility, strength, speed, joint capacity and multidirectional movement of a complete athlete.",
   principle:
     "Not a minimum-effective-dose program. Maximum productive dose — harder is useful when harder produces adaptation. Every extra set has to earn its place by producing progress.",
 };
 
-// The weekly rhythm as a chant.
-export const mantra = ["TRAIN LONG", "CONTRACT HARD", "MOVE EVERY DIRECTION", "RUN FAST", "DON'T BREAK"];
+// The weekly rhythm as a chant. Maps to Mon stretch / Wed squeeze / Fri 360 / Sat speed / Sun durability.
+export const mantra = ["GO DEEP", "SQUEEZE HARDER", "OPEN EVERY ANGLE", "LAST LONGER", "DON'T TAP OUT"];
 
 export const goalLegend = [
   { key: "ass", emoji: "🍑", label: "ass size / projection", stripe: "#ff78ad" },
@@ -29,19 +29,21 @@ export const periodization = [
   {
     phase: "WEEKS 1–2",
     name: "ESTABLISH",
-    detail: "Lock in working weights, ROM and recovery baseline. ~18 productive glute sets/week. Low end of every set range; skip extended sets.",
+    detail: "Learn the loads. Learn what your recovery can actually take before it complains. Around 18 hard glute sets a week, bottom of every range, nothing to failure yet.",
   },
   {
     phase: "WEEKS 3–5",
     name: "PUSH",
-    detail: "Primary hypertrophy block. 20–24+ glute sets/week if recovery allows. Add volume to Bulgarian, hip thrust, abduction, reverse lunge, donkey kick. Compounds toward the low end of their RIR without losing ROM.",
+    detail: "The block that builds it. 20–24+ glute sets a week if recovery holds — Bulgarians, thrusts, abduction, deficit lunges, kickbacks. Take the compounds right to the edge. Never trade range for load.",
   },
   {
     phase: "WEEK 6",
     name: "DELOAD",
-    detail: "Cut hard-set volume ~40–50%. Keep patterns, full ROM, moderate load, mobility, easy aerobic. No failure, myo-reps, drop sets or max sprints. Then restart the cycle off what actually recovered.",
+    detail: "Back off 40–50%. Keep the patterns, keep the full range, keep it moving. Nothing hard. Let it supercompensate, then go again heavier.",
   },
 ];
+
+export const cyclePull = "More is only better if you can still take all of it.";
 
 export const effortArchitecture = [
   { kind: "Heavy Compounds", rule: "1–2 RIR. Repeated high-quality hard sets, not drop sets. 10 → 9 → 8 with excellent ROM is a win.", list: "Deep Bulgarian · RDL · Hip thrust · Deep squat · ATG split squat · Deficit reverse lunge" },
@@ -285,11 +287,11 @@ export const designMatrix = {
 };
 
 export const benchmarks = [
-  { name: "Passive straight-leg raise", now: "~55–60°", target: "→ 90°+" },
-  { name: "Pancake", now: 'Elbows ~3" high, relaxed', target: "→ forearms → chest" },
-  { name: "Middle split", now: '~18" off the floor', target: "→ progressively to the floor" },
-  { name: "Squared front split", now: "needs a clean retest", target: "→ floor" },
-  { name: "Hanging straight-leg raise", now: "~50–60°", target: "→ 90° → above 90° → bar" },
+  { name: "Passive straight-leg raise", now: "~55–60°", pct: 62, target: "→ past 90°. knee to your own face, no hands." },
+  { name: "Pancake", now: 'elbows ~3" up', pct: 34, target: "→ chest flat to the floor, legs as wide as they'll go." },
+  { name: "Middle split", now: '~18" off the floor', pct: 28, target: "→ flat, hips square, comfortable enough to hold a conversation." },
+  { name: "Squared front split", now: "needs a clean retest", pct: 20, target: "→ all the way down, both sides, no wobble, no wince." },
+  { name: "Hanging straight-leg raise", now: "now 88°", pct: 92, hit: true, target: "✓ 90°. next: toes to the bar, slow, no swing — pure control." },
 ];
 
 export const endState = [
