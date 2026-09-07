@@ -298,7 +298,7 @@
 .baddie-assmeter .cap { font-family: var(--f-ui); font-weight: 700; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; }
 .baddie-assmeter .cap b { color: var(--hot); font-weight: 700; }
 .baddie-assmeter .track { margin-top: 8px; height: 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); position: relative; overflow: hidden; }
-.baddie-assmeter .track i { display: block; height: 100%; width: 72%; background: linear-gradient(90deg, var(--chrome)); box-shadow: 0 0 16px rgba(255, 30, 122, 0.5); }
+.baddie-assmeter .track i { display: block; height: 100%; width: 72%; background: linear-gradient(90deg, #8b90ab, #fefeff 45%, var(--hot)); box-shadow: 0 0 16px rgba(255, 30, 122, 0.5); }
 
 .baddie-phases { display: grid; gap: 12px; }
 .baddie-phase { padding: 18px 20px; }
