@@ -14,6 +14,7 @@ import AddListItemButton from '@/components/lists/AddListItemButton';
 import AvailableLists from '../components/lists/AvailableLists';
 import WorkoutSection from '../components/workouts/WorkoutSection';
 import KPIDashboard from '../components/kpis/KPIDashboard';
+import HermesChat from '@/components/hermes/HermesChat';
 
 export const revalidate = 60 * 60; // Regenerate the page every hour
 
@@ -74,8 +75,14 @@ export default async function Home() {
           </div>
         </div>
 
+        {/** Hermes Agent Chat */}
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div>
+        <div className="w-full mb-4">
+          <HermesChat title="Ask Hermes" placeholder="Ask Hermes anything..." />
+        </div>
+
         {/** Main Components List */}
-        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div> 
+        <div className="bg-gradient-to-r from-cyan-900 to-cyan-300 h-[2px] my-4"></div>
         <div className='w-full md:grid md:grid-cols-2'>
         
         {/** Column 1: Routines */}
