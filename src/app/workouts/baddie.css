@@ -1,0 +1,299 @@
+/* Scoped "Full-Body Baddie" design system for /workouts.
+   Everything lives under .baddie so it never touches the rest of the app. */
+
+.baddie {
+  --ink: #29233a;
+  --muted: #716b82;
+  --card: #ffffff;
+  --pink: #ff3d96;
+  --peach: #ffb27d;
+  --purple: #9d7cff;
+  --blue: #65b8ff;
+  --mint: #69d5b1;
+  --yellow: #ffd866;
+  --line: #eadfeb;
+
+  color: var(--ink);
+  font: 15px/1.5 ui-sans-serif, system-ui, "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 8% 4%, #ffe1ed 0 9%, transparent 24%),
+    radial-gradient(circle at 92% 12%, #e5ddff 0 9%, transparent 25%),
+    linear-gradient(135deg, #fff2f8, #fff7ee 42%, #f1edff);
+  min-height: 100vh;
+  padding: 26px 18px 60px;
+}
+.baddie * { box-sizing: border-box; }
+.baddie a { color: inherit; }
+
+.baddie-wrap { max-width: 1080px; margin: 0 auto; }
+
+/* hero */
+.baddie-hero {
+  background: linear-gradient(115deg, #ff3d96 0%, #ff8b72 38%, #9a63ff 78%, #5b34ba 100%);
+  border-radius: 26px;
+  padding: 26px 26px 22px;
+  color: #fff;
+  box-shadow: 0 18px 50px #9c83ff33;
+  position: relative;
+  overflow: hidden;
+}
+.baddie-kicker { font-size: 12px; font-weight: 900; letter-spacing: 0.22em; opacity: 0.85; }
+.baddie-hero h1 {
+  font-size: clamp(32px, 6vw, 46px);
+  line-height: 1.02;
+  margin: 8px 0 10px;
+  font-weight: 850;
+}
+.baddie-hero p { margin: 0; max-width: 760px; font-size: 15px; opacity: 0.95; }
+.baddie-mantra {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.baddie-mantra span {
+  background: #ffffff26;
+  border: 1px solid #ffffff45;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* tabs */
+.baddie-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 18px;
+}
+.baddie-tabs button {
+  border: 1px solid #f0d9e7;
+  background: #fff;
+  color: var(--ink);
+  padding: 9px 15px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  box-shadow: 0 3px 12px #4d365b12;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.baddie-tabs button:hover { transform: translateY(-1px); }
+.baddie-tabs button.is-active {
+  background: linear-gradient(110deg, #ff238b, #8d5cff);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 7px 18px #d1399340;
+}
+
+/* section heads */
+.baddie-sechead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin: 22px 0 12px;
+}
+.baddie-sechead h2 {
+  margin: 0;
+  font: italic 900 30px/1 Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+}
+.baddie-sechead span { color: var(--muted); font-size: 13px; text-align: right; }
+
+/* legend */
+.baddie-legend { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0 4px; }
+.baddie-legend .pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+/* generic card */
+.baddie-card {
+  background: #ffffffe0;
+  border: 1px solid #fff;
+  border-radius: 22px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 34px #6b4c7514;
+}
+
+/* day card */
+.baddie-day .daytop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.baddie-day .daytop h3 {
+  margin: 0;
+  font: italic 800 24px/1.05 Georgia, "Times New Roman", serif;
+}
+.baddie-day .daylabel {
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #fff;
+}
+.baddie-day .time {
+  font-weight: 800;
+  font-size: 12px;
+  background: #f3edf7;
+  color: var(--muted);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+.baddie-day .theme {
+  font: italic 700 14px/1.3 Georgia, serif;
+  color: var(--pink);
+  margin: 0 0 4px;
+}
+.baddie-day .payoff { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+
+.baddie-block {
+  font-weight: 850;
+  letter-spacing: 0.03em;
+  font-size: 12px;
+  text-transform: uppercase;
+  background: #f7f1fb;
+  color: #7b1659;
+  padding: 7px 11px;
+  border-radius: 11px;
+  margin: 12px 0 9px;
+  box-shadow: inset 0 0 0 1px #ffffff85;
+}
+
+.baddie-exgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.baddie-ex {
+  background: linear-gradient(145deg, #fff, #fffafd);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 13px 13px 12px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.baddie-ex::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--stripe, var(--purple));
+}
+.baddie-ex h4 { margin: 0 0 3px; font-size: 16px; }
+.baddie-ex .dose { font-weight: 900; color: #7b1659; font-size: 13px; margin: 4px 0 6px; }
+.baddie-ex .why { color: var(--muted); font-size: 12.5px; margin: 0; }
+.baddie-ex .prog {
+  font-size: 12px;
+  border-top: 1px dashed var(--line);
+  margin-top: 8px;
+  padding-top: 7px;
+  color: var(--muted);
+}
+.baddie-ex .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+.baddie-ex .tag {
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* chips row (goals / end state) */
+.baddie-chiprow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 9px;
+  margin: 14px 0;
+}
+.baddie-chip {
+  background: linear-gradient(145deg, #fff, #fff6fb);
+  border: 1px solid #f1d2e5;
+  border-radius: 16px;
+  padding: 12px;
+  text-align: center;
+}
+.baddie-chip .big { font-size: 26px; }
+.baddie-chip b { display: block; font-size: 12px; margin-top: 4px; letter-spacing: 0.02em; }
+.baddie-chip .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* phase cards */
+.baddie-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 11px; }
+.baddie-phase {
+  border-radius: 16px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+.baddie-phase .p { font-size: 11px; font-weight: 900; letter-spacing: 0.14em; color: var(--muted); }
+.baddie-phase .n { font: italic 900 22px/1 Georgia, serif; margin: 3px 0 7px; }
+.baddie-phase .d { font-size: 12.5px; color: var(--muted); }
+
+/* matrix table */
+.baddie-matrix { overflow-x: auto; background: #fff; border-radius: 16px; border: 1px solid var(--line); }
+.baddie-matrix table { width: 100%; border-collapse: collapse; min-width: 720px; }
+.baddie-matrix th, .baddie-matrix td {
+  padding: 9px 11px;
+  border-bottom: 1px solid #f0e7f0;
+  text-align: left;
+  font-size: 12.5px;
+  vertical-align: top;
+}
+.baddie-matrix th { background: #fbf5fb; font-weight: 800; }
+.baddie-matrix td:first-child, .baddie-matrix th:first-child { font-weight: 800; }
+
+/* benchmarks */
+.baddie-bench { display: grid; gap: 8px; }
+.baddie-bench .row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 10px 13px;
+  font-size: 13px;
+}
+.baddie-bench .row b { font-weight: 750; }
+.baddie-bench .now { color: var(--muted); }
+.baddie-bench .target { color: var(--pink); font-weight: 800; }
+
+.baddie-note {
+  background: #fff8df;
+  border: 1px solid #f4dda1;
+  padding: 11px 14px;
+  border-radius: 13px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+/* host for the reused dark app components (charts/tracker/history) so they
+   sit on a readable surface inside the bright page */
+.baddie-embed {
+  background: #1b1030;
+  border-radius: 20px;
+  padding: 16px;
+  color: #fff;
+  box-shadow: 0 14px 40px #3a1c5a2e;
+}
+
+@media (max-width: 720px) {
+  .baddie { padding: 16px 12px 48px; }
+  .baddie-hero { padding: 20px; }
+  .baddie-exgrid { grid-template-columns: 1fr; }
+  .baddie-bench .row { grid-template-columns: 1fr; gap: 3px; }
+}
