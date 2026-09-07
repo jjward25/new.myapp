@@ -291,7 +291,7 @@ export const benchmarks = [
   { name: "Pancake", now: 'elbows ~3" up', pct: 34, target: "→ chest flat to the floor, legs as wide as they'll go." },
   { name: "Middle split", now: '~18" off the floor', pct: 28, target: "→ flat, hips square, comfortable enough to hold a conversation." },
   { name: "Squared front split", now: "needs a clean retest", pct: 20, target: "→ all the way down, both sides, no wobble, no wince." },
-  { name: "Hanging straight-leg raise", now: "now 88°", pct: 92, hit: true, target: "✓ 90°. next: toes to the bar, slow, no swing — pure control." },
+  { name: "Hanging straight-leg raise", now: "88°", pct: 92, hit: true, target: "✓ basically 90°. next: toes to the bar, slow, no swing — pure control." },
 ];
 
 export const endState = [
