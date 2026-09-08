@@ -15,6 +15,18 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Third-party callbacks + cron jobs arrive with no session cookie and
+  // carry their own auth (OAuth code exchange, CRON_SECRET bearer).
+  const UNGATED = [
+    "/api/strava/callback",
+    "/api/strava/sync",
+    "/api/gcal/callback",
+    "/api/cron",
+  ];
+  if (UNGATED.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    return NextResponse.next();
+  }
+
   const secret = process.env.LOGIN_COOKIE_SECRET;
   // Fail open only if genuinely unconfigured (fresh local clone, no
   // .env.local yet) — never silently pretend to be protected.

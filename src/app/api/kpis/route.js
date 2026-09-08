@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
 import { getWeekBoundsEST, getNowEST, formatDateEST } from '@/utils/dateUtils';
+import { linearConfigured, listIssues } from '@/utils/linear';
 
 export const dynamic = 'force-dynamic';
 
@@ -52,31 +53,46 @@ export async function GET() {
       });
     }
 
-    // 2. Tasks completed this week — any task with a Complete Date in the window
+    // 2 + 3. Task metrics — Linear when configured, else Personal.Backlog
     let completedThisWeek = 0;
     let completedLastWeek = 0;
-    backlog.forEach((t) => {
-      const cd = t['Complete Date'];
-      if (inRange(cd, thisWeek.start, thisWeek.end)) completedThisWeek++;
-      else if (inRange(cd, lastWeek.start, lastWeek.end)) completedLastWeek++;
-    });
-
-    // 3. Open tasks due this week — not done, not missed, due in the window
     const openDue = { thisWeek: 0, lastWeek: 0, p0: 0, p1: 0, p2plus: 0, overdue: 0 };
-    backlog.forEach((t) => {
-      if (t['Complete Date'] || t.Missed === true) return;
-      const due = t['Due Date'];
-      if (inRange(due, thisWeek.start, thisWeek.end)) {
-        openDue.thisWeek++;
-        const p = String(t.Priority || '').toUpperCase();
-        if (p === 'P0') openDue.p0++;
-        else if (p === 'P1') openDue.p1++;
-        else openDue.p2plus++;
-        if (due < todayStr) openDue.overdue++;
-      } else if (inRange(due, lastWeek.start, lastWeek.end)) {
-        openDue.lastWeek++;
+
+    const tally = (rows) => {
+      rows.forEach((t) => {
+        const cd = t['Complete Date'];
+        if (inRange(cd, thisWeek.start, thisWeek.end)) completedThisWeek++;
+        else if (inRange(cd, lastWeek.start, lastWeek.end)) completedLastWeek++;
+
+        if (t['Complete Date'] || t.Missed === true) return;
+        const due = t['Due Date'];
+        if (inRange(due, thisWeek.start, thisWeek.end)) {
+          openDue.thisWeek++;
+          const p = String(t.Priority || '').toUpperCase();
+          if (p === 'P0') openDue.p0++;
+          else if (p === 'P1') openDue.p1++;
+          else openDue.p2plus++;
+          if (due < todayStr) openDue.overdue++;
+        } else if (inRange(due, lastWeek.start, lastWeek.end)) {
+          openDue.lastWeek++;
+        }
+      });
+    };
+
+    if (linearConfigured()) {
+      try {
+        const [done, open] = await Promise.all([
+          listIssues({ completed: true, first: 100 }),
+          listIssues({ completed: false, first: 200 }),
+        ]);
+        tally([...done, ...open]);
+      } catch (e) {
+        console.error('kpi linear', e);
+        tally(backlog);
       }
-    });
+    } else {
+      tally(backlog);
+    }
 
     // 4. Events scheduled this week + the next upcoming one
     let eventsThisWeek = 0;

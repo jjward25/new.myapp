@@ -100,7 +100,7 @@ export default function OpsBoard() {
 
   const load = async () => {
     const [b, p, l] = await Promise.all([
-      fetch("/api/backlog").then((r) => r.json()).catch(() => []),
+      fetch("/api/tasks").then((r) => r.json()).catch(() => []),
       fetch("/api/projects").then((r) => r.json()).catch(() => []),
       fetch("/api/lists").then((r) => r.json()).catch(() => ({ lists: [] })),
     ]);
@@ -139,8 +139,8 @@ export default function OpsBoard() {
   const completeTask = async (id: string) => {
     setExiting((s) => new Set(s).add(id));
     try {
-      await fetch("/api/backlog", {
-        method: "PUT",
+      await fetch("/api/tasks", {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, updatedItem: { "Complete Date": today } }),
       });
@@ -174,7 +174,7 @@ export default function OpsBoard() {
       "Complete Date": "",
       Size: "S",
     };
-    await fetch("/api/backlog", {
+    await fetch("/api/tasks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(item),
