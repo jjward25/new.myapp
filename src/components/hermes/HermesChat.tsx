@@ -17,6 +17,35 @@ interface HermesChatProps {
   emptyState?: React.ReactNode;
 }
 
+// Direct-to-gateway chat token, minted by /api/hermes/token (fast, local
+// HMAC signing server-side, no gateway call) and cached across sends so
+// every message doesn't need a fresh mint. Refreshed automatically once
+// within REFRESH_BUFFER_MS of expiry. See browser_proxy/proxy.py and
+// ARCHITECTURE.md Key Decisions #8 for why this exists: talking to
+// /api/hermes (a Vercel serverless function) put a hard 60s ceiling on every
+// chat turn; talking directly to the gateway over Tailscale Funnel has none.
+interface DirectChatToken {
+  token: string;
+  expiresAt: number; // ms epoch
+  proxyUrl: string;
+}
+
+const REFRESH_BUFFER_MS = 60_000; // re-mint if within 60s of expiry
+let cachedToken: DirectChatToken | null = null; // shared across component instances on this page
+
+async function getDirectChatToken(): Promise<DirectChatToken> {
+  if (cachedToken && cachedToken.expiresAt - Date.now() > REFRESH_BUFFER_MS) {
+    return cachedToken;
+  }
+  const res = await fetch("/api/hermes/token", { method: "POST" });
+  if (!res.ok) {
+    throw new Error("Could not get a chat token (are you logged in?)");
+  }
+  const data = await res.json();
+  cachedToken = { token: data.token, expiresAt: data.expires_at, proxyUrl: data.proxy_url };
+  return cachedToken;
+}
+
 export default function HermesChat({
   title = "Ask Hermes",
   placeholder = "Type a message...",
@@ -56,18 +85,46 @@ export default function HermesChat({
     setError(null);
 
     try {
-      const res = await fetch("/api/hermes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: nextMessages, systemPrompt }),
-      });
+      let chatToken: DirectChatToken;
+      try {
+        chatToken = await getDirectChatToken();
+      } catch {
+        setError("Could not reach Hermes (are you logged in?).");
+        return;
+      }
 
-      // Errors (bad key, gateway down, etc.) come back as plain JSON, not a
-      // stream — handle that case before trying to read an SSE body.
+      // Ephemeral system prompt layered on top of Hermes' own persona by the
+      // gateway itself, same as the old /api/hermes route did server-side —
+      // replicated here since that route is no longer in the chat path.
+      const outgoingMessages = systemPrompt
+        ? [{ role: "system", content: systemPrompt }, ...nextMessages]
+        : nextMessages;
+
+      let res: Response;
+      try {
+        res = await fetch(`${chatToken.proxyUrl}/v1/chat/completions`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${chatToken.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ model: "hermes-agent", messages: outgoingMessages, stream: true }),
+        });
+      } catch {
+        // Laptop asleep, Tailscale down, etc. — a real, honest failure mode
+        // of routing straight to a local machine (see ARCHITECTURE.md Key
+        // Decisions #8), not something to paper over with a vague retry.
+        setError("Hermes is unreachable right now (the machine it runs on may be offline).");
+        return;
+      }
+
+      // Errors (bad/expired token, gateway down, etc.) come back as plain
+      // JSON, not a stream — handle that case before trying to read an SSE
+      // body.
       const contentType = res.headers.get("content-type") || "";
       if (!res.ok || !contentType.includes("text/event-stream")) {
         const data = await res.json().catch(() => null);
-        setError(data?.error || "Something went wrong talking to Hermes.");
+        setError(data?.error?.message || data?.error || "Something went wrong talking to Hermes.");
         return;
       }
 
