@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server"
 
+// 300s = Vercel Hobby's actual hard ceiling (not the default-but-raisable
+// number Pro/Enterprise get) -- explicit here since the ambient default
+// depends on Fluid Compute being active, which isn't reliably knowable per
+// project. Confirmed live 2026-09-08: a real tool-using turn ("check my
+// open linear tasks") took 83s -- comfortably inside this, but almost
+// certainly over whatever the un-configured default was, which is why the
+// webapp was silently returning no response before this was set explicitly.
+export const maxDuration = 300;
+
 // Talks to the Hermes agent gateway over Tailscale Funnel. The gateway key
 // lives only in server-side env vars (HERMES_GATEWAY_URL/HERMES_GATEWAY_KEY) —
 // never sent to the browser, unlike the OpenRouter route which takes a
