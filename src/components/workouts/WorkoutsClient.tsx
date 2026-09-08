@@ -130,7 +130,7 @@ export default function WorkoutsClient({ workouts }: { workouts: any[] }) {
         )}
       </div>
 
-      <div className="baddie-footer">SLUT — Issue 04 · training funhouse</div>
+      <div className="baddie-footer">Full Body Baddie</div>
     </div>
   );
 }
