@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server"
 
-// 300s = Vercel Hobby's actual hard ceiling (not the default-but-raisable
-// number Pro/Enterprise get) -- explicit here since the ambient default
-// depends on Fluid Compute being active, which isn't reliably knowable per
-// project. Confirmed live 2026-09-08: a real tool-using turn ("check my
-// open linear tasks") took 83s -- comfortably inside this, but almost
-// certainly over whatever the un-configured default was, which is why the
-// webapp was silently returning no response before this was set explicitly.
-export const maxDuration = 300;
+// 60s is this project's REAL hard ceiling on Hobby -- confirmed directly
+// from Vercel's own deploy-time error, not from docs: "Serverless Functions
+// must have a maxDuration between 1 and 60 for plan hobby." (a first
+// attempt at 300, based on Vercel's current default-Hobby-tier docs, was
+// rejected outright -- this project doesn't have Fluid Compute active,
+// which is what that higher number assumes). Real, unresolved gap: a
+// genuine tool-using turn ("check my open linear tasks") measured at 83s
+// against the actual backend -- longer than even this real ceiling. This
+// value is still an improvement (was unset before), but does not fully
+// solve the timeout problem by itself; see roadmap's webapp
+// trigger-and-poll entry.
+export const maxDuration = 60;
 
 // Talks to the Hermes agent gateway over Tailscale Funnel. The gateway key
 // lives only in server-side env vars (HERMES_GATEWAY_URL/HERMES_GATEWAY_KEY) —
