@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import StripPole from "./StripPole";
 import {
   mantra,
   goalLegend,
@@ -24,19 +25,24 @@ const Wave = () => (
 
 function Manifesto() {
   return (
-    <section className="baddie-spread">
-      <span className="baddie-eyebrow">
-        One body <span className="sep">·</span> maximum dose <span className="sep">·</span> zero shame
-      </span>
-      <p className="baddie-thesis">
-        A body that folds in half, <span className="shine">holds any position</span> as long as it wants to, and looks
-        obscene doing it.
-      </p>
-      <ul className="baddie-mantra">
-        {mantra.map((m) => (
-          <li key={m}>{titleCase(m)}</li>
-        ))}
-      </ul>
+    <section className="baddie-spread baddie-manifesto">
+      <div className="baddie-manifesto-grid">
+        <div>
+          <span className="baddie-eyebrow">
+            One body <span className="sep">·</span> maximum dose <span className="sep">·</span> zero shame
+          </span>
+          <p className="baddie-thesis">
+            A body that folds in half, <span className="shine">holds any position</span> as long as it wants to, and
+            looks obscene doing it.
+          </p>
+          <ul className="baddie-mantra">
+            {mantra.map((m) => (
+              <li key={m}>{titleCase(m)}</li>
+            ))}
+          </ul>
+        </div>
+        <StripPole />
+      </div>
     </section>
   );
 }

@@ -102,14 +102,18 @@
 .baddie-folio span { opacity: 0.4; }
 
 /* masthead */
-.baddie-masthead { padding: 8px 0 6px; text-align: center; position: relative; }
+.baddie-masthead { padding: 10px 0 6px; text-align: center; position: relative; }
 .baddie-wordmark {
   font-family: var(--f-display);
   font-weight: 900;
-  font-size: clamp(64px, 15vw, 172px);
-  line-height: 0.86;
-  letter-spacing: -0.045em;
+  font-size: clamp(48px, 12vw, 132px);
+  line-height: 0.84;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
   margin: 0;
+}
+.baddie-wordmark span {
+  display: block;
   background: var(--chrome);
   background-size: 100% 260%;
   -webkit-background-clip: text;
@@ -117,9 +121,11 @@
   color: transparent;
   filter: drop-shadow(0 0 34px rgba(255, 30, 122, 0.55)) drop-shadow(0 3px 2px rgba(0, 0, 0, 0.5));
 }
-.baddie-wordmark span {
+.baddie-wordmark span:nth-child(2) { color: transparent; opacity: 0.92; }
+.baddie-wordmark i {
   -webkit-text-fill-color: var(--hot);
   color: var(--hot);
+  font-style: normal;
 }
 .baddie-tagline {
   display: inline-block;
@@ -194,6 +200,8 @@
 }
 
 /* 01 manifesto */
+.baddie-manifesto-grid { display: grid; grid-template-columns: 1fr 240px; gap: 40px; align-items: center; }
+@media (max-width: 780px) { .baddie-manifesto-grid { grid-template-columns: 1fr; gap: 20px; } .baddie-manifesto-grid .baddie-pole { max-width: 180px; } }
 .baddie-thesis {
   font-family: var(--f-display);
   font-weight: 600;
@@ -357,6 +365,66 @@
 
 .baddie-embed { margin-top: 22px; padding: 12px; }
 .baddie-embed .embed-inner { background: #141018; border-radius: 10px; padding: 16px; color: #fff; }
+
+/* vibe piece: dancer on a pole */
+.baddie-pole { width: 100%; max-width: 230px; margin: 0 auto; }
+.baddie-pole svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 0 26px rgba(255, 30, 122, 0.35)); }
+.baddie-pole .dancer,
+.baddie-pole .legA,
+.baddie-pole .legB,
+.baddie-pole .booty,
+.baddie-pole .hair { transform-box: view-box; }
+.baddie-pole .legA { transform-origin: 128px 132px; }
+.baddie-pole .legB { transform-origin: 128px 132px; }
+.baddie-pole .booty { transform-origin: 120px 126px; }
+.baddie-pole .hair { transform-origin: 132px 20px; }
+/* resting pose (reduced motion / no-JS): a held split */
+.baddie-pole .dancer { transform: translateY(150px); }
+.baddie-pole .legA { transform: rotate(52deg); }
+.baddie-pole .legB { transform: rotate(-58deg); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .baddie-pole .dancer { animation: baddie-descend 7s cubic-bezier(0.5, 0.05, 0.5, 0.95) infinite; }
+  .baddie-pole .legA { animation: baddie-splitA 7s ease-in-out infinite; }
+  .baddie-pole .legB { animation: baddie-splitB 7s ease-in-out infinite; }
+  .baddie-pole .booty { animation: baddie-bounce 7s ease-in-out infinite; }
+  .baddie-pole .hair { animation: baddie-hairswing 7s ease-in-out infinite; }
+
+  @keyframes baddie-descend {
+    0%   { transform: translateY(-4px) rotate(0deg); }
+    30%  { transform: translateY(150px) rotate(4deg); }
+    38%  { transform: translateY(150px) rotate(-2deg); }
+    70%  { transform: translateY(150px) rotate(0deg); }
+    92%  { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-4px) rotate(0deg); }
+  }
+  @keyframes baddie-splitA {
+    0%, 30% { transform: rotate(0deg); }
+    40%     { transform: rotate(52deg); }
+    68%     { transform: rotate(52deg); }
+    80%, 100% { transform: rotate(0deg); }
+  }
+  @keyframes baddie-splitB {
+    0%, 30% { transform: rotate(0deg); }
+    40%     { transform: rotate(-58deg); }
+    68%     { transform: rotate(-58deg); }
+    80%, 100% { transform: rotate(0deg); }
+  }
+  @keyframes baddie-bounce {
+    0%, 42% { transform: scaleY(1) translateY(0); }
+    46%     { transform: scaleY(1.24) translateY(2px); }
+    50%     { transform: scaleY(0.84) translateY(-1px); }
+    54%     { transform: scaleY(1.18) translateY(2px); }
+    58%     { transform: scaleY(0.9) translateY(0); }
+    62%     { transform: scaleY(1.12) translateY(1px); }
+    66%, 100% { transform: scaleY(1) translateY(0); }
+  }
+  @keyframes baddie-hairswing {
+    0%, 100% { transform: rotate(0deg); }
+    30%      { transform: rotate(-26deg); }
+    46%      { transform: rotate(12deg); }
+  }
+}
 
 /* sparkles */
 .baddie-spark { position: absolute; pointer-events: none; color: var(--ink); opacity: 0.5; z-index: 2; }

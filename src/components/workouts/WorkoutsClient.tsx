@@ -64,22 +64,19 @@ export default function WorkoutsClient({ workouts }: { workouts: any[] }) {
   return (
     <div className="baddie">
       <div className="baddie-wrap">
-        <div className="baddie-folio">
-          Joe <span>·</span> <b>Issue 04</b> <span>·</span> Week 4 of 6 <span>·</span> Phase: Push
-        </div>
-
         <header className="baddie-masthead">
-          <span className="baddie-spark" style={{ left: "7%", top: 18, fontSize: 24 }}>
+          <span className="baddie-spark" style={{ left: "6%", top: 24, fontSize: 16 }}>
             ✦
           </span>
-          <span className="baddie-spark" style={{ right: "9%", top: 6, fontSize: 18, animationDelay: ".6s" }}>
-            ✧
-          </span>
-          <span className="baddie-spark" style={{ right: "24%", bottom: 8, fontSize: 20, animationDelay: ".3s" }}>
+          <span className="baddie-spark" style={{ right: "8%", top: 12, fontSize: 12, animationDelay: ".6s" }}>
             ✧
           </span>
           <h1 className="baddie-wordmark">
-            SLUT<span>.</span>
+            <span>Full</span>
+            <span>Body</span>
+            <span>
+              Baddie<i>.</i>
+            </span>
           </h1>
           <div className="baddie-tagline">for women who train their ass off — and mean it</div>
         </header>
