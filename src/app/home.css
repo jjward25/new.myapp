@@ -1,0 +1,208 @@
+/* "Personal mission control" — homepage + shared app-chrome design tokens.
+   Scoped to .mc so it never leaks into other pages. */
+
+.mc {
+  --mc-ground: #0c0d10;
+  --mc-surface: #131519;
+  --mc-surface-2: #171a1f;
+  --mc-line: rgba(255, 255, 255, 0.08);
+  --mc-line-bright: rgba(255, 255, 255, 0.16);
+  --mc-ink: #e7eaee;
+  --mc-ink-dim: #8a919c;
+  --mc-ink-faint: #5b626d;
+  --mc-signal: #22d3ee; /* the app's cyan */
+  --mc-signal-dim: #0e7490;
+
+  /* semantic — status only, never decorative */
+  --mc-p0: #f0426a;
+  --mc-p1: #f5a623;
+  --mc-p2: #35c48b;
+  --mc-done: #35c48b;
+  --mc-overdue: #f0426a;
+
+  --mc-mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --mc-ui: var(--font-ui), "Archivo", system-ui, sans-serif;
+
+  color: var(--mc-ink);
+  font-family: var(--mc-ui);
+}
+
+.mc-mono { font-family: var(--mc-mono); font-variant-numeric: tabular-nums; }
+
+/* --- motion --- */
+@media (prefers-reduced-motion: no-preference) {
+  .mc-stagger > * {
+    animation: mc-rise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .mc-stagger > *:nth-child(1) { animation-delay: 0.02s; }
+  .mc-stagger > *:nth-child(2) { animation-delay: 0.06s; }
+  .mc-stagger > *:nth-child(3) { animation-delay: 0.1s; }
+  .mc-stagger > *:nth-child(4) { animation-delay: 0.14s; }
+  .mc-stagger > *:nth-child(5) { animation-delay: 0.18s; }
+  .mc-stagger > *:nth-child(6) { animation-delay: 0.22s; }
+  .mc-stagger > *:nth-child(7) { animation-delay: 0.26s; }
+  .mc-stagger > *:nth-child(8) { animation-delay: 0.3s; }
+  .mc-stagger > *:nth-child(n + 9) { animation-delay: 0.34s; }
+
+  @keyframes mc-rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .mc-row-exit {
+    animation: mc-collapse 0.28s ease forwards;
+  }
+  @keyframes mc-collapse {
+    to { opacity: 0; transform: translateX(10px); max-height: 0; padding-top: 0; padding-bottom: 0; margin: 0; }
+  }
+
+  .mc-pulse::before {
+    animation: mc-pulse 2s ease-in-out infinite;
+  }
+  @keyframes mc-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+}
+
+/* --- primitives --- */
+.mc-panel {
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-line);
+  border-radius: 10px;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+.mc-panel:hover { border-color: var(--mc-line-bright); }
+
+.mc-label {
+  font-family: var(--mc-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mc-ink-dim);
+}
+
+.mc-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 12px 9px 0;
+  border-bottom: 1px solid var(--mc-line);
+  overflow: hidden;
+}
+.mc-row:last-child { border-bottom: 0; }
+.mc-row .rail { align-self: stretch; border-radius: 2px; background: var(--mc-ink-faint); }
+.mc-row.p-0 .rail { background: var(--mc-p0); }
+.mc-row.p-1 .rail { background: var(--mc-p1); }
+.mc-row.p-2 .rail { background: var(--mc-p2); }
+.mc-row.overdue::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, rgba(240, 66, 106, 0.22), transparent);
+  pointer-events: none;
+}
+.mc-row.due-today .rail { position: relative; }
+.mc-row.due-today .rail::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 2px;
+  background: var(--mc-p1);
+}
+.mc-row .rname { font-size: 13.5px; color: var(--mc-ink); }
+.mc-row .rmeta { font-family: var(--mc-mono); font-size: 11px; color: var(--mc-ink-dim); white-space: nowrap; }
+.mc-row .rmeta.late { color: var(--mc-overdue); }
+.mc-row .rmeta.today { color: var(--mc-p1); }
+
+.mc-chip {
+  font-family: var(--mc-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border: 1px solid var(--mc-line-bright);
+  border-radius: 4px;
+  color: var(--mc-ink-dim);
+}
+
+.mc-check {
+  width: 15px; height: 15px;
+  border: 1.5px solid var(--mc-line-bright);
+  border-radius: 4px;
+  flex: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.mc-check:hover { border-color: var(--mc-signal); }
+.mc-check.on { background: var(--mc-done); border-color: var(--mc-done); }
+
+/* --- app header (condensed nav bar) --- */
+.app-header {
+  --hdr-ground: #0c0d10;
+  --hdr-line: rgba(255, 255, 255, 0.09);
+  --hdr-ink: #e7eaee;
+  --hdr-ink-dim: #8a919c;
+  --hdr-accent: #22d3ee;
+  display: block;
+}
+.app-header .nav-blur { display: none; } /* kept only as a hook for the /workouts tint */
+.app-header .nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 50px;
+  padding: 0 18px;
+  background: color-mix(in srgb, var(--hdr-ground) 88%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hdr-line);
+}
+.app-header__mark {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--hdr-ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.app-header__nav {
+  display: flex;
+  gap: 4px;
+  margin: 0 auto;
+}
+.app-header__link {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hdr-ink-dim);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.app-header__link:hover { color: var(--hdr-ink); background: rgba(255, 255, 255, 0.04); }
+.app-header__link.is-active { color: var(--hdr-ground); background: var(--hdr-accent); }
+.app-header__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--hdr-ink-dim);
+  white-space: nowrap;
+}
+.app-header__time { color: var(--hdr-ink); font-weight: 500; }
+.app-header__date { color: var(--hdr-ink-dim); }
+@media (max-width: 720px) {
+  .app-header .nav-bar { gap: 10px; padding: 0 12px; height: 46px; }
+  .app-header__nav { gap: 0; }
+  .app-header__link { padding: 6px 7px; font-size: 10px; letter-spacing: 0.04em; }
+  .app-header__date { display: none; }
+  .app-header__mark { font-size: 10px; letter-spacing: 0.12em; }
+}
+@media (max-width: 460px) {
+  .app-header__mark { display: none; }
+}

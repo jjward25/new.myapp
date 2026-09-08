@@ -1,51 +1,69 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 interface KPIData {
-  p0Completed: { thisWeek: number; lastWeek: number };
-  cardioMiles: { thisWeek: number; lastWeek: number; goal: number };
-  eventsThisWeek: number;
-  openTasks: number;
+  miles: { thisWeek: number; lastWeek: number; goal: number; source: string };
+  tasksCompleted: { thisWeek: number; lastWeek: number };
+  openTasksDue: { thisWeek: number; lastWeek: number; p0: number; p1: number; p2plus: number; overdue: number };
+  events: { thisWeek: number; lastWeek: number; next: { title: string; date: string } | null };
 }
 
-// Global function to trigger KPI refresh from anywhere
 export function refreshKPIs() {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('kpi-refresh'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("kpi-refresh"));
   }
 }
 
-const WoWIndicator: React.FC<{ current: number; previous: number }> = ({ current, previous }) => {
-  const delta = current - previous;
-  
-  if (delta === 0) {
-    return <span className="text-xs text-gray-400 ml-1">—</span>;
-  }
-  
-  const isPositive = delta > 0;
-  
-  // Format delta: round to 2 decimal places and remove trailing zeros
-  const formatDelta = (num: number) => {
-    const rounded = Math.round(Math.abs(num) * 100) / 100;
-    return rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2).replace(/\.?0+$/, '');
-  };
-  
+function useCountUp(value: number, ms = 650) {
+  const [n, setN] = useState(0);
+  const prev = useRef(0);
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setN(value);
+      prev.current = value;
+      return;
+    }
+    const from = prev.current;
+    const start = performance.now();
+    let raf = 0;
+    const step = (t: number) => {
+      const p = Math.min((t - start) / ms, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(from + (value - from) * eased);
+      if (p < 1) raf = requestAnimationFrame(step);
+      else prev.current = value;
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value, ms]);
+  return n;
+}
+
+const WoW: React.FC<{ current: number; previous: number; unit?: string; invert?: boolean }> = ({
+  current,
+  previous,
+  unit = "",
+  invert = false,
+}) => {
+  const delta = Math.round((current - previous) * 100) / 100;
+  if (delta === 0) return <span className="mc-mono text-[10px] text-[#5b626d]">±0</span>;
+  const up = delta > 0;
+  const good = invert ? !up : up;
   return (
-    <span className={`text-xs ml-1 flex items-center ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
-      {isPositive ? (
-        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
-        </svg>
-      ) : (
-        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clipRule="evenodd" />
-        </svg>
-      )}
-      {formatDelta(delta)}
+    <span className={`mc-mono text-[10px] ${good ? "text-[#35c48b]" : "text-[#f0426a]"}`}>
+      {up ? "▲" : "▼"} {Math.abs(delta)}
+      {unit}
     </span>
   );
 };
+
+const Card: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div className="mc-panel p-3.5 flex flex-col gap-2">
+    <div className="mc-label">{label}</div>
+    {children}
+  </div>
+);
 
 const KPIDashboard: React.FC = () => {
   const [data, setData] = useState<KPIData | null>(null);
@@ -53,111 +71,111 @@ const KPIDashboard: React.FC = () => {
 
   const fetchKPIs = useCallback(async () => {
     try {
-      const response = await fetch('/api/kpis');
-      if (!response.ok) throw new Error('Failed to fetch KPIs');
-      const kpiData = await response.json();
-      setData(kpiData);
-    } catch (error) {
-      console.error('Error fetching KPIs:', error);
+      const r = await fetch("/api/kpis");
+      if (!r.ok) throw new Error("kpi fetch failed");
+      setData(await r.json());
+    } catch (e) {
+      console.error("Error fetching KPIs:", e);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Initial fetch
   useEffect(() => {
     fetchKPIs();
   }, [fetchKPIs]);
-
-  // Listen for refresh events
   useEffect(() => {
-    const handleRefresh = () => {
-      fetchKPIs();
-    };
-
-    window.addEventListener('kpi-refresh', handleRefresh);
-    return () => window.removeEventListener('kpi-refresh', handleRefresh);
+    const h = () => fetchKPIs();
+    window.addEventListener("kpi-refresh", h);
+    return () => window.removeEventListener("kpi-refresh", h);
   }, [fetchKPIs]);
 
-  if (loading) {
+  const miles = useCountUp(data?.miles.thisWeek ?? 0);
+  const done = useCountUp(data?.tasksCompleted.thisWeek ?? 0);
+  const openDue = useCountUp(data?.openTasksDue.thisWeek ?? 0);
+  const events = useCountUp(data?.events.thisWeek ?? 0);
+
+  if (loading || !data) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full mb-6">
+      <div className="mc grid grid-cols-2 md:grid-cols-4 gap-2.5 w-full">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-slate-800/50 rounded-lg p-4 animate-pulse h-20" />
+          <div key={i} className="mc-panel h-[92px] animate-pulse" />
         ))}
       </div>
     );
   }
 
-  if (!data) return null;
-
-  const milesPercentage = Math.min((data.cardioMiles.thisWeek / data.cardioMiles.goal) * 100, 100);
+  const milesPct = Math.min((data.miles.thisWeek / data.miles.goal) * 100, 100);
+  const od = data.openTasksDue;
+  const odTotal = Math.max(od.p0 + od.p1 + od.p2plus, 1);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full mb-6">
-      {/* P0s Completed */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-cyan-800/50 hover:border-cyan-600/50 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-cyan-400 uppercase tracking-wide font-medium">P0s Done</span>
-          <WoWIndicator current={data.p0Completed.thisWeek} previous={data.p0Completed.lastWeek} />
+    <div className="mc grid grid-cols-2 md:grid-cols-4 gap-2.5 w-full mc-stagger">
+      {/* Miles */}
+      <Card label="Miles run · wk">
+        <div className="flex items-baseline gap-1.5">
+          <span className="mc-mono text-2xl text-[#e7eaee]">{miles.toFixed(1)}</span>
+          <span className="mc-mono text-[10px] text-[#5b626d]">/ {data.miles.goal}</span>
+          <span className="ml-auto">
+            <WoW current={data.miles.thisWeek} previous={data.miles.lastWeek} unit="mi" />
+          </span>
         </div>
-        <div className="flex items-baseline">
-          <span className="text-2xl font-bold text-white">{data.p0Completed.thisWeek}</span>
-          <span className="text-xs text-gray-400 ml-1">this week</span>
-        </div>
-      </div>
-
-      {/* Cardio Miles */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-cyan-800/50 hover:border-cyan-600/50 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-cyan-400 uppercase tracking-wide font-medium">Miles Run</span>
-          <WoWIndicator current={data.cardioMiles.thisWeek} previous={data.cardioMiles.lastWeek} />
-        </div>
-        <div className="flex items-baseline mb-2">
-          <span className="text-2xl font-bold text-white">{data.cardioMiles.thisWeek.toFixed(1)}</span>
-          <span className="text-xs text-gray-400 ml-1">/ {data.cardioMiles.goal} mi</span>
-        </div>
-        {/* Progress meter */}
-        <div className="w-full bg-slate-700 rounded-full h-1.5">
-          <div 
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              milesPercentage >= 100 ? 'bg-emerald-500' : milesPercentage >= 50 ? 'bg-cyan-500' : 'bg-amber-500'
-            }`}
-            style={{ width: `${milesPercentage}%` }}
+        <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{ width: `${milesPct}%`, background: milesPct >= 100 ? "#35c48b" : "#22d3ee" }}
           />
         </div>
-      </div>
+        {data.miles.source !== "strava" && (
+          <a href="/api/strava/connect" className="mc-mono text-[9px] text-[#0e7490] hover:text-[#22d3ee]">
+            connect strava →
+          </a>
+        )}
+      </Card>
 
-      {/* Events This Week */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-cyan-800/50 hover:border-cyan-600/50 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-cyan-400 uppercase tracking-wide font-medium">Events</span>
-          <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
+      {/* Tasks completed */}
+      <Card label="Tasks done · wk">
+        <div className="flex items-baseline gap-1.5">
+          <span className="mc-mono text-2xl text-[#e7eaee]">{Math.round(done)}</span>
+          <span className="ml-auto">
+            <WoW current={data.tasksCompleted.thisWeek} previous={data.tasksCompleted.lastWeek} />
+          </span>
         </div>
-        <div className="flex items-baseline">
-          <span className="text-2xl font-bold text-white">{data.eventsThisWeek}</span>
-          <span className="text-xs text-gray-400 ml-1">this week</span>
-        </div>
-      </div>
+        <div className="mc-mono text-[10px] text-[#5b626d]">last wk {data.tasksCompleted.lastWeek}</div>
+      </Card>
 
-      {/* Open Tasks */}
-      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-4 border border-cyan-800/50 hover:border-cyan-600/50 transition-colors">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-xs text-cyan-400 uppercase tracking-wide font-medium">Open Tasks</span>
-          <svg className="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
+      {/* Open due this week */}
+      <Card label="Open · due this wk">
+        <div className="flex items-baseline gap-1.5">
+          <span className="mc-mono text-2xl text-[#e7eaee]">{Math.round(openDue)}</span>
+          {od.overdue > 0 && (
+            <span className="mc-mono text-[10px] text-[#f0426a]">{od.overdue} late</span>
+          )}
+          <span className="ml-auto">
+            <WoW current={od.thisWeek} previous={od.lastWeek} invert />
+          </span>
         </div>
-        <div className="flex items-baseline">
-          <span className="text-2xl font-bold text-white">{data.openTasks}</span>
-          <span className="text-xs text-gray-400 ml-1">pending</span>
+        <div className="flex h-1 rounded-full overflow-hidden bg-white/5">
+          {od.p0 > 0 && <div style={{ width: `${(od.p0 / odTotal) * 100}%`, background: "#f0426a" }} />}
+          {od.p1 > 0 && <div style={{ width: `${(od.p1 / odTotal) * 100}%`, background: "#f5a623" }} />}
+          {od.p2plus > 0 && <div style={{ width: `${(od.p2plus / odTotal) * 100}%`, background: "#35c48b" }} />}
         </div>
-      </div>
+      </Card>
+
+      {/* Events */}
+      <Card label="Events · wk">
+        <div className="flex items-baseline gap-1.5">
+          <span className="mc-mono text-2xl text-[#e7eaee]">{Math.round(events)}</span>
+          <span className="ml-auto">
+            <WoW current={data.events.thisWeek} previous={data.events.lastWeek} />
+          </span>
+        </div>
+        <div className="mc-mono text-[10px] text-[#5b626d] truncate">
+          {data.events.next ? `next · ${data.events.next.title}` : "nothing upcoming"}
+        </div>
+      </Card>
     </div>
   );
 };
 
 export default KPIDashboard;
-

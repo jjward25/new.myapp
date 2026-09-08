@@ -52,13 +52,12 @@ body[data-route="baddie"] #app-panel {
   border-color: rgba(255, 30, 122, 0.55);
   --tw-shadow-color: rgba(255, 30, 122, 0.5);
 }
-body[data-route="baddie"] #app-nav .nav-blur {
-  background-image: linear-gradient(to top right, rgba(255, 30, 122, 0.5), rgba(255, 125, 176, 0.25), rgba(255, 30, 122, 0.5));
+body[data-route="baddie"] .app-header .nav-bar {
+  border-bottom-color: rgba(255, 30, 122, 0.5);
+  background-color: rgba(11, 10, 12, 0.88);
 }
-body[data-route="baddie"] #app-nav .nav-bar {
-  border-color: rgba(255, 30, 122, 0.5);
-  background-color: rgba(12, 12, 14, 0.85);
-}
-body[data-route="baddie"] #app-nav a {
-  color: #ff7db0;
+body[data-route="baddie"] .app-header {
+  --hdr-accent: #ff1e7a;
+  --hdr-ink: #ffe3ef;
+  --hdr-ink-dim: #d98cb2;
 }

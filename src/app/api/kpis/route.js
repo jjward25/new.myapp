@@ -1,106 +1,102 @@
 // src/app/api/kpis/route.js
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
-import { getWeekBoundsEST, formatDateEST, getNowEST } from '@/utils/dateUtils';
+import { getWeekBoundsEST, getNowEST, formatDateEST } from '@/utils/dateUtils';
+
+export const dynamic = 'force-dynamic';
+
+const inRange = (d, start, end) => d && d >= start && d <= end;
 
 export async function GET() {
   try {
     const client = await clientPromise;
     const db = client.db('Personal');
-    
-    // Get current time in EST
+
     const nowEST = getNowEST();
+    const todayStr = formatDateEST(nowEST);
     const thisWeek = getWeekBoundsEST(nowEST);
-    
-    // Get last week bounds
     const lastWeekDate = new Date(nowEST);
     lastWeekDate.setDate(lastWeekDate.getDate() - 7);
     const lastWeek = getWeekBoundsEST(lastWeekDate);
-    
-    // Week bounds as strings for comparison
-    const thisWeekStartStr = thisWeek.start;
-    const thisWeekEndStr = thisWeek.end;
-    const lastWeekStartStr = lastWeek.start;
-    const lastWeekEndStr = lastWeek.end;
-    
-    // 1. P0 Milestones Completed
-    const projects = await db.collection('Projects').find({}).toArray();
-    
-    let p0ThisWeek = 0;
-    let p0LastWeek = 0;
-    
-    projects.forEach((project) => {
-      const milestones = project.Milestones || {};
-      Object.values(milestones).forEach((milestone) => {
-        if (Number(milestone['Milestone Priority']) === 0 && milestone['Complete Date']) {
-          const completeDateStr = milestone['Complete Date']; // Already stored as YYYY-MM-DD
-          if (completeDateStr >= thisWeekStartStr && completeDateStr <= thisWeekEndStr) {
-            p0ThisWeek++;
-          } else if (completeDateStr >= lastWeekStartStr && completeDateStr <= lastWeekEndStr) {
-            p0LastWeek++;
-          }
-        }
-      });
-    });
-    
-    // 2. Cardio Miles from Simple Workouts
-    const workoutData = await db.collection('Workouts').find({}).toArray();
-    const allWorkouts = workoutData[0]?.Workouts || [];
-    const simpleWorkouts = allWorkouts.filter((w) => w.Type === 'simple');
-    
+
+    const [workoutData, backlog, calendar] = await Promise.all([
+      db.collection('Workouts').find({}).toArray(),
+      db.collection('Backlog').find({}).toArray(),
+      db.collection('Calendar').find({}).toArray(),
+    ]);
+
+    // 1. Miles run — Strava (Personal.Activities) with fallback to simple cardio
     let milesThisWeek = 0;
     let milesLastWeek = 0;
-    
-    simpleWorkouts.forEach((workout) => {
-      const workoutDate = workout.Date; // Already stored as YYYY-MM-DD
-      const exercises = workout.Exercises || [];
-      
-      exercises.forEach((ex) => {
-        if (ex.Category === 'Cardio' && ex.Miles) {
-          if (workoutDate >= thisWeekStartStr && workoutDate <= thisWeekEndStr) {
-            milesThisWeek += Number(ex.Miles) || 0;
-          } else if (workoutDate >= lastWeekStartStr && workoutDate <= lastWeekEndStr) {
-            milesLastWeek += Number(ex.Miles) || 0;
-          }
-        }
+    let source = 'workouts';
+    const activities = await db
+      .collection('Activities')
+      .find({ source: 'strava', type: { $in: ['Run', 'run', 'TrailRun'] } })
+      .toArray()
+      .catch(() => []);
+    if (activities.length) {
+      source = 'strava';
+      activities.forEach((a) => {
+        if (inRange(a.date, thisWeek.start, thisWeek.end)) milesThisWeek += Number(a.miles) || 0;
+        else if (inRange(a.date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(a.miles) || 0;
       });
+    } else {
+      const simple = (workoutData[0]?.Workouts || []).filter((w) => w.Type === 'simple');
+      simple.forEach((w) => {
+        (w.Exercises || []).forEach((ex) => {
+          if (ex.Category === 'Cardio' && ex.Miles) {
+            if (inRange(w.Date, thisWeek.start, thisWeek.end)) milesThisWeek += Number(ex.Miles) || 0;
+            else if (inRange(w.Date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(ex.Miles) || 0;
+          }
+        });
+      });
+    }
+
+    // 2. Tasks completed this week — any task with a Complete Date in the window
+    let completedThisWeek = 0;
+    let completedLastWeek = 0;
+    backlog.forEach((t) => {
+      const cd = t['Complete Date'];
+      if (inRange(cd, thisWeek.start, thisWeek.end)) completedThisWeek++;
+      else if (inRange(cd, lastWeek.start, lastWeek.end)) completedLastWeek++;
     });
-    
-    // 3. Events This Week
-    const events = await db.collection('Calendar').find({}).toArray();
-    
-    let eventsThisWeek = 0;
-    
-    events.forEach((event) => {
-      const eventDate = event.date; // Already stored as YYYY-MM-DD
-      if (eventDate && eventDate >= thisWeekStartStr && eventDate <= thisWeekEndStr) {
-        eventsThisWeek++;
+
+    // 3. Open tasks due this week — not done, not missed, due in the window
+    const openDue = { thisWeek: 0, lastWeek: 0, p0: 0, p1: 0, p2plus: 0, overdue: 0 };
+    backlog.forEach((t) => {
+      if (t['Complete Date'] || t.Missed === true) return;
+      const due = t['Due Date'];
+      if (inRange(due, thisWeek.start, thisWeek.end)) {
+        openDue.thisWeek++;
+        const p = String(t.Priority || '').toUpperCase();
+        if (p === 'P0') openDue.p0++;
+        else if (p === 'P1') openDue.p1++;
+        else openDue.p2plus++;
+        if (due < todayStr) openDue.overdue++;
+      } else if (inRange(due, lastWeek.start, lastWeek.end)) {
+        openDue.lastWeek++;
       }
     });
-    
-    // 4. Open Tasks Count
-    const tasks = await db.collection('Backlog').find({}).toArray();
-    
-    const openTasks = tasks.filter((task) => {
-      const hasNoCompleteDate = !task['Complete Date'];
-      const isNotMissed = task.Missed !== true;
-      return hasNoCompleteDate && isNotMissed;
-    }).length;
-    
-    return NextResponse.json({
-      p0Completed: {
-        thisWeek: p0ThisWeek,
-        lastWeek: p0LastWeek
-      },
-      cardioMiles: {
-        thisWeek: milesThisWeek,
-        lastWeek: milesLastWeek,
-        goal: 6
-      },
-      eventsThisWeek,
-      openTasks
+
+    // 4. Events scheduled this week + the next upcoming one
+    let eventsThisWeek = 0;
+    let eventsLastWeek = 0;
+    let nextEvent = null;
+    calendar.forEach((e) => {
+      const d = e.date;
+      if (inRange(d, thisWeek.start, thisWeek.end)) eventsThisWeek++;
+      else if (inRange(d, lastWeek.start, lastWeek.end)) eventsLastWeek++;
+      if (d && d >= todayStr && (!nextEvent || d < nextEvent.date)) {
+        nextEvent = { title: e.title, date: d };
+      }
     });
-    
+
+    return NextResponse.json({
+      miles: { thisWeek: Math.round(milesThisWeek * 10) / 10, lastWeek: Math.round(milesLastWeek * 10) / 10, goal: 6, source },
+      tasksCompleted: { thisWeek: completedThisWeek, lastWeek: completedLastWeek },
+      openTasksDue: openDue,
+      events: { thisWeek: eventsThisWeek, lastWeek: eventsLastWeek, next: nextEvent },
+    });
   } catch (error) {
     console.error('Error fetching KPIs:', error);
     return NextResponse.json({ error: 'Failed to fetch KPIs' }, { status: 500 });
