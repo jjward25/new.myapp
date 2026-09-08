@@ -4,7 +4,10 @@
 // Env: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN,
 //      GOOGLE_CALENDAR_ID (default "primary")
 
+import { EVENT_EXTRA_KEYS } from '@/config/eventTypes';
+
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const XPROP_KEYS = ['eventType', ...EVENT_EXTRA_KEYS];
 const calId = () => encodeURIComponent(process.env.GOOGLE_CALENDAR_ID || 'primary');
 const base = () => `https://www.googleapis.com/calendar/v3/calendars/${calId()}/events`;
 
@@ -39,6 +42,11 @@ async function getAccessToken() {
 // normalize a gcal event -> the webapp's flat shape
 function norm(e) {
   const start = e.start?.date || e.start?.dateTime || '';
+  const xp = e.extendedProperties?.private || {};
+  const extras = {};
+  XPROP_KEYS.forEach((k) => {
+    if (xp[k] != null && xp[k] !== '') extras[k] = xp[k];
+  });
   return {
     gcalId: e.id,
     title: e.summary || '(no title)',
@@ -47,6 +55,7 @@ function norm(e) {
     description: e.description || '',
     location: e.location || '',
     allDay: !!e.start?.date,
+    ...extras,
   };
 }
 
@@ -72,7 +81,8 @@ export async function listEvents(timeMin, timeMax) {
   return out;
 }
 
-function bodyFor({ title, date, time, description, location }) {
+function bodyFor(evt) {
+  const { title, date, time, description, location } = evt;
   const b = { summary: title, description: description || '', location: location || '' };
   const day = String(date).slice(0, 10);
   if (time) {
@@ -82,6 +92,11 @@ function bodyFor({ title, date, time, description, location }) {
     b.start = { date: day };
     b.end = { date: day };
   }
+  const priv = {};
+  XPROP_KEYS.forEach((k) => {
+    if (evt[k] != null) priv[k] = String(evt[k]);
+  });
+  if (Object.keys(priv).length) b.extendedProperties = { private: priv };
   return b;
 }
 

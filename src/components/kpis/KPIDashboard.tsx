@@ -126,10 +126,8 @@ const KPIDashboard: React.FC = () => {
             style={{ width: `${milesPct}%`, background: milesPct >= 100 ? "#35c48b" : "#22d3ee" }}
           />
         </div>
-        {data.miles.source !== "strava" && (
-          <a href="/api/strava/connect" className="mc-mono text-[9px] text-[#0e7490] hover:text-[#22d3ee]">
-            connect strava →
-          </a>
+        {data.miles.source === "workouts" && (
+          <span className="mc-mono text-[9px] text-[#5b626d]">from logged cardio</span>
         )}
       </Card>
 

@@ -15,11 +15,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Third-party callbacks + cron jobs arrive with no session cookie and
-  // carry their own auth (OAuth code exchange, CRON_SECRET bearer).
+  // Third-party callbacks / device pushes / cron jobs arrive with no session
+  // cookie and carry their own auth (OAuth code exchange, ingest token).
   const UNGATED = [
-    "/api/strava/callback",
-    "/api/strava/sync",
+    "/api/health/ingest",
     "/api/gcal/callback",
     "/api/cron",
   ];

@@ -1,15 +1,18 @@
 "use client"
 import React, { useState } from 'react';
+import { EVENT_TYPES, getEventType } from '@/config/eventTypes';
 
 export default function AddEventButton() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState<Record<string, string>>({
     title: '',
     date: '',
     time: '',
     description: '',
     location: '',
+    eventType: '',
   });
+  const typeDef = getEventType(newEvent.eventType);
 
   const handleAddEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +39,7 @@ export default function AddEventButton() {
         });
 
         if (response.ok) {
-          setNewEvent({ title: '', date: '', time: '', description: '', location: '' });
+          setNewEvent({ title: '', date: '', time: '', description: '', location: '', eventType: '' });
           setIsFormOpen(false);
           // Reload to refresh the calendar
           window.location.reload();
@@ -104,13 +107,38 @@ export default function AddEventButton() {
                 onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })} 
                 placeholder="Description" 
               />
-              <input 
-                className='w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900' 
-                type="text" 
-                value={newEvent.location} 
-                onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })} 
-                placeholder="Location" 
+              <input
+                className='w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900'
+                type="text"
+                value={newEvent.location}
+                onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                placeholder="Location"
               />
+
+              <select
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                value={newEvent.eventType}
+                onChange={(e) => setNewEvent({ ...newEvent, eventType: e.target.value })}
+              >
+                <option value="">No type</option>
+                {EVENT_TYPES.map((t) => (
+                  <option key={t.key} value={t.key}>
+                    {t.icon} {t.label}
+                  </option>
+                ))}
+              </select>
+
+              {typeDef?.fields?.map((f) => (
+                <input
+                  key={f.key}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                  type="text"
+                  value={newEvent[f.key] || ''}
+                  onChange={(e) => setNewEvent({ ...newEvent, [f.key]: e.target.value })}
+                  placeholder={f.placeholder || f.label}
+                />
+              ))}
+
               <div className="flex justify-end gap-2 pt-2">
                 <button 
                   type="button" 

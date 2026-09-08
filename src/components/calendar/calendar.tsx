@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { getEventType } from '@/config/eventTypes';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -184,12 +185,47 @@ export default function Calendar() {
             return (
               <div key={index} className="text-center py-2">
                 <span className={`${
-                  isCurrentMonth 
-                    ? (isToday ? 'bg-cyan-600 text-white rounded-full px-2 py-1' : 'text-black') 
+                  isCurrentMonth
+                    ? (isToday ? 'bg-cyan-600 text-white rounded-full px-2 py-1' : 'text-black')
                     : 'text-gray-400'
                 }`}>
                   {date.getDate()}
                 </span>
+
+                {/* event-type badges */}
+                {(() => {
+                  const badges = dayEvents
+                    .map((e: any) => ({ e, t: getEventType(e.eventType) }))
+                    .filter((x: any) => x.t);
+                  if (!badges.length) return null;
+                  return (
+                    <div className="flex flex-wrap justify-center gap-1 mt-0.5">
+                      {badges.map(({ e, t }: any, i: number) => {
+                        const href = t.link ? t.link(e) : null;
+                        return (
+                          <button
+                            key={i}
+                            title={`${t.label}: ${e.title}${href ? ` · open ${t.linkLabel || 'link'}` : ''}`}
+                            onClick={(ev) => {
+                              ev.stopPropagation();
+                              if (href) window.open(href, '_blank', 'noopener');
+                              else {
+                                setSelectedEvent(e);
+                                setIsEditing(false);
+                                setEditedEvent(null);
+                              }
+                            }}
+                            className="text-base leading-none rounded px-0.5 hover:scale-110 transition-transform"
+                            style={{ filter: href ? 'none' : 'grayscale(0.4)' }}
+                          >
+                            {t.icon}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
+
                 {dayEvents.map((event, eventIndex) => (
                   <div
                     key={eventIndex}

@@ -29,7 +29,7 @@ export async function GET(req) {
 
     // gcal events first; keep any mongo-only events not represented in gcal
     const merged = [
-      ...g.map((e) => ({ _id: e.gcalId, gcalId: e.gcalId, title: e.title, date: e.date, description: e.description, location: e.location })),
+      ...g.map((e) => ({ ...e, _id: e.gcalId })),
       ...mongoEvents
         .filter((e) => !(e.gcalId && gIds.has(e.gcalId)) && !gKey.has(`${e.title}|${dayOnly(e.date)}`))
         .map((e) => ({ ...e, _id: String(e._id), date: dayOnly(e.date) })),

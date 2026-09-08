@@ -26,17 +26,18 @@ export async function GET() {
       db.collection('Calendar').find({}).toArray(),
     ]);
 
-    // 1. Miles run — Strava (Personal.Activities) with fallback to simple cardio
+    // 1. Miles run — Personal.Activities (Apple Health push) with a fallback
+    //    to whatever cardio was logged in the simple workout tracker
     let milesThisWeek = 0;
     let milesLastWeek = 0;
     let source = 'workouts';
     const activities = await db
       .collection('Activities')
-      .find({ source: 'strava', type: { $in: ['Run', 'run', 'TrailRun'] } })
+      .find({ type: { $in: ['Run', 'run', 'TrailRun', 'VirtualRun'] } })
       .toArray()
       .catch(() => []);
     if (activities.length) {
-      source = 'strava';
+      source = 'activities';
       activities.forEach((a) => {
         if (inRange(a.date, thisWeek.start, thisWeek.end)) milesThisWeek += Number(a.miles) || 0;
         else if (inRange(a.date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(a.miles) || 0;
