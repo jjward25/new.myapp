@@ -1,9 +1,10 @@
 import clientPromise from './mongoConnect';
+import { APP_DB } from './dbName';
 import { ObjectId } from 'mongodb';
 
 export async function getLists() {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   const lists = await collection.find({}).toArray();
   return lists;
@@ -11,7 +12,7 @@ export async function getLists() {
 
 export async function updateListParent(listName, parentName) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   const result = await collection.updateOne(
@@ -28,7 +29,7 @@ export async function updateListParent(listName, parentName) {
 
 export async function getListByName(listName) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   try {
@@ -45,7 +46,7 @@ export async function getListByName(listName) {
 
 export async function addList(listName) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   if (!listName) {
@@ -62,7 +63,7 @@ export async function addList(listName) {
 
 export async function addItem(listName, item) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   
   const result = await collection.updateOne(
@@ -79,7 +80,7 @@ export async function addItem(listName, item) {
 
 export const updateItem = async (listName, itemIndex, updates) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   try {
@@ -101,7 +102,7 @@ export const updateItem = async (listName, itemIndex, updates) => {
 
 export const deleteItem = async (listName, itemIndex) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   const result = await collection.updateOne(
@@ -124,7 +125,7 @@ export const deleteItem = async (listName, itemIndex) => {
 
 export const deleteList = async (listName) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   const result = await collection.deleteOne({ name: listName });
@@ -138,7 +139,7 @@ export const deleteList = async (listName) => {
 
 export async function updateListItem(listName, itemName, updates) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   
   const result = await collection.updateOne(
@@ -160,7 +161,7 @@ export async function updateListItem(listName, itemName, updates) {
 
 export async function deleteListItem(listName, itemName) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   
   const result = await collection.updateOne(
@@ -181,7 +182,7 @@ export async function deleteListItem(listName, itemName) {
 
 export async function createList(name, list = [], parent = null) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   
   // Check if list already exists
@@ -202,7 +203,7 @@ export async function createList(name, list = [], parent = null) {
 
 export async function addItemsToList(listName, items) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Lists');
 
   try {

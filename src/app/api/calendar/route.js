@@ -5,11 +5,12 @@
 import { ObjectId } from 'mongodb';
 import { getCalendarEvents, addEvent, updateEvent, deleteEvent } from '../../../utils/mongoDB/calendarCRUD';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
+import { APP_DB } from '@/utils/mongoDB/dbName';
 import { gcalConfigured, listEvents, createEvent, patchEvent, removeEvent } from '@/utils/gcal';
 
 export const dynamic = 'force-dynamic';
 
-const cache = async () => (await clientPromise).db('Personal').collection('Calendar');
+const cache = async () => (await clientPromise).db(APP_DB).collection('Calendar');
 const dayOnly = (d) => (d ? String(d).slice(0, 10) : '');
 
 export async function GET(req) {

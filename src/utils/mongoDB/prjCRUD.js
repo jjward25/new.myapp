@@ -1,10 +1,11 @@
 // src/utils/mongoDB/prjCRUD.js
 import clientPromise from './mongoConnect';
+import { APP_DB } from './dbName';
 import { ObjectId } from 'mongodb';
 
 export async function getBacklog() {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
   const backlog = await collection.find({}).toArray();
   return backlog;
@@ -12,7 +13,7 @@ export async function getBacklog() {
 
 export async function addItem(projectName, milestone, msName) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
   
   // Add the milestone to the specified project
@@ -26,7 +27,7 @@ export async function addItem(projectName, milestone, msName) {
 
 export const updateMilestone = async (projectId, milestoneName, updates) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   try {
@@ -50,7 +51,7 @@ export const updateMilestone = async (projectId, milestoneName, updates) => {
 
 export const deleteItem = async (projectId, milestoneName) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   if (!ObjectId.isValid(projectId)) {
@@ -74,7 +75,7 @@ export const deleteItem = async (projectId, milestoneName) => {
 
 export const updateProject = async (projectName, updates) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   try {
@@ -97,7 +98,7 @@ export const updateProject = async (projectName, updates) => {
 
 export const deleteProject = async (projectName) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   const result = await collection.deleteOne({ "Project Name": projectName });
@@ -112,7 +113,7 @@ export const deleteProject = async (projectName) => {
 
 export async function addProject(projectName, projectPriority,projectType,projectNotes) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   // Validate inputs
@@ -134,7 +135,7 @@ export async function addProject(projectName, projectPriority,projectType,projec
 
 export const getProjectByName = async (projectName) => {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Projects');
 
   try {

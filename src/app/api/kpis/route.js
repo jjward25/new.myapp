@@ -1,6 +1,7 @@
 // src/app/api/kpis/route.js
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
+import { APP_DB } from '@/utils/mongoDB/dbName';
 import { getWeekBoundsEST, getNowEST, formatDateEST } from '@/utils/dateUtils';
 import { linearConfigured, listIssues } from '@/utils/linear';
 
@@ -11,7 +12,7 @@ const inRange = (d, start, end) => d && d >= start && d <= end;
 export async function GET() {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
 
     const nowEST = getNowEST();
     const todayStr = formatDateEST(nowEST);

@@ -1,10 +1,11 @@
 // src/utils/mongoDB/calendarCRUD.js
 import clientPromise from './mongoConnect';
+import { APP_DB } from './dbName';
 import { ObjectId } from 'mongodb';
 
 export async function getCalendarEvents() {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Calendar');
   const backlog = await collection.find({}).toArray();
   return backlog;
@@ -12,7 +13,7 @@ export async function getCalendarEvents() {
 
 export async function addEvent(item) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Calendar');
   const result = await collection.insertOne(item);
   return result;
@@ -20,7 +21,7 @@ export async function addEvent(item) {
 
 export async function updateEvent(id, updatedItem) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Calendar');
 
   // Validate ObjectId
@@ -38,7 +39,7 @@ export async function updateEvent(id, updatedItem) {
 
 export async function deleteEvent(id) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Calendar');
   const result = await collection.deleteOne({ _id: id });
   return result;

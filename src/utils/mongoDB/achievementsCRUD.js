@@ -1,12 +1,13 @@
 // src/utils/mongoDB/achievementsCRUD.js
 import clientPromise from './mongoConnect';
+import { APP_DB } from './dbName';
 
 const DEFAULT_USER_ID = 'default';
 
 // Get or create achievement levels document
 export async function getAchievementLevels() {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Achievements');
   
   let levels = await collection.findOne({ userId: DEFAULT_USER_ID });
@@ -30,7 +31,7 @@ export async function getAchievementLevels() {
 // Increment a specific level pool
 export async function incrementLevel(pool) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Achievements');
   
   const fieldName = `${pool}Level`;
@@ -62,7 +63,7 @@ export async function incrementWorkoutsLevel() {
 // Check and mark weekly workout as complete (prevents double-counting)
 export async function checkAndMarkWeeklyWorkout(weekIdentifier) {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Achievements');
   
   const levels = await collection.findOne({ userId: DEFAULT_USER_ID });

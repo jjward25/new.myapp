@@ -11,6 +11,7 @@
 // middleware; carries its own token.
 import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
+import { APP_DB } from '@/utils/mongoDB/dbName';
 import { formatDateEST } from '@/utils/dateUtils';
 
 export const dynamic = 'force-dynamic';
@@ -66,7 +67,7 @@ function extractRuns(body) {
 async function ingest(body) {
   const runs = extractRuns(body);
   if (!runs.length) return { stored: 0 };
-  const coll = (await clientPromise).db('Personal').collection('Activities');
+  const coll = (await clientPromise).db(APP_DB).collection('Activities');
   for (const r of runs) {
     await coll.updateOne(
       { _id: r._id },

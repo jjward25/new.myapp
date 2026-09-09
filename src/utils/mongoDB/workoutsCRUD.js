@@ -1,10 +1,11 @@
 // src/utils/mongoDB/workoutsCRUD.js
 import clientPromise from './mongoConnect';
+import { APP_DB } from './dbName';
 import { ObjectId } from 'mongodb';
 
 export async function getWorkoutData() {
   const client = await clientPromise;
-  const db = client.db('Personal');
+  const db = client.db(APP_DB);
   const collection = db.collection('Workouts');
   const workoutData = await collection.find({}).toArray();
   return workoutData.length > 0 ? workoutData[0] : null; // Return the first document
@@ -28,7 +29,7 @@ export async function getTodaysWorkout(date) {
 export async function addWorkout(item) {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
     const collection = db.collection('Workouts');
     
     // Add the workout to the Workouts array in the document
@@ -55,7 +56,7 @@ export async function addWorkout(item) {
 export async function updateWorkout(workoutId, updateData) {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
     const collection = db.collection('Workouts');
     
     const result = await collection.updateOne(
@@ -73,7 +74,7 @@ export async function updateWorkout(workoutId, updateData) {
 export async function updateWorkoutByDate(date, exercises) {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
     const collection = db.collection('Workouts');
 
     const result = await collection.updateOne(
@@ -91,7 +92,7 @@ export async function updateWorkoutByDate(date, exercises) {
 export async function deleteWorkout(workoutId) {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
     const collection = db.collection('Workouts');
     
     const result = await collection.updateOne(
@@ -109,7 +110,7 @@ export async function deleteWorkout(workoutId) {
 export async function addSetToWorkout(workoutId, exerciseName, setData) {
   try {
     const client = await clientPromise;
-    const db = client.db('Personal');
+    const db = client.db(APP_DB);
     const collection = db.collection('Workouts');
     
     const result = await collection.updateOne(
