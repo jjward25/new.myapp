@@ -10,7 +10,7 @@ import KPIDashboard from '../components/kpis/KPIDashboard';
 import HermesChat from '@/components/hermes/HermesChat';
 import OpsBoard from '@/components/home/OpsBoard';
 
-export const revalidate = 60 * 60; // Regenerate the page every hour
+export const revalidate = 3600; // Regenerate the page every hour
 
 export default async function Home() {
   return (

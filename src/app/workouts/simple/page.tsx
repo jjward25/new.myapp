@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 
 interface Exercise {
   _id?: string;
@@ -110,12 +111,12 @@ export default function SimpleWorkoutHistory() {
       </h1>
       
       {/* Back link */}
-      <a 
-        href="/" 
+      <Link
+        href="/"
         className="text-teal-400 hover:text-teal-300 mb-6 text-sm"
       >
         ← Back to Home
-      </a>
+      </Link>
       
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 w-full max-w-2xl mb-6">

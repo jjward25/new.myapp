@@ -3,7 +3,7 @@ import React from 'react';
 import TaskListWrap from '../../components/tasks/TaskClientWrapBacklog';
 import AddNewTaskForm from '../../components/tasks/NewTaskButton'
 
-export const revalidate = 60 * 60; // Regenerate the page every hour
+export const revalidate = 3600; // Regenerate the page every hour
 
 export default async function Backlog() {
   return (
