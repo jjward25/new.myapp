@@ -31,9 +31,16 @@ export const updateMilestone = async (projectId, milestoneName, updates) => {
   const collection = db.collection('Projects');
 
   try {
+    // Field-level $set so a partial update (e.g. just "Complete Date")
+    // never wipes the milestone's other fields.
+    const setDoc = {};
+    for (const [k, v] of Object.entries(updates || {})) {
+      setDoc[`Milestones.${milestoneName}.${k}`] = v;
+    }
+
     const result = await collection.updateOne(
       { _id: new ObjectId(projectId), [`Milestones.${milestoneName}`]: { $exists: true } },
-      { $set: { [`Milestones.${milestoneName}`]: updates } }
+      { $set: setDoc }
     );
 
     if (result.matchedCount === 0) {
