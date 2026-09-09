@@ -338,9 +338,7 @@ export default function OpsBoard() {
                     </span>
                   )}
                 </span>
-                <span className="rmeta">
-                  {isProgress ? `${done}/${total}` : `${total - done} open`}
-                </span>
+                <span className="rmeta">{isProgress ? `${done}/${total}` : ""}</span>
               </button>
               {open && (
                 <div className="pb-2 pl-[22px]">
