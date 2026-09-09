@@ -142,20 +142,24 @@ export async function updateListItem(listName, itemName, updates) {
   const db = client.db(APP_DB);
   const collection = db.collection('Lists');
   
+  // Set individual fields on the matched element — never replace the whole
+  // element (that would drop `name` and any other fields).
+  const setDoc = {};
+  for (const [k, v] of Object.entries(updates || {})) {
+    if (k === 'name') continue; // renames go through a different path
+    setDoc[`list.$.${k}`] = v;
+  }
+  if (Object.keys(setDoc).length === 0) return { matchedCount: 1, modifiedCount: 0 };
+
   const result = await collection.updateOne(
-    { 
-      name: listName,
-      'list.name': itemName // Find the item by name
-    },
-    { 
-      $set: { 'list.$': updates } // Update the matched item
-    }
+    { name: listName, 'list.name': itemName },
+    { $set: setDoc }
   );
-  
+
   if (result.matchedCount === 0) {
     throw new Error('List or item not found');
   }
-  
+
   return result;
 }
 

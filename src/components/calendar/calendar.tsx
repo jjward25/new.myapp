@@ -167,27 +167,27 @@ export default function Calendar() {
 
   return (
     <div className="w-full mx-auto flex flex-col md:flex-row h-full">
-      <div className="bg-transparent shadow rounded-xl md:rounded-bl-none md:rounded-br-none w-full h-full">
-        <div className="flex items-center justify-between px-6 pt-4 bg-cyan-950 rounded-tr-xl rounded-tl-xl">
-          <button onClick={handlePrevMonth} className="text-white hover:text-cyan-400">Prev</button>
-          <h2 className='font-semibold text-white'>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-          <button onClick={handleNextMonth} className="text-white hover:text-cyan-400">Next</button>
+      <div className="bg-transparent w-full h-full">
+        <div className="flex items-center justify-between px-5 py-3 bg-white/[0.03] border-b border-white/10">
+          <button onClick={handlePrevMonth} className="text-[#8a919c] hover:text-[#22d3ee] text-sm font-medium">Prev</button>
+          <h2 className="font-semibold text-[#e7eaee] tracking-wide">{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+          <button onClick={handleNextMonth} className="text-[#8a919c] hover:text-[#22d3ee] text-sm font-medium">Next</button>
         </div>
-        <div className="grid grid-cols-7 gap-1 p-4 border-2 border-cyan-950 text-black md:border-b-0 h-full">
+        <div className="grid grid-cols-7 gap-1 p-3 h-full">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div key={day} className="text-center text-sm font-semibold text-cyan-950 bg-neutral-300 rounded-md">{day}</div>
+            <div key={day} className="text-center text-[10px] font-semibold tracking-widest uppercase text-[#8a919c] py-1.5 bg-white/[0.03] rounded">{day}</div>
           ))}
           {generateCalendarDays().map((date, index) => {
             const dayEvents = getEventsForDate(date);
             const isCurrentMonth = date.getMonth() === currentDate.getMonth();
             const isToday = date.toDateString() === new Date().toDateString();
-            
+
             return (
-              <div key={index} className="text-center py-2">
-                <span className={`${
-                  isCurrentMonth
-                    ? (isToday ? 'bg-cyan-600 text-white rounded-full px-2 py-1' : 'text-black')
-                    : 'text-gray-400'
+              <div key={index} className={`text-center py-1.5 rounded min-h-[52px] ${isCurrentMonth ? 'bg-white/[0.02]' : ''}`}>
+                <span className={`inline-block text-[13px] ${
+                  isToday
+                    ? 'bg-[#22d3ee] text-[#0c0d10] rounded-full w-6 h-6 leading-6 font-semibold'
+                    : isCurrentMonth ? 'text-[#e7eaee]' : 'text-[#4b515b]'
                 }`}>
                   {date.getDate()}
                 </span>
@@ -229,10 +229,10 @@ export default function Calendar() {
                 {dayEvents.map((event, eventIndex) => (
                   <div
                     key={eventIndex}
-                    className={`text-xs rounded px-1 mt-1 truncate cursor-pointer ${
-                      isCurrentMonth 
-                        ? 'bg-blue-100 text-blue-800' 
-                        : 'bg-gray-100 text-gray-600'
+                    className={`text-[11px] rounded px-1.5 py-0.5 mt-1 truncate cursor-pointer border transition-colors ${
+                      isCurrentMonth
+                        ? 'bg-[#22d3ee]/12 text-[#7fe6f5] border-[#22d3ee]/25 hover:bg-[#22d3ee]/20'
+                        : 'bg-white/[0.04] text-[#6b727d] border-white/[0.06]'
                     }`}
                     onClick={() => {
                       setSelectedEvent(event);

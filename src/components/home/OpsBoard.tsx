@@ -26,6 +26,7 @@ interface Milestone {
 interface ListDoc {
   name: string;
   parent?: string | null;
+  kind?: string; // "progress" -> show a completion bar; else rolling
   list: { name: string; done: boolean }[];
 }
 
@@ -67,11 +68,12 @@ const Lane: React.FC<{
     <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/[0.08]">
       <span className="mc-label">{title}</span>
       <span className="mc-mono text-[11px] text-[#5b626d]">{count}</span>
-      {addHref ? (
+      {addHref && (
         <a href={addHref} className="ml-auto mc-mono text-[#5b626d] hover:text-[#22d3ee] text-sm leading-none">
           +
         </a>
-      ) : (
+      )}
+      {onAdd && !addHref && (
         <button
           onClick={onAdd}
           className="ml-auto mc-mono text-[#5b626d] hover:text-[#22d3ee] text-sm leading-none"
@@ -184,6 +186,49 @@ export default function OpsBoard() {
     refreshKPIs();
   };
 
+  // --- lists ---
+  const [openList, setOpenList] = useState<string | null>(null);
+
+  const patchLocalItem = (listName: string, itemName: string, done: boolean) =>
+    setLists((ls) =>
+      ls.map((l) =>
+        l.name === listName
+          ? { ...l, list: l.list.map((i) => (i.name === itemName ? { ...i, done } : i)) }
+          : l
+      )
+    );
+
+  const toggleItem = async (listName: string, itemName: string, cur: boolean) => {
+    patchLocalItem(listName, itemName, !cur);
+    try {
+      await fetch("/api/lists/items/update", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listName, itemName, updates: { done: !cur } }),
+      });
+    } catch {
+      patchLocalItem(listName, itemName, cur); // revert
+    }
+  };
+
+  const addItem = async (listName: string, name: string, el: HTMLInputElement) => {
+    const v = name.trim();
+    if (!v) return;
+    el.value = "";
+    setLists((ls) =>
+      ls.map((l) => (l.name === listName ? { ...l, list: [...l.list, { name: v, done: false }] } : l))
+    );
+    try {
+      await fetch("/api/lists/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listName, item: { name: v, done: false } }),
+      });
+    } catch {
+      /* leave the optimistic row */
+    }
+  };
+
   const msByProject = useMemo(() => {
     const g: Record<string, Milestone[]> = {};
     milestones.forEach((m) => (g[m.project] ||= []).push(m));
@@ -269,23 +314,57 @@ export default function OpsBoard() {
       </Lane>
 
       {/* LISTS */}
-      <Lane title="Lists" count={lists.length} addHref="/backlog">
+      <Lane title="Lists" count={lists.length}>
         {!loaded && <Skeleton />}
         {lists.map((l) => {
           const total = l.list.length;
           const done = l.list.filter((i) => i.done).length;
           const pct = total ? Math.round((done / total) * 100) : 0;
+          const open = openList === l.name;
+          const isProgress = l.kind === "progress";
           return (
-            <div key={l.name} className="mc-row" style={{ gridTemplateColumns: "1fr auto" }}>
-              <div className="min-w-0">
-                <div className="rname truncate">{l.name}</div>
-                <div className="h-[3px] mt-1.5 rounded-full bg-white/5 overflow-hidden">
-                  <div className="h-full rounded-full bg-[#22d3ee]/70" style={{ width: `${pct}%` }} />
+            <div key={l.name} className="border-b border-white/[0.06] last:border-b-0">
+              <button
+                onClick={() => setOpenList(open ? null : l.name)}
+                className="w-full grid items-center gap-3 py-2.5 text-left"
+                style={{ gridTemplateColumns: "10px 1fr auto" }}
+              >
+                <span className="mc-mono text-[10px] text-[#5b626d]">{open ? "−" : "+"}</span>
+                <span className="min-w-0">
+                  <span className="rname block truncate">{l.name}</span>
+                  {isProgress && (
+                    <span className="block h-[3px] mt-1.5 rounded-full bg-white/5 overflow-hidden">
+                      <span className="block h-full rounded-full bg-[#22d3ee]/70" style={{ width: `${pct}%` }} />
+                    </span>
+                  )}
+                </span>
+                <span className="rmeta">
+                  {isProgress ? `${done}/${total}` : `${total - done} open`}
+                </span>
+              </button>
+              {open && (
+                <div className="pb-2 pl-[22px]">
+                  {l.list.map((it) => (
+                    <button
+                      key={it.name}
+                      onClick={() => toggleItem(l.name, it.name, it.done)}
+                      className="flex items-center gap-2 py-1 w-full text-left"
+                    >
+                      <span className={`mc-check ${it.done ? "on" : ""}`} />
+                      <span className={`text-[12.5px] ${it.done ? "line-through text-[#5b626d]" : "text-[#c4c9d0]"}`}>
+                        {it.name}
+                      </span>
+                    </button>
+                  ))}
+                  <input
+                    placeholder="add item, enter"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") addItem(l.name, (e.target as HTMLInputElement).value, e.target as HTMLInputElement);
+                    }}
+                    className="w-full mt-1 bg-white/[0.04] border border-white/10 rounded px-2 py-1 text-[12px] text-[#e7eaee] outline-none focus:border-[#22d3ee]"
+                  />
                 </div>
-              </div>
-              <span className="rmeta">
-                {done}/{total}
-              </span>
+              )}
             </div>
           );
         })}
