@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { getEventType } from '@/config/eventTypes';
+import { getEventType, EVENT_TYPES, EVENT_EXTRA_KEYS } from '@/config/eventTypes';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -69,33 +69,27 @@ export default function Calendar() {
           selectedDate.getUTCDate()
         );
 
-        const eventToUpdate = {
-          ...editedEvent,
-          date: adjustedDate.toISOString(),
+        const dayStr = adjustedDate.toISOString().slice(0, 10);
+        const updatedItem: any = {
+          title: editedEvent.title,
+          date: dayStr,
+          time: editedEvent.time || '',
+          description: editedEvent.description || '',
+          location: editedEvent.location || '',
+          eventType: editedEvent.eventType || '',
         };
+        EVENT_EXTRA_KEYS.forEach((k) => { updatedItem[k] = editedEvent[k] ?? ''; });
 
         const response = await fetch('/api/calendar', {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: editedEvent._id,
-            updatedItem: {
-              title: eventToUpdate.title,
-              date: eventToUpdate.date,
-              time: eventToUpdate.time,
-              description: eventToUpdate.description,
-              location: eventToUpdate.location,
-            }
-          }),
+          body: JSON.stringify({ id: editedEvent._id, updatedItem }),
         });
 
         if (response.ok) {
-          const updatedEvent = await response.json();
-          // Update the event in the local state
-          setEvents(events.map(event => 
-            event._id === updatedEvent._id ? updatedEvent : event
-          ));
-          setSelectedEvent(updatedEvent);
+          const merged = { ...selectedEvent, ...updatedItem, _id: editedEvent._id };
+          setEvents(events.map((event) => (event._id === editedEvent._id ? merged : event)));
+          setSelectedEvent(merged);
           setIsEditing(false);
           setEditedEvent(null);
         } else {
@@ -304,6 +298,31 @@ export default function Calendar() {
                     className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Type</label>
+                  <select
+                    value={editedEvent?.eventType || ''}
+                    onChange={(e) => setEditedEvent({ ...editedEvent, eventType: e.target.value })}
+                    className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
+                  >
+                    <option value="">No type</option>
+                    {EVENT_TYPES.map((t) => (
+                      <option key={t.key} value={t.key}>{t.icon} {t.label}</option>
+                    ))}
+                  </select>
+                </div>
+                {getEventType(editedEvent?.eventType)?.fields?.map((f) => (
+                  <div key={f.key}>
+                    <label className="block text-sm font-medium mb-1">{f.label}</label>
+                    <input
+                      type="text"
+                      value={editedEvent?.[f.key] || ''}
+                      onChange={(e) => setEditedEvent({ ...editedEvent, [f.key]: e.target.value })}
+                      placeholder={f.placeholder || ''}
+                      className="w-full border border-neutral-300 rounded-md px-2 py-1 text-black"
+                    />
+                  </div>
+                ))}
               </div>
               <div className="flex justify-center mt-4 space-x-2">
                 <button
@@ -323,13 +342,32 @@ export default function Calendar() {
           ) : (
             // View mode
             <div>
-              <h3 className='font-semibold underline text-center'>{selectedEvent.title}</h3>
+              <h3 className='font-semibold underline text-center'>
+                {getEventType(selectedEvent.eventType)?.icon} {selectedEvent.title}
+              </h3>
               <p className="mt-2"><span className="font-medium">Date:</span> {selectedEvent.date ? new Date(selectedEvent.date).toLocaleDateString() : 'No date'}</p>
               {selectedEvent.time && (
                 <p className="mt-1"><span className="font-medium">Time:</span> {formatTime(selectedEvent.time)}</p>
               )}
               <p className="mt-1"><span className="font-medium">Location:</span> {selectedEvent.location || 'No location'}</p>
               <p className="mt-1"><span className="font-medium">Description:</span> {selectedEvent.description || 'No description'}</p>
+              {(() => {
+                const t = getEventType(selectedEvent.eventType);
+                const href = t?.link ? t.link(selectedEvent) : null;
+                if (!t) return null;
+                return (
+                  <p className="mt-1">
+                    <span className="font-medium">{t.label}:</span>{' '}
+                    {href ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="text-cyan-300 underline">
+                        {t.linkLabel || 'open'} →
+                      </a>
+                    ) : (
+                      <span className="text-white/60">no {t.linkLabel?.toLowerCase() || 'link'} set</span>
+                    )}
+                  </p>
+                );
+              })()}
               <div className="flex justify-center mt-4 space-x-2">
                 <button
                   className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm'
