@@ -39,7 +39,21 @@ async function getDirectChatToken(): Promise<DirectChatToken> {
   }
   const res = await fetch("/api/hermes/token", { method: "POST" });
   if (!res.ok) {
-    throw new Error("Could not get a chat token (are you logged in?)");
+    // Distinguish the real causes instead of one vague message — status
+    // alone tells you which: 401 = not logged in (or session expired),
+    // 500 = server misconfigured (e.g. HERMES_PROXY_TOKEN_SECRET missing),
+    // anything else = something unexpected worth seeing verbatim.
+    let detail = `HTTP ${res.status}`;
+    try {
+      const body = await res.json();
+      if (body?.error) detail = String(body.error);
+    } catch {
+      // body wasn't JSON — status code is still useful on its own
+    }
+    if (res.status === 401) {
+      throw new Error("Not logged in — go to /login and sign back in.");
+    }
+    throw new Error(`Could not get a chat token: ${detail}`);
   }
   const data = await res.json();
   cachedToken = { token: data.token, expiresAt: data.expires_at, proxyUrl: data.proxy_url };
@@ -88,8 +102,8 @@ export default function HermesChat({
       let chatToken: DirectChatToken;
       try {
         chatToken = await getDirectChatToken();
-      } catch {
-        setError("Could not reach Hermes (are you logged in?).");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Could not get a chat token.");
         return;
       }
 
