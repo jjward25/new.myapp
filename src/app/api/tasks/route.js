@@ -1,72 +1,44 @@
-// src/app/api/tasks/route.js — Linear-backed task API.
-// Falls back to Personal.Backlog when Linear isn't configured, so the home
-// board + KPIs keep working either way. Returns the app's task shape.
+// src/app/api/tasks/route.js
+//
+// Backs the center "tasks" pane on /work -- scoped to Linear's "ToDos"
+// project only (see src/utils/linear/client.js). Replaced 2026-09-09: this
+// used to pull from an older, separate Linear client that queried every
+// issue across every project (no project filter, and never set `Project` on
+// the returned task, so per-project scoping silently never worked) with a
+// Mongo Personal.Backlog fallback. Linear is the single source now, same as
+// /api/projects and /api/tasks/by-project.
 import { NextResponse } from 'next/server';
-import { ObjectId } from 'mongodb';
-import { linearConfigured, listIssues, createIssue, updateIssue } from '@/utils/linear';
-import { getBacklog, addItem, updateItem } from '@/utils/mongoDB/taskCRUD';
-import { getWeekBoundsEST } from '@/utils/dateUtils';
+import { getToDosTasks, createToDosTask, updateTaskById } from '@/utils/linear/client';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const scope = searchParams.get('scope'); // "open-week" | "done-week" | null
-
-  if (linearConfigured()) {
-    try {
-      const week = getWeekBoundsEST(new Date());
-      if (scope === 'done-week') {
-        const all = await listIssues({ completed: true, first: 100 });
-        return NextResponse.json(all.filter((t) => t['Complete Date'] >= week.start && t['Complete Date'] <= week.end));
-      }
-      if (scope === 'open-week') {
-        return NextResponse.json(await listIssues({ completed: false, dueBefore: week.end, first: 100 }));
-      }
-      return NextResponse.json(await listIssues({ first: 100 }));
-    } catch (e) {
-      console.error('tasks GET (linear)', e);
-      // fall through to Mongo
-    }
+export async function GET() {
+  try {
+    return NextResponse.json(await getToDosTasks());
+  } catch (e) {
+    console.error('tasks GET', e);
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
   }
-
-  // Mongo fallback
-  const backlog = await getBacklog();
-  const list = (Array.isArray(backlog) ? backlog : []).map((t) => ({ ...t, _id: String(t._id) }));
-  return NextResponse.json(list);
 }
 
 export async function POST(req) {
-  const item = await req.json();
-  if (linearConfigured()) {
-    try {
-      const issue = await createIssue({
-        title: item['Task Name'],
-        description: item.Notes || '',
-        priority: item.Priority || 'P1',
-        dueDate: item['Due Date'] || null,
-      });
-      return NextResponse.json(issue, { status: 201 });
-    } catch (e) {
-      console.error('tasks POST (linear)', e);
-    }
+  try {
+    const item = await req.json();
+    const result = await createToDosTask(item);
+    return NextResponse.json(result, { status: 201 });
+  } catch (e) {
+    console.error('tasks POST', e);
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
   }
-  item._id = new ObjectId();
-  const result = await addItem(item);
-  return NextResponse.json({ ok: true, result }, { status: 201 });
 }
 
 export async function PATCH(req) {
-  const { id, updatedItem } = await req.json();
-  if (linearConfigured() && !ObjectId.isValid(id)) {
-    try {
-      return NextResponse.json(await updateIssue(id, updatedItem));
-    } catch (e) {
-      console.error('tasks PATCH (linear)', e);
-      return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
-    }
+  try {
+    const { id, updatedItem } = await req.json();
+    const success = await updateTaskById(id, updatedItem);
+    return NextResponse.json({ ok: success });
+  } catch (e) {
+    console.error('tasks PATCH', e);
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
   }
-  if (!ObjectId.isValid(id)) return NextResponse.json({ error: 'bad id' }, { status: 400 });
-  const result = await updateItem(new ObjectId(id), updatedItem);
-  return NextResponse.json({ ok: true, result });
 }

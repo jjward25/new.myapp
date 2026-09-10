@@ -83,7 +83,7 @@ export default function MorningReviewPage() {
     (async () => {
       const [journalRes, tasksRes, roundupRes] = await Promise.allSettled([
         fetch("/api/journal/latest").then((r) => r.json()),
-        fetch("/api/tasks/by-project", { method: "POST" }).then((r) => r.json()),
+        fetch("/api/tasks/by-project").then((r) => r.json()),
         fetch("/api/roundup").then((r) => r.json()),
       ]);
 

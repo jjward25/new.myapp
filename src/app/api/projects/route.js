@@ -1,15 +1,27 @@
 // app/api/projects/route.js
-import { ObjectId } from 'mongodb';
-import { getBacklog, addItem, updateMilestone, deleteItem, deleteProject, updateProject, addProject } from '../../../utils/mongoDB/prjCRUD';
+//
+// Backed by Linear (not Mongo) since 2026-09-09 -- see src/utils/linear/client.js
+// for the field-mapping notes. Request/response shapes here are unchanged from
+// the old Mongo-backed version so PrjList.js, /projects/page.js,
+// MilestoneList.tsx and MilestoneTrendComponent.js needed no changes.
+import {
+  getAllProjectsWithMilestones,
+  addProject,
+  addMilestoneToProject,
+  updateMilestoneByName,
+  updateProjectByRef,
+  deleteMilestoneByName,
+  deleteProjectByName,
+} from '../../../utils/linear/client';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req, res) {
   try {
-    const backlog = await getBacklog();
-    return new Response(JSON.stringify(backlog), { status: 200 });
+    const projects = await getAllProjectsWithMilestones();
+    return new Response(JSON.stringify(projects), { status: 200 });
   } catch (error) {
-    console.error('Error fetching backlog:', error);
+    console.error('Error fetching projects:', error);
     return new Response(JSON.stringify({ error: 'Unable to fetch backlog' }), { status: 500 });
   }
 }
@@ -18,14 +30,12 @@ export async function POST(req, res) {
   try {
     const { projectName, milestone, projectPriority, msName, projectType, projectNotes } = await req.json();
 
-    if (projectName && projectPriority) {
-      // Add a new project
+    if (projectName && projectPriority !== undefined && !milestone) {
       const result = await addProject(projectName, projectPriority, projectType, projectNotes);
       return new Response(JSON.stringify(result), { status: 201 });
     } else if (projectName && milestone) {
-      // Add milestone to existing project
-      const result = await addItem(projectName, milestone, msName);
-      return new Response(JSON.stringify(result), { status: 201 });
+      const result = await addMilestoneToProject(projectName, milestone, msName);
+      return new Response(JSON.stringify({ success: result }), { status: 201 });
     } else {
       throw new Error('Missing projectName or milestone');
     }
@@ -37,62 +47,32 @@ export async function POST(req, res) {
 
 export async function PUT(req, res) {
   try {
-    const { projectName, milestoneName, updatedMilestone, updatedProject, projectId } = await req.json();
+    const { projectName, milestoneName, updatedMilestone, updates, updatedProject, projectId } = await req.json();
+    // PrjList.js sends `updatedMilestone`; the /projects page's own inline
+    // edit form sends `updates` -- accept either so both keep working.
+    const milestoneUpdates = updatedMilestone || updates;
 
-    if (projectName) {
-      // If projectName is provided, check if it's for updating milestone or project
-      if (milestoneName && updatedMilestone) {
-        // Update Milestone
-        const project = await getProjectByName(projectName);
-        if (!project) {
-          throw new Error('Project not found');
-        }
-
-        const result = await updateMilestone(project._id.toString(), milestoneName, updatedMilestone);
-        return new Response(JSON.stringify(result), { status: 200 });
-      }
-
-      if (updatedProject) {
-        // Update Project
-        const result = await updateProject(projectName, updatedProject);
-        return new Response(JSON.stringify(result), { status: 200 });
-      }
+    if (projectId && milestoneName && milestoneUpdates) {
+      const result = await updateMilestoneByName(projectId, milestoneName, milestoneUpdates);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
     }
 
-    if (projectId) {
-      // If projectId is provided, handle updates for milestone or project
-      if (milestoneName && updatedMilestone) {
-        if (!ObjectId.isValid(projectId)) {
-          throw new Error('Invalid project ID');
-        }
-        const result = await updateMilestone(projectId, milestoneName, updatedMilestone);
-        return new Response(JSON.stringify(result), { status: 200 });
-      }
+    if (projectName && milestoneName && milestoneUpdates) {
+      const projects = await getAllProjectsWithMilestones();
+      const project = projects.find((p) => p['Project Name'] === projectName);
+      if (!project) throw new Error('Project not found');
+      const result = await updateMilestoneByName(project._id, milestoneName, milestoneUpdates);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
+    }
 
-      if (updatedProject) {
-        if (!ObjectId.isValid(projectId)) {
-          throw new Error('Invalid project ID');
-        }
+    if (projectName && updatedProject) {
+      const result = await updateProjectByRef(projectName, updatedProject);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
+    }
 
-      
-
-        // Only include fields that are part of the updatedProject
-        const validFields = ['Project Name', 'Project Priority', 'Type', 'Notes'];
-        const updateFields = {};
-
-        validFields.forEach(field => {
-          if (updatedProject[field] !== undefined) {
-            updateFields[field] = updatedProject[field];
-          }
-        });
-
-        if (Object.keys(updateFields).length === 0) {
-          throw new Error('No valid fields to update');
-        }
-
-        const result = await updateProject(projectId, updateFields);
-        return new Response(JSON.stringify(result), { status: 200 });
-      }
+    if (projectId && updatedProject) {
+      const result = await updateProjectByRef(projectId, updatedProject);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
     }
 
     throw new Error('Missing required parameters for update');
@@ -102,24 +82,18 @@ export async function PUT(req, res) {
   }
 }
 
-
 export async function DELETE(req) {
   try {
     const { projectId, milestoneName, projectName } = await req.json();
 
-    // Handle milestone deletion
     if (projectId && milestoneName && !projectName) {
-      if (!ObjectId.isValid(projectId)) {
-        throw new Error('Invalid project ID');
-      }
-      const result = await deleteItem(projectId, milestoneName);
-      return new Response(JSON.stringify(result), { status: 200 });
+      const result = await deleteMilestoneByName(projectId, milestoneName);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
     }
 
-    // Handle project deletion
     if (!projectId && !milestoneName && projectName) {
-      const result = await deleteProject(projectName);
-      return new Response(JSON.stringify(result), { status: 200 });
+      const result = await deleteProjectByName(projectName);
+      return new Response(JSON.stringify({ success: result }), { status: 200 });
     }
 
     throw new Error('Missing required parameters for deletion');
@@ -128,6 +102,3 @@ export async function DELETE(req) {
     return new Response(JSON.stringify({ error: 'Unable to delete item' }), { status: 500 });
   }
 }
-
-
-

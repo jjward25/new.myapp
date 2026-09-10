@@ -107,25 +107,35 @@ export default function OpsBoard() {
       fetch("/api/lists").then((r) => r.json()).catch(() => ({ lists: [] })),
     ]);
 
+    // All open ToDos tasks, not just ones with a due date this week -- this
+    // IS the ToDos pane on the homepage (mirrors /work's center pane), not a
+    // due-soon filter, so a task with no due date (or one further out) still
+    // needs to show up here. Unlike /work, this lane has no separate MISSED
+    // tab, so overdue tasks stay in here too (relDue below just marks them
+    // late in red) instead of silently disappearing.
     setTasks(
       (Array.isArray(b) ? b : [])
-        .filter((t: Task) => !t["Complete Date"] && t.Missed !== true && t["Due Date"] && t["Due Date"] <= week.end)
-        .sort((a: Task, x: Task) => pRank(a.Priority) - pRank(x.Priority) || String(a["Due Date"]).localeCompare(String(x["Due Date"])))
+        .filter((t: Task) => !t["Complete Date"])
+        .sort((a: Task, x: Task) => pRank(a.Priority) - pRank(x.Priority) || String(a["Due Date"] || "9999").localeCompare(String(x["Due Date"] || "9999")))
     );
 
     const ms: Milestone[] = [];
-    (Array.isArray(p) ? p : []).forEach((proj: any) => {
-      Object.entries(proj.Milestones || {}).forEach(([name, m]: [string, any]) => {
-        if (!m["Complete Date"]) {
-          ms.push({
-            name,
-            project: proj["Project Name"],
-            priority: Number(m["Milestone Priority"]) || 3,
-            due: m["Due Date"] || "",
-          });
-        }
+    // ToDos has its own tasks lane (the `b`/tasks fetch above) -- don't also
+    // list its issues here as "milestones", or they show up twice.
+    (Array.isArray(p) ? p : [])
+      .filter((proj: any) => proj["Project Name"] !== "ToDos")
+      .forEach((proj: any) => {
+        Object.entries(proj.Milestones || {}).forEach(([name, m]: [string, any]) => {
+          if (!m["Complete Date"]) {
+            ms.push({
+              name,
+              project: proj["Project Name"],
+              priority: Number(m["Milestone Priority"]) || 3,
+              due: m["Due Date"] || "",
+            });
+          }
+        });
       });
-    });
     ms.sort((a, b) => a.priority - b.priority || a.project.localeCompare(b.project));
     setMilestones(ms);
 
@@ -270,7 +280,7 @@ export default function OpsBoard() {
       </Lane>
 
       {/* TASKS */}
-      <Lane title="Tasks · due ≤ wk" count={dueTasks.length} onAdd={() => setQuickTask("")}>
+      <Lane title="ToDos" count={dueTasks.length} onAdd={() => setQuickTask("")}>
         {!loaded && <Skeleton />}
         {quickTask !== null && (
           <input
@@ -310,7 +320,7 @@ export default function OpsBoard() {
             </div>
           );
         })}
-        {loaded && dueTasks.length === 0 && <Empty>nothing due this week</Empty>}
+        {loaded && dueTasks.length === 0 && <Empty>no open tasks</Empty>}
       </Lane>
 
       {/* LISTS */}
