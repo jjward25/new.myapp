@@ -36,6 +36,13 @@ export async function updateItem(id, updatedItem) {
   return result;
 }
 
+export async function getRoutineById(id) {
+  const client = await clientPromise;
+  const db = client.db(APP_DB);
+  const collection = db.collection('Routines');
+  return collection.findOne({ _id: id });
+}
+
 export async function deleteItem(id) {
   const client = await clientPromise;
   const db = client.db(APP_DB);
