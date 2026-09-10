@@ -28,11 +28,18 @@ export async function GET(req) {
     const gIds = new Set(g.map((e) => e.gcalId));
     const gKey = new Set(g.map((e) => `${e.title}|${e.date}`));
 
-    // gcal events first; keep any mongo-only events not represented in gcal
+    // gcal events first; keep any mongo-only events not represented in gcal --
+    // but only future ones. 178 pre-gcal-sync Mongo entries (all undated
+    // relative to "now", accumulated before real Calendar sync existed) were
+    // otherwise showing up as phantom extras alongside the real calendar
+    // (found live 2026-09-09). Past Mongo-only entries are historical noise
+    // now that gcal is the real source of truth; future ones might still be
+    // real, not-yet-synced commitments, so those still show.
+    const today = dayOnly(now.toISOString());
     const merged = [
       ...g.map((e) => ({ ...e, _id: e.gcalId })),
       ...mongoEvents
-        .filter((e) => !(e.gcalId && gIds.has(e.gcalId)) && !gKey.has(`${e.title}|${dayOnly(e.date)}`))
+        .filter((e) => !(e.gcalId && gIds.has(e.gcalId)) && !gKey.has(`${e.title}|${dayOnly(e.date)}`) && dayOnly(e.date) >= today)
         .map((e) => ({ ...e, _id: String(e._id), date: dayOnly(e.date) })),
     ];
     return Response.json(merged);
