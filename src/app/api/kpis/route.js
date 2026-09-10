@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import clientPromise from '@/utils/mongoDB/mongoConnect';
 import { APP_DB } from '@/utils/mongoDB/dbName';
 import { getWeekBoundsEST, getNowEST, formatDateEST } from '@/utils/dateUtils';
-import { linearConfigured, listIssues } from '@/utils/linear';
+import { getToDosTasks } from '@/utils/linear/client';
+import { listWorkoutEntries } from '@/utils/mongoDB/hermesWorkouts';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,8 +22,8 @@ export async function GET() {
     lastWeekDate.setDate(lastWeekDate.getDate() - 7);
     const lastWeek = getWeekBoundsEST(lastWeekDate);
 
-    const [workoutData, backlog, calendar] = await Promise.all([
-      db.collection('Workouts').find({}).toArray(),
+    const [workoutEntries, backlog, calendar] = await Promise.all([
+      listWorkoutEntries({ sinceDays: 30 }).catch(() => []),
       db.collection('Backlog').find({}).toArray(),
       db.collection('Calendar').find({}).toArray(),
     ]);
@@ -44,18 +45,18 @@ export async function GET() {
         else if (inRange(a.date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(a.miles) || 0;
       });
     } else {
-      const simple = (workoutData[0]?.Workouts || []).filter((w) => w.Type === 'simple');
-      simple.forEach((w) => {
-        (w.Exercises || []).forEach((ex) => {
-          if (ex.Category === 'Cardio' && ex.Miles) {
-            if (inRange(w.Date, thisWeek.start, thisWeek.end)) milesThisWeek += Number(ex.Miles) || 0;
-            else if (inRange(w.Date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(ex.Miles) || 0;
-          }
-        });
+      workoutEntries.forEach((e) => {
+        const miles = Number(e.cardio?.miles) || 0;
+        if (!miles) return;
+        if (inRange(e.date, thisWeek.start, thisWeek.end)) milesThisWeek += miles;
+        else if (inRange(e.date, lastWeek.start, lastWeek.end)) milesLastWeek += miles;
       });
     }
 
-    // 2 + 3. Task metrics — Linear when configured, else Personal.Backlog
+    // 2 + 3. Task metrics — the ToDos project only (same scope as the /work
+    // center pane). Deliberately excludes other projects' issues: those are
+    // milestones, tracked separately, and mixing them in used to inflate
+    // "completed this week" with milestone-completion history.
     let completedThisWeek = 0;
     let completedLastWeek = 0;
     const openDue = { thisWeek: 0, lastWeek: 0, p0: 0, p1: 0, p2plus: 0, overdue: 0 };
@@ -81,18 +82,10 @@ export async function GET() {
       });
     };
 
-    if (linearConfigured()) {
-      try {
-        const [done, open] = await Promise.all([
-          listIssues({ completed: true, first: 100 }),
-          listIssues({ completed: false, first: 200 }),
-        ]);
-        tally([...done, ...open]);
-      } catch (e) {
-        console.error('kpi linear', e);
-        tally(backlog);
-      }
-    } else {
+    try {
+      tally(await getToDosTasks());
+    } catch (e) {
+      console.error('kpi linear', e);
       tally(backlog);
     }
 

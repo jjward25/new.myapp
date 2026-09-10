@@ -226,7 +226,7 @@ export default function WorkoutProgressionChart() {
   };
 
   const getRandomColor = (index: number): string => {
-    const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#ff00ff', '#00ffff', '#ffff00'];
+    const colors = ['#22d3ee', '#35c48b', '#f5a623', '#f0426a', '#a78bfa', '#38bdf8', '#facc15', '#fb7185'];
     return colors[index % colors.length];
   };
 
@@ -235,16 +235,15 @@ export default function WorkoutProgressionChart() {
     if (active && payload && payload.length) {
       return (
         <div 
-          className="bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-lg"
-          style={{ zIndex: 1000 }}
+          className="rounded-lg p-3 shadow-lg" style={{ background: "#171a1f", border: "1px solid rgba(255,255,255,0.16)", zIndex: 1000 }}
         >
-          <p className="text-white font-semibold mb-2">{`Date: ${label}`}</p>
+          <p className="mc-mono text-[11px] text-[#e7eaee] font-semibold mb-2">{`Date: ${label}`}</p>
           {payload.map((entry: any, index: number) => {
             const currentValue = entry.value;
             const previousValue = entry.payload?.previousValues?.[entry.dataKey] || 0;
             const percentChange = previousValue > 0 ? ((currentValue - previousValue) / previousValue * 100) : 0;
             const changeSymbol = percentChange > 0 ? '+' : '';
-            const changeColor = percentChange > 0 ? 'text-green-400' : percentChange < 0 ? 'text-red-400' : 'text-gray-400';
+            const changeColor = percentChange > 0 ? 'text-[#35c48b]' : percentChange < 0 ? 'text-[#f0426a]' : 'text-[#8a919c]';
             
             return (
               <p key={index} style={{ color: entry.color }} className="mb-1">
@@ -268,16 +267,15 @@ export default function WorkoutProgressionChart() {
     if (active && payload && payload.length) {
       return (
         <div 
-          className="bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-lg"
-          style={{ zIndex: 1000 }}
+          className="rounded-lg p-3 shadow-lg" style={{ background: "#171a1f", border: "1px solid rgba(255,255,255,0.16)", zIndex: 1000 }}
         >
-          <p className="text-white font-semibold mb-2">{`Date: ${label}`}</p>
+          <p className="mc-mono text-[11px] text-[#e7eaee] font-semibold mb-2">{`Date: ${label}`}</p>
           {payload.map((entry: any, index: number) => {
             const currentValue = entry.value;
             const previousValue = entry.payload?.previousValues?.[entry.dataKey] || 0;
             const percentChange = previousValue > 0 ? ((currentValue - previousValue) / previousValue * 100) : 0;
             const changeSymbol = percentChange > 0 ? '+' : '';
-            const changeColor = percentChange > 0 ? 'text-green-400' : percentChange < 0 ? 'text-red-400' : 'text-gray-400';
+            const changeColor = percentChange > 0 ? 'text-[#35c48b]' : percentChange < 0 ? 'text-[#f0426a]' : 'text-[#8a919c]';
             
             return (
               <p key={index} style={{ color: entry.color }} className="mb-1">
@@ -297,20 +295,20 @@ export default function WorkoutProgressionChart() {
   };
 
   return (
-    <div className="text-black p-4">
-      <h3 className="text-xl font-bold mb-4">Workout Progression</h3>
+    <div className="mc-panel p-4" style={{ background: "#171a1f", borderColor: "rgba(255,255,255,0.14)" }}>
+      <div className="mc-label mb-4">Workout Progression</div>
       
       {/* Filter Controls */}
       <div className="mb-6 space-x-4 flex flex-row">
         <div>
-          <label className="block text-sm font-medium">Filter Type:</label>
+          <label className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] block mb-1">Filter</label>
           <select 
             value={filterType} 
             onChange={(e) => {
               setFilterType(e.target.value as 'Day' | 'Group' | 'Exercise');
               setSelectedFilter('');
             }}
-            className="bg-gray-800 text-white border border-gray-600 rounded p-2"
+            className="bg-[#0c0d10] border border-white/20 rounded px-2 py-1.5 text-[13px] text-[#e7eaee] outline-none focus:border-[#22d3ee]"
           >
             <option value="Day">By Day</option>
             <option value="Group">By Muscle Group</option>
@@ -319,11 +317,11 @@ export default function WorkoutProgressionChart() {
         </div>
         
         <div>
-          <label className="block text-sm font-medium">Select {filterType}:</label>
+          <label className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] block mb-1">{filterType}</label>
           <select 
             value={selectedFilter} 
             onChange={(e) => setSelectedFilter(e.target.value)}
-            className="bg-gray-800 text-white border border-gray-600 rounded p-2"
+            className="bg-[#0c0d10] border border-white/20 rounded px-2 py-1.5 text-[13px] text-[#e7eaee] outline-none focus:border-[#22d3ee]"
           >
             <option value="">Choose {filterType.toLowerCase()}...</option>
             {availableFilters.map(filter => (
@@ -336,18 +334,18 @@ export default function WorkoutProgressionChart() {
       {/* Total Weight Chart */}
       {weightChartData.length > 0 && (
         <div className="mb-8">
-          <h4 className="text-lg font-semibold mb-4">Total Weight Progression</h4>
-          <div className="bg-gray-800 rounded-lg p-4 relative" style={{ height: '400px' }}>
+          <div className="mc-mono text-[11px] uppercase tracking-widest text-[#c4c9d1] mb-3">Total Weight Progression</div>
+          <div className="rounded-lg p-4 relative" style={{ height: '400px', background: '#0c0d10', border: '1px solid rgba(255,255,255,0.1)' }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={weightChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#9CA3AF"
+                  stroke="#8a919c"
                   tick={{ fontSize: 12 }}
                 />
                 <YAxis 
-                  stroke="#9CA3AF"
+                  stroke="#8a919c"
                   label={{ value: 'Total Weight (lbs)', angle: -90, position: 'insideLeft' }}
                 />
                 <Tooltip 
@@ -375,18 +373,18 @@ export default function WorkoutProgressionChart() {
       {/* Total Reps Chart */}
       {repsChartData.length > 0 && (
         <div className="mb-8">
-          <h4 className="text-lg font-semibold mb-4">Total Reps Progression</h4>
-          <div className="bg-gray-800 rounded-lg p-4 relative" style={{ height: '400px' }}>
+          <div className="mc-mono text-[11px] uppercase tracking-widest text-[#c4c9d1] mb-3">Total Reps Progression</div>
+          <div className="rounded-lg p-4 relative" style={{ height: '400px', background: '#0c0d10', border: '1px solid rgba(255,255,255,0.1)' }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={repsChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis 
                   dataKey="date" 
-                  stroke="#9CA3AF"
+                  stroke="#8a919c"
                   tick={{ fontSize: 12 }}
                 />
                 <YAxis 
-                  stroke="#9CA3AF"
+                  stroke="#8a919c"
                   label={{ value: 'Total Reps', angle: -90, position: 'insideLeft' }}
                 />
                 <Tooltip 
@@ -412,7 +410,7 @@ export default function WorkoutProgressionChart() {
       )}
 
       {weightChartData.length === 0 && selectedFilter && (
-        <div className="text-gray-400 text-center py-8">
+        <div className="mc-mono text-[11px] text-[#8a919c] text-center py-8">
           No data available for the selected filter.
         </div>
       )}

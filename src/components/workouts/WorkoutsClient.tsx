@@ -1,136 +1,51 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProgramView from "./ProgramView";
-import WorkoutTracker from "./WorkoutTracker";
 import WorkoutProgressionChart from "./WorkoutProgressionChart";
-import PastWorkoutsSection from "./PastWorkoutsSection";
+import WorkoutHistory from "./WorkoutHistory";
 
-type TabId = "program" | "log" | "progress" | "history";
+type TabId = "program" | "progress" | "history";
 
 const TABS: { id: TabId; label: string }[] = [
-  { id: "program", label: "The Program" },
-  { id: "log", label: "Log It" },
-  { id: "progress", label: "The Numbers" },
-  { id: "history", label: "The Receipts" },
+  { id: "program", label: "Program" },
+  { id: "progress", label: "Progress" },
+  { id: "history", label: "History" },
 ];
 
-function useSparkleTrail() {
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const glyphs = ["✦", "✧"];
-    const colors = ["#FF1E7A", "#FF7DB0", "#d8dbea"];
-    let last = 0;
-    const onMove = (e: PointerEvent) => {
-      const t = Date.now();
-      if (t - last < 45) return;
-      last = t;
-      const s = document.createElement("div");
-      s.className = "baddie-trail";
-      s.textContent = glyphs[(Math.random() * glyphs.length) | 0];
-      s.style.left = e.clientX + "px";
-      s.style.top = e.clientY + "px";
-      s.style.color = colors[(Math.random() * colors.length) | 0];
-      document.body.appendChild(s);
-      const dx = Math.random() * 24 - 12;
-      const dy = Math.random() * -30 - 6;
-      s.animate(
-        [
-          { transform: "translate(0,0) scale(1)", opacity: 1 },
-          { transform: `translate(${dx}px,${dy}px) scale(.2)`, opacity: 0 },
-        ],
-        { duration: 700, easing: "cubic-bezier(.2,.7,.2,1)" }
-      ).onfinish = () => s.remove();
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
-  }, []);
-}
-
-function useChromeTint() {
-  useEffect(() => {
-    document.body.dataset.route = "baddie";
-    return () => {
-      delete document.body.dataset.route;
-    };
-  }, []);
-}
-
-export default function WorkoutsClient({ workouts }: { workouts: any[] }) {
+export default function WorkoutsClient({ sessions }: { sessions: any[] }) {
   const [tab, setTab] = useState<TabId>("program");
-  useSparkleTrail();
-  useChromeTint();
 
   return (
-    <div className="baddie">
-      <div className="baddie-wrap">
-        <header className="baddie-masthead">
-          <span className="baddie-spark" style={{ left: "6%", top: 24, fontSize: 16 }}>
-            ✦
-          </span>
-          <span className="baddie-spark" style={{ right: "8%", top: 12, fontSize: 12, animationDelay: ".6s" }}>
-            ✧
-          </span>
-          <h1 className="baddie-wordmark">
-            <span>Full</span>
-            <span>Body</span>
-            <span>
-              Baddie<i>.</i>
-            </span>
-          </h1>
-          <div className="baddie-tagline">for women who train their ass off — and mean it</div>
-        </header>
+    <div className="mc min-h-screen bg-[#0c0d10] text-[#e7eaee]">
+      <div className="w-full max-w-[1100px] mx-auto px-3 md:px-6 py-6 flex flex-col gap-5">
+        <div>
+          <h1 className="mc-mono text-lg tracking-[0.2em] text-[#e7eaee]">WORKOUTS</h1>
+          <p className="mc-mono text-[11px] text-[#8a919c] mt-1">
+            The program, your progression, every logged session. Logging lives on the home page.
+          </p>
+        </div>
 
-        <nav className="baddie-tabs">
+        <div className="flex gap-1">
           {TABS.map((t) => (
-            <button key={t.id} className={t.id === tab ? "is-active" : ""} onClick={() => setTab(t.id)}>
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded ${
+                tab === t.id
+                  ? "bg-[#22d3ee] text-[#0c0d10]"
+                  : "bg-white/[0.06] border border-white/15 text-[#8a919c] hover:text-[#e7eaee]"
+              }`}
+            >
               {t.label}
             </button>
           ))}
-        </nav>
-      </div>
+        </div>
 
-      <div className="baddie-wrap">
         {tab === "program" && <ProgramView />}
-
-        {tab === "log" && (
-          <section className="baddie-spread">
-            <span className="baddie-eyebrow">Pick a day, fill in the sets</span>
-            <h2 className="baddie-h2">Log It</h2>
-            <div className="baddie-sticker baddie-embed">
-              <div className="embed-inner">
-                <WorkoutTracker />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {tab === "progress" && (
-          <section className="baddie-spread">
-            <span className="baddie-eyebrow">Weight &amp; reps over time</span>
-            <h2 className="baddie-h2">The Numbers</h2>
-            <div className="baddie-sticker baddie-embed">
-              <div className="embed-inner">
-                <WorkoutProgressionChart />
-              </div>
-            </div>
-          </section>
-        )}
-
-        {tab === "history" && (
-          <section className="baddie-spread">
-            <span className="baddie-eyebrow">Every session, logged</span>
-            <h2 className="baddie-h2">The Receipts</h2>
-            <div className="baddie-sticker baddie-embed">
-              <div className="embed-inner">
-                <PastWorkoutsSection workouts={workouts} />
-              </div>
-            </div>
-          </section>
-        )}
+        {tab === "progress" && <WorkoutProgressionChart />}
+        {tab === "history" && <WorkoutHistory sessions={sessions} />}
       </div>
-
-      <div className="baddie-footer">Full Body Baddie</div>
     </div>
   );
 }

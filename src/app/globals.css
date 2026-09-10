@@ -42,22 +42,3 @@ body {
   -ms-overflow-style: none;  /* IE 10+ */
 }
 
-/* /workouts ("SLUT") re-tints the app chrome — set by WorkoutsClient
-   via document.body.dataset.route = "baddie". Black + hot pink. */
-body[data-route="baddie"] #app-frame {
-  background-image: linear-gradient(135deg, #0b0a0c, #ff1e7a 50%, #0b0a0c);
-}
-body[data-route="baddie"] #app-panel {
-  background-color: #0b0a0c;
-  border-color: rgba(255, 30, 122, 0.55);
-  --tw-shadow-color: rgba(255, 30, 122, 0.5);
-}
-body[data-route="baddie"] .app-header .nav-bar {
-  border-bottom-color: rgba(255, 30, 122, 0.5);
-  background-color: rgba(11, 10, 12, 0.88);
-}
-body[data-route="baddie"] .app-header {
-  --hdr-accent: #ff1e7a;
-  --hdr-ink: #ffe3ef;
-  --hdr-ink-dim: #d98cb2;
-}

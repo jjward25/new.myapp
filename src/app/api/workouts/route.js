@@ -1,61 +1,68 @@
-//src/app/api/workouts/route.js
-import { ObjectId } from 'mongodb';
-import { getWorkout, addWorkout, updateWorkout, deleteWorkout } from '../../../utils/mongoDB/workoutsCRUD';
-import { USE_MOCK_WORKOUTS, mockWorkouts } from '../../../utils/mockWorkoutData';
+// src/app/api/workouts/route.js
+// Backed by Hermes' `workouts` collection. Returns the legacy compound
+// shape (Exercises keyed by name, Sets array) for the /workouts legacy page.
+import {
+  listWorkoutEntries,
+  logWorkoutEntry,
+  updateWorkoutEntry,
+  deleteWorkoutEntry,
+  toCompoundShape,
+} from '../../../utils/mongoDB/hermesWorkouts';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req) {
+export async function GET() {
   try {
-    if (USE_MOCK_WORKOUTS) {
-      return new Response(JSON.stringify(mockWorkouts), { status: 200 });
-    }
-    const backlog = await getWorkout();
-    return new Response(JSON.stringify(backlog), { status: 200 });
+    const entries = await listWorkoutEntries({ categoryPrefix: 'legacy_' });
+    return new Response(JSON.stringify(toCompoundShape(entries)), { status: 200 });
   } catch (error) {
-    console.error('Error fetching backlog:', error);
-    return new Response(JSON.stringify({ error: 'Unable to fetch backlog' }), { status: 500 });
+    console.error('Error fetching workouts:', error);
+    return new Response(JSON.stringify({ error: 'Unable to fetch workouts' }), { status: 500 });
   }
 }
 
 export async function POST(req) {
   try {
-    const newItem = await req.json();
-    newItem._id = new ObjectId();
-    const result = await addWorkout(newItem);
-    return new Response(JSON.stringify(result), { status: 201 });
+    const item = await req.json();
+    const day = item.Day ? `legacy_${item.Day}` : 'legacy';
+    const created = [];
+    for (const [name, d] of Object.entries(item.Exercises || {})) {
+      const sets = (d.Sets || []).map((s) => ({ reps: s.Reps ?? null, weight: s.Weight ?? null }));
+      const res = await logWorkoutEntry({
+        exercise: name,
+        sets: sets.length ? sets : null,
+        category: day,
+        sessionType: 'workout',
+        notes: [item.WorkoutName, d.ExerciseType].filter(Boolean).join(' — '),
+        date: item.Date,
+      });
+      created.push(res._id);
+    }
+    return new Response(JSON.stringify({ ok: true, created }), { status: 201 });
   } catch (error) {
-    console.error('Error adding item:', error);
-    return new Response(JSON.stringify({ error: 'Unable to add item' }), { status: 500 });
+    console.error('Error adding workout:', error);
+    return new Response(JSON.stringify({ error: 'Unable to add workout' }), { status: 500 });
   }
 }
 
 export async function PUT(req) {
   try {
     const { id, updatedItem } = await req.json();
-    if (!ObjectId.isValid(id)) {
-      return new Response(JSON.stringify({ error: 'Invalid ID format' }), { status: 400 });
-    }
-    const objectId = new ObjectId(id);
-    const result = await updateWorkout(objectId, updatedItem);
-    return new Response(JSON.stringify(result), { status: 200 });
+    await updateWorkoutEntry(id, updatedItem);
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (error) {
-    console.error('Error updating item:', error);
-    return new Response(JSON.stringify({ error: 'Unable to update item' }), { status: 500 });
+    console.error('Error updating workout:', error);
+    return new Response(JSON.stringify({ error: 'Unable to update workout' }), { status: 500 });
   }
 }
 
 export async function DELETE(req) {
   try {
     const { id } = await req.json();
-    if (!ObjectId.isValid(id)) {
-      return new Response(JSON.stringify({ error: 'Invalid ID format' }), { status: 400 });
-    }
-    const objectId = new ObjectId(id);
-    const result = await deleteWorkout(objectId);
-    return new Response(JSON.stringify(result), { status: 200 });
+    await deleteWorkoutEntry(id);
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (error) {
-    console.error('Error deleting item:', error);
-    return new Response(JSON.stringify({ error: 'Unable to delete item' }), { status: 500 });
+    console.error('Error deleting workout:', error);
+    return new Response(JSON.stringify({ error: 'Unable to delete workout' }), { status: 500 });
   }
 }
