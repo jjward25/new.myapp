@@ -2,6 +2,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Recessed/dark relative to the card (#171a1f) so fields read as distinct
+// wells, not a shade of the same background -- the previous bg-white/[0.04]
+// was nearly the same color as the card itself.
+const inputCls =
+  "w-full bg-[#0c0d10] border border-white/20 rounded px-2 py-1.5 text-[13px] text-[#e7eaee] outline-none focus:border-[#22d3ee] focus:ring-1 focus:ring-[#22d3ee]";
+// Solid fill + bright border so buttons read as buttons, not dim text.
+const btnCls =
+  "mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded bg-white/[0.08] border border-white/25 text-[#e7eaee] hover:bg-[#22d3ee]/15 hover:border-[#22d3ee] hover:text-[#22d3ee] transition-colors";
+const btnPrimaryCls =
+  "mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded bg-[#22d3ee]/20 border border-[#22d3ee] text-[#22d3ee] hover:bg-[#22d3ee]/30 transition-colors";
+
 const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, onDelete, weeklyCounts = {}, weeklyTargets = {}, remainingDays = 7 }) => {
   const [newReadLearnText, setNewReadLearnText] = useState('');
   const [newReadLearnLink, setNewReadLearnLink] = useState('');
@@ -32,13 +43,13 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
 
   const handleAddReadLearn = () => {
     if (!newReadLearnText.trim()) return;
-    
+
     const currentItems = routine.ReadLearn || [];
     const newItem = {
       text: newReadLearnText.trim(),
-      link: newReadLearnLink.trim() || null
+      link: newReadLearnLink.trim() || null,
     };
-    
+
     onInputChange({ target: { value: [...currentItems, newItem] } }, 'ReadLearn');
     setNewReadLearnText('');
     setNewReadLearnLink('');
@@ -50,245 +61,211 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
     onInputChange({ target: { value: updatedItems } }, 'ReadLearn');
   };
 
+  // status pill shown in view mode: green = done, amber = passed, gray = not done
+  const StatusPill = ({ value }) => {
+    const done = value === true;
+    const passed = value === 'Pass';
+    return (
+      <span
+        className="mc-mono text-[11px] px-2 py-0.5 rounded"
+        style={{
+          color: done ? '#35c48b' : passed ? '#f5a623' : '#e7eaee',
+          background: done ? 'rgba(53,196,139,0.12)' : passed ? 'rgba(245,166,35,0.12)' : 'rgba(255,255,255,0.08)',
+          border: done || passed ? 'none' : '1px solid rgba(255,255,255,0.16)',
+        }}
+      >
+        {done ? 'Yes' : passed ? 'Pass' : 'No'}
+      </span>
+    );
+  };
+
+  const PassButton = ({ routineKey, active }) =>
+    canPass(routineKey) &&
+    !active && (
+      <button
+        onClick={() => handlePass(routineKey)}
+        className="mc-mono text-[10px] px-2 py-0.5 rounded bg-white/[0.06] border border-white/20 text-[#e7eaee] hover:bg-[#f5a623]/15 hover:text-[#f5a623] hover:border-[#f5a623]"
+      >
+        Pass
+      </button>
+    );
+
+  const BoolRow = ({ label, target, routineKey }) => {
+    const value = routine[routineKey];
+    return (
+      <div className="mc-row" style={{ gridTemplateColumns: '3px 1fr auto' }}>
+        <span
+          className="rail"
+          style={{ background: value === true ? '#35c48b' : value === 'Pass' ? '#f5a623' : '#3a3f47' }}
+        />
+        <span className="rname">
+          {label} <span className="text-[#8a919c]">({target}x/wk)</span>
+        </span>
+        <div className="flex items-center gap-2">
+          {isEditing ? (
+            <>
+              <input
+                type="checkbox"
+                checked={value === true}
+                onChange={(e) => onInputChange(e, routineKey)}
+                disabled={value === 'Pass'}
+                className={`mc-check appearance-none ${value === true ? 'on' : ''}`}
+              />
+              <PassButton routineKey={routineKey} active={value === true} />
+            </>
+          ) : (
+            <StatusPill value={value} />
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="routine-card bg-slate-100 p-4 rounded-lg shadow-lg relative my-4 w-full border border-black drop-shadow-md">
+    <div className="mc-panel relative w-full p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
       {/* Delete Button */}
       <button
         onClick={handleDelete}
-        className={`absolute top-4 right-5 rounded-lg hover:scale-95 ${isEditing ? 'text-cyan-700 bg-slate-800 border-white hover:text-fuchsia-400' : 'text-cyan-700 bg-black border border-cyan-200 hover:text-fuchsia-400'}`}
+        className="absolute top-3 right-3 text-[#5b626d] hover:text-[#f0426a] transition-colors"
+        aria-label="delete routine entry"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
       <div className="flex flex-col">
         {/* Date */}
-        <div className="flex items-center md:ml-1 mb-3 py-1 md:px-1 rounded">
-          <div className="w-auto">
-            {isEditing ? (
-              <input
-                type="text"
-                value={routine.Date}
-                onChange={(e) => onInputChange(e, 'Date')}
-                className="input input-bordered bg-neutral-100 text-cyan-700 w-full"
-              />
-            ) : (
-              <p className="inline-block bg-gradient-to-br from-black via-slate-800 to-neutral-800 text-cyan-500 font-semibold p-1 px-3 rounded-xl text-sm">{routine.Date}</p>
-            )}
-          </div>
+        <div className="mb-3">
+          {isEditing ? (
+            <input
+              type="text"
+              value={routine.Date}
+              onChange={(e) => onInputChange(e, 'Date')}
+              className={inputCls + ' max-w-[160px]'}
+            />
+          ) : (
+            <span className="mc-chip">{routine.Date}</span>
+          )}
         </div>
-        
+
         {/* Section Header */}
-        <p className='pl-1 mb-4 mt-4 mx-4 md:mb-2 border-b border-cyan-200 font-bold text-xl bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700'>Daily Routines</p>
-        
-        <div className='flex flex-col md:grid md:grid-cols-2 mb-2 overflow-hidden rounded-lg text-xs'>
-          {/* Left Column - Boolean Activities */}
-          <div className='md:mr-5 md:ml-6 mb-4 md:mb-0'>
-            <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
+        <div className="mc-label mb-2">Daily Routines</div>
 
-              {/* Mobility - 5x/week */}
-              <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Mobility (5x/wk):</label>
-                </div>
-                <div className="w-auto flex items-center gap-2">
-                  {isEditing ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        checked={routine.Mobility === true}
-                        onChange={(e) => onInputChange(e, 'Mobility')}
-                        className="checkbox checkbox-primary"
-                        disabled={routine.Mobility === 'Pass'}
-                      />
-                      {canPass('Mobility') && routine.Mobility !== true && (
-                        <button
-                          onClick={() => handlePass('Mobility')}
-                          className={`px-2 py-0.5 text-xs rounded ${routine.Mobility === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
-                        >
-                          {routine.Mobility === 'Pass' ? 'Passed' : 'Pass'}
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine.Mobility === true ? 'text-cyan-500' : routine.Mobility === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Mobility === true ? 'Yes' : routine.Mobility === 'Pass' ? 'Pass' : 'No'}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Language - 5x/week */}
-              <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Language (5x/wk):</label>
-                </div>
-                <div className="w-auto flex items-center gap-2">
-                  {isEditing ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        checked={routine.Language === true}
-                        onChange={(e) => onInputChange(e, 'Language')}
-                        className="checkbox checkbox-primary"
-                        disabled={routine.Language === 'Pass'}
-                      />
-                      {canPass('Language') && routine.Language !== true && (
-                        <button
-                          onClick={() => handlePass('Language')}
-                          className={`px-2 py-0.5 text-xs rounded ${routine.Language === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
-                        >
-                          {routine.Language === 'Pass' ? 'Passed' : 'Pass'}
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine.Language === true ? 'text-cyan-500' : routine.Language === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Language === true ? 'Yes' : routine.Language === 'Pass' ? 'Pass' : 'No'}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Piano - 5x/week */}
-              <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Piano (5x/wk):</label>
-                </div>
-                <div className="w-auto flex items-center gap-2">
-                  {isEditing ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        checked={routine.Piano === true}
-                        onChange={(e) => onInputChange(e, 'Piano')}
-                        className="checkbox checkbox-primary"
-                        disabled={routine.Piano === 'Pass'}
-                      />
-                      {canPass('Piano') && routine.Piano !== true && (
-                        <button
-                          onClick={() => handlePass('Piano')}
-                          className={`px-2 py-0.5 text-xs rounded ${routine.Piano === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
-                        >
-                          {routine.Piano === 'Pass' ? 'Passed' : 'Pass'}
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine.Piano === true ? 'text-cyan-500' : routine.Piano === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Piano === true ? 'Yes' : routine.Piano === 'Pass' ? 'Pass' : 'No'}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-            </div>
+        <div className="grid md:grid-cols-2 gap-x-4">
+          <div>
+            <BoolRow label="Mobility" target={5} routineKey="Mobility" />
+            <BoolRow label="Language" target={5} routineKey="Language" />
+            <BoolRow label="Piano" target={5} routineKey="Piano" />
           </div>
 
-          {/* Right Column - Exercise Dropdown */}
-          <div className='md:mr-6 md:ml-5'> 
-            <div className='bg-neutral-100 rounded-lg px-1 md:px-0 h-full'>
-              
-              {/* Exercise - 2 Lift + 3 Cardio per week */}
-              <div className="flex items-center mb-2 p-1 rounded">
-                <div className="w-auto mr-2">
-                  <label className="block text-sm text-black font-semibold">Exercise (2L/3C):</label>
-                </div>
-                <div className="w-auto flex items-center gap-2">
-                  {isEditing ? (
-                    <>
-                      <select
-                        value={routine.Exercise === 'Pass' ? '' : (routine.Exercise || '')}
-                        onChange={(e) => onInputChange({ target: { value: e.target.value || null } }, 'Exercise')}
-                        className="select select-bordered select-sm bg-neutral-100 text-cyan-700"
-                        disabled={routine.Exercise === 'Pass'}
-                      >
-                        <option value="">None</option>
-                        <option value="Lift">Lift</option>
-                        <option value="Cardio">Cardio</option>
-                      </select>
-                      {canPass('Exercise') && !routine.Exercise && (
-                        <button
-                          onClick={() => handlePass('Exercise')}
-                          className={`px-2 py-0.5 text-xs rounded ${routine.Exercise === 'Pass' ? 'bg-amber-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-amber-400'}`}
-                        >
-                          {routine.Exercise === 'Pass' ? 'Passed' : 'Pass'}
-                        </button>
-                      )}
-                    </>
-                  ) : (
-                    <p className={`px-3 inline-block ${routine.Exercise && routine.Exercise !== 'Pass' ? 'text-cyan-500' : routine.Exercise === 'Pass' ? 'text-amber-400' : 'text-fuchsia-500'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 p-1 rounded-lg`}>
-                      {routine.Exercise || 'None'}
-                    </p>
-                  )}
-                </div>
+          {/* Exercise - 2 Lift + 3 Cardio per week */}
+          <div>
+            <div className="mc-row" style={{ gridTemplateColumns: '3px 1fr auto' }}>
+              <span
+                className="rail"
+                style={{
+                  background:
+                    routine.Exercise === 'Lift' || routine.Exercise === 'Cardio'
+                      ? '#35c48b'
+                      : routine.Exercise === 'Pass'
+                        ? '#f5a623'
+                        : '#3a3f47',
+                }}
+              />
+              <span className="rname">
+                Exercise <span className="text-[#8a919c]">(2L/3C)</span>
+              </span>
+              <div className="flex items-center gap-2">
+                {isEditing ? (
+                  <>
+                    <select
+                      value={routine.Exercise === 'Pass' ? '' : routine.Exercise || ''}
+                      onChange={(e) => onInputChange({ target: { value: e.target.value || null } }, 'Exercise')}
+                      disabled={routine.Exercise === 'Pass'}
+                      className="bg-[#0c0d10] border border-white/20 rounded px-2 py-1 text-[12px] text-[#e7eaee] outline-none focus:border-[#22d3ee] focus:ring-1 focus:ring-[#22d3ee]"
+                    >
+                      <option value="">None</option>
+                      <option value="Lift">Lift</option>
+                      <option value="Cardio">Cardio</option>
+                    </select>
+                    <PassButton routineKey="Exercise" active={!!routine.Exercise && routine.Exercise !== 'Pass'} />
+                  </>
+                ) : (
+                  <span
+                    className="mc-mono text-[11px] px-2 py-0.5 rounded"
+                    style={{
+                      color: routine.Exercise && routine.Exercise !== 'Pass' ? '#35c48b' : routine.Exercise === 'Pass' ? '#f5a623' : '#e7eaee',
+                      background:
+                        routine.Exercise && routine.Exercise !== 'Pass'
+                          ? 'rgba(53,196,139,0.12)'
+                          : routine.Exercise === 'Pass'
+                            ? 'rgba(245,166,35,0.12)'
+                            : 'rgba(255,255,255,0.08)',
+                      border: routine.Exercise ? 'none' : '1px solid rgba(255,255,255,0.16)',
+                    }}
+                  >
+                    {routine.Exercise || 'None'}
+                  </span>
+                )}
               </div>
-
             </div>
           </div>
         </div>
 
         {/* Read/Learn Section - 7x/week */}
-        <div className="flex flex-col justify-start mb-2 py-1 md:mx-6 pt-4 rounded text-sm border-t border-t-cyan-200">
-          <div className="w-full mb-2">
-            <label className="block font-bold text-black text-lg bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Read/Learn (7x/wk):</label>
-          </div>
-          
-          {/* List of Read/Learn items */}
-          <div className="w-full mb-2">
+        <div className="mt-4 pt-4 border-t border-white/[0.08]">
+          <div className="mc-label mb-2">Read/Learn (7x/wk)</div>
+
+          <div className="mb-2">
             {(routine.ReadLearn || []).length > 0 ? (
-              <ul className="list-disc list-inside space-y-1">
-                {(routine.ReadLearn || []).map((item, index) => (
-                  <li key={index} className="flex items-center justify-between bg-gradient-to-br from-black via-slate-800 to-neutral-800 px-3 py-1 rounded-lg">
-                    <span className="text-cyan-400">
-                      {item.link ? (
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="hover:text-fuchsia-400 underline">
-                          {item.text}
-                        </a>
-                      ) : (
-                        item.text
-                      )}
-                    </span>
-                    {isEditing && (
-                      <button
-                        onClick={() => handleRemoveReadLearn(index)}
-                        className="text-red-400 hover:text-red-600 ml-2"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+              (routine.ReadLearn || []).map((item, index) => (
+                <div key={index} className="mc-row" style={{ gridTemplateColumns: '3px 1fr auto' }}>
+                  <span className="rail" style={{ background: '#35c48b' }} />
+                  <span className="rname truncate">
+                    {item.link ? (
+                      <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[#22d3ee] hover:underline">
+                        {item.text}
+                      </a>
+                    ) : (
+                      item.text
                     )}
-                  </li>
-                ))}
-              </ul>
+                  </span>
+                  {isEditing && (
+                    <button
+                      onClick={() => handleRemoveReadLearn(index)}
+                      className="text-[#5b626d] hover:text-[#f0426a]"
+                      aria-label="remove item"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              ))
             ) : (
-              <p className="text-neutral-500 italic text-xs">No items yet</p>
+              <p className="mc-mono text-[11px] text-[#8a919c] italic py-2">No items yet</p>
             )}
           </div>
 
-          {/* Add new Read/Learn item (only in edit mode) */}
           {isEditing && (
-            <div className="flex flex-col gap-2 mt-2 bg-neutral-200 p-2 rounded-lg">
+            <div className="flex flex-col gap-2 mt-2">
               <input
                 type="text"
                 value={newReadLearnText}
                 onChange={(e) => setNewReadLearnText(e.target.value)}
                 placeholder="What did you read/learn?"
-                className="input input-bordered input-sm bg-neutral-100 text-cyan-700 w-full"
+                className={inputCls}
               />
               <input
                 type="url"
                 value={newReadLearnLink}
                 onChange={(e) => setNewReadLearnLink(e.target.value)}
                 placeholder="Link (optional)"
-                className="input input-bordered input-sm bg-neutral-100 text-cyan-700 w-full"
+                className={inputCls}
               />
-              <button
-                onClick={handleAddReadLearn}
-                className="btn btn-sm bg-cyan-700 text-white hover:bg-cyan-600"
-              >
+              <button onClick={handleAddReadLearn} className={btnCls}>
                 Add Item
               </button>
             </div>
@@ -296,41 +273,31 @@ const RoutineCard = ({ routine, isEditing, onInputChange, onEditToggle, onSave, 
         </div>
 
         {/* Journal Section - 7x/week */}
-        <div className="flex flex-col justify-start mb-2 py-1 md:mx-6 pt-4 rounded text-sm border-t border-t-cyan-200">
-          <div className="w-full">
-            <label className="block font-bold text-black text-lg bg-clip-text text-transparent bg-gradient-to-br from-cyan-500 via-neutral-400 to-cyan-700">Journal (7x/wk):</label>
-          </div>
-          <div className="w-full">
-            {isEditing ? (
-              <textarea
-                value={routine.Journal || ''}
-                onChange={(e) => onInputChange(e, 'Journal')}
-                className="textarea textarea-bordered bg-neutral-100 text-cyan-700 w-full h-24"
-                placeholder="Write your daily reflection..."
-              />
-            ) : (
-              <p className={`inline-block py-3 ${routine.Journal ? 'text-cyan-600' : 'text-neutral-500 italic'} bg-gradient-to-br from-black via-slate-800 to-neutral-800 px-3 rounded-lg w-full min-h-10 mt-2`}>
-                {routine.Journal || 'No journal entry'}
-              </p>
-            )}
-          </div>
+        <div className="mt-4 pt-4 border-t border-white/[0.08]">
+          <div className="mc-label mb-2">Journal (7x/wk)</div>
+          {isEditing ? (
+            <textarea
+              value={routine.Journal || ''}
+              onChange={(e) => onInputChange(e, 'Journal')}
+              className={inputCls + ' h-24 resize-none'}
+              placeholder="Write your daily reflection..."
+            />
+          ) : (
+            <p className={`text-[13px] whitespace-pre-wrap ${routine.Journal ? 'text-[#e7eaee]' : 'text-[#8a919c] italic'}`}>
+              {routine.Journal || 'No journal entry'}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Edit/Save Button */}
-      <div className='flex justify-center border-t border-cyan-200 pt-6 mx-6'>
+      <div className="flex justify-center border-t border-white/[0.08] pt-4 mt-4">
         {isEditing ? (
-          <button
-            onClick={onSave}
-            className="btn px-6 border-black btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:border-black text-cyan-700 hover:text-fuchsia-400 w-auto hover:scale-95"
-          >
+          <button onClick={onSave} className={btnPrimaryCls}>
             Save
           </button>
         ) : (
-          <button
-            onClick={onEditToggle}
-            className="btn px-6 border-cyan-500 hover:border-cyan-700 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:scale-95 text-cyan-700 hover:text-fuchsia-400 w-auto"
-          >
+          <button onClick={onEditToggle} className={btnCls}>
             Edit
           </button>
         )}

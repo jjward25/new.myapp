@@ -147,18 +147,22 @@ const RoutinesBarChart = () => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    // Appended to <body>, outside the .mc-scoped tree -- var(--mc-*) wouldn't
+    // resolve here, so these mirror home.css's tokens as literal hex.
     const tooltip = d3
       .select("body")
       .append("div")
       .style("position", "absolute")
-      .style("background", "#333")
-      .style("color", "#fff")
-      .style("padding", "8px")
-      .style("border-radius", "5px")
+      .style("background", "#171a1f")
+      .style("border", "1px solid rgba(255,255,255,0.16)")
+      .style("color", "#e7eaee")
+      .style("padding", "8px 10px")
+      .style("border-radius", "8px")
       .style("opacity", 0)
       .style("max-width", "200px")
       .style("font-size", "11px")
-      .style("line-height", "1.3");
+      .style("line-height", "1.4")
+      .style("font-family", "Archivo, system-ui, sans-serif");
 
     const x = d3.scaleBand()
       .domain(data.map(d => d3.timeFormat("%Y-%m-%d")(d.Date)))
@@ -170,15 +174,17 @@ const RoutinesBarChart = () => {
       .nice()
       .range([height, 0]);
 
+    // mc design tokens (home.css), hardcoded -- these bars are raw D3/SVG
+    // attribute values, not CSS, so var(--mc-*) wouldn't resolve reliably.
     const color = d3.scaleOrdinal()
       .domain(fields)
       .range([
-        "#9d5b96", // Mobility - Emerald
-        "#5f0b00", // Exercise - Rose
-        "#05779f", // Language - Sky  
-        "#20005f", // Piano - Violet
-        "#5b9d7e", // ReadLearn - Amber
-        "#e3e3e2"  // Journal - Teal
+        "#22d3ee", // Mobility - signal cyan
+        "#35c48b", // Exercise - done green
+        "#f5a623", // Language - p1 amber
+        "#a78bfa", // Piano - violet
+        "#f0426a", // ReadLearn - p0 rose
+        "#38bdf8"  // Journal - sky
       ]);
 
     svg
@@ -196,7 +202,7 @@ const RoutinesBarChart = () => {
       .attr("y", (d) => y(d[1]))
       .attr("height", (d) => y(d[0]) - y(d[1]))
       .attr("width", x.bandwidth())
-      .attr("stroke", "white")
+      .attr("stroke", "#0c0d10")
       .attr("stroke-width", 0.5)
       .on("mouseover", function (event, d) {
         const field = d3.select(this.parentNode).datum().key;
@@ -236,16 +242,18 @@ const RoutinesBarChart = () => {
         return date.getDate() === 1 ? d3.timeFormat("%b")(date) : d3.timeFormat("%d")(date);
       }));
 
-    xAxis.selectAll(".tick text").attr("fill", "white");
-    xAxis.select(".domain").attr("stroke", "white");
+    xAxis.selectAll(".tick text").attr("fill", "#c4c9d1").attr("font-family", "ui-monospace, SF Mono, Menlo, monospace");
+    xAxis.select(".domain").attr("stroke", "rgba(255,255,255,0.16)");
+    xAxis.selectAll(".tick line").attr("stroke", "rgba(255,255,255,0.16)");
 
     const yAxis = svg
       .append("g")
       .attr("class", "y-axis")
       .call(d3.axisLeft(y).tickValues(d3.range(0, Math.ceil(y.domain()[1]) + 1)).tickFormat((d) => d));
 
-    yAxis.selectAll(".tick text").attr("fill", "white");
-    yAxis.select(".domain").attr("stroke", "white");
+    yAxis.selectAll(".tick text").attr("fill", "#c4c9d1").attr("font-family", "ui-monospace, SF Mono, Menlo, monospace");
+    yAxis.select(".domain").attr("stroke", "rgba(255,255,255,0.16)");
+    yAxis.selectAll(".tick line").attr("stroke", "rgba(255,255,255,0.16)");
 
     // Legend
     const legend = d3
@@ -278,16 +286,16 @@ const RoutinesBarChart = () => {
         const item = d3.select(this);
         item.append("rect")
           .attr("x", 0)
-          .attr("width", 12)
-          .attr("height", 12)
-          .attr("fill", color(d))
-          .attr("stroke", "white")
-          .attr("stroke-width", 1);
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("rx", 2)
+          .attr("fill", color(d));
         item.append("text")
-          .attr("x", 20)
-          .attr("y", 10)
+          .attr("x", 16)
+          .attr("y", 9)
           .style("font-size", "9px")
-          .style("fill", "white")
+          .style("font-family", "ui-monospace, SF Mono, Menlo, monospace")
+          .style("fill", "#c4c9d1")
           .text(d);
       });
 
@@ -295,78 +303,54 @@ const RoutinesBarChart = () => {
     return () => {
       d3.selectAll("div").filter(function() {
         return d3.select(this).style("position") === "absolute" && 
-               d3.select(this).style("background-color") === "rgb(51, 51, 51)";
+               d3.select(this).style("background-color") === "rgb(23, 26, 31)";
       }).remove();
     };
   }, [stackedData, data]);
 
   const getProgressColor = (current, target) => {
-    // If 0, show gray (same as labels)
-    if (current === 0) return 'text-slate-400';
-    
+    // mc semantic tokens: done green / p1 amber / ink-faint gray
+    if (current === 0) return "text-[#c4c9d1]";
+
     // Calculate days remaining in the week (Mon-Sun)
     const now = new Date();
     const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const daysRemaining = dayOfWeek === 0 ? 0 : 7 - dayOfWeek; // Days left including today
-    
+
     // Check if still possible to hit target
     const remaining = target - current;
     if (remaining <= daysRemaining) {
-      return 'text-teal-400'; // On pace or ahead
+      return "text-[#35c48b]"; // On pace or ahead
     }
-    
-    return 'text-yellow-400'; // Behind pace but not 0
+
+    return "text-[#f5a623]"; // Behind pace but not 0
   };
 
+  const summaryRows = weeklyStats && [
+    ["Mobility", weeklyStats.mobility],
+    ["Lift", weeklyStats.lift],
+    ["Cardio", weeklyStats.cardio],
+    ["Language", weeklyStats.language],
+    ["Piano", weeklyStats.piano],
+    ["Read/Learn", weeklyStats.readLearn],
+    ["Journal", weeklyStats.journal],
+  ];
+
   return (
-    <div style={{ padding: "10px 10px", maxWidth: "100%" }}>
+    <div style={{ maxWidth: "100%" }}>
       {/* Weekly Summary */}
-      {weeklyStats && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-lg border border-slate-700">
-          <h3 className="text-sm font-bold text-cyan-400 mb-2">This Week&apos;s Progress</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Mobility:</span>
-              <span className={getProgressColor(weeklyStats.mobility.current, weeklyStats.mobility.target)}>
-                {weeklyStats.mobility.current}/{weeklyStats.mobility.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Lift:</span>
-              <span className={getProgressColor(weeklyStats.lift.current, weeklyStats.lift.target)}>
-                {weeklyStats.lift.current}/{weeklyStats.lift.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Cardio:</span>
-              <span className={getProgressColor(weeklyStats.cardio.current, weeklyStats.cardio.target)}>
-                {weeklyStats.cardio.current}/{weeklyStats.cardio.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Language:</span>
-              <span className={getProgressColor(weeklyStats.language.current, weeklyStats.language.target)}>
-                {weeklyStats.language.current}/{weeklyStats.language.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Piano:</span>
-              <span className={getProgressColor(weeklyStats.piano.current, weeklyStats.piano.target)}>
-                {weeklyStats.piano.current}/{weeklyStats.piano.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Read/Learn:</span>
-              <span className={getProgressColor(weeklyStats.readLearn.current, weeklyStats.readLearn.target)}>
-                {weeklyStats.readLearn.current}/{weeklyStats.readLearn.target}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Journal:</span>
-              <span className={getProgressColor(weeklyStats.journal.current, weeklyStats.journal.target)}>
-                {weeklyStats.journal.current}/{weeklyStats.journal.target}
-              </span>
-            </div>
+      {summaryRows && (
+        <div className="mb-4 mc-panel px-3 py-2.5">
+          <div className="mc-label mb-2">This Week&apos;s Progress</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 mc-mono text-[11px]">
+            {summaryRows.map(([label, stat]) => (
+              <div key={label} className="flex justify-between">
+                <span className="text-[#c4c9d1]">{label}:</span>
+                <span className={getProgressColor(stat.current, stat.target)}>
+                  {stat.current}/{stat.target}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       )}

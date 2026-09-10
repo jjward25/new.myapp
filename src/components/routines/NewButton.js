@@ -57,9 +57,9 @@ const AddRoutineButton = () => {
     <button
       onClick={handleAddRoutine}
       disabled={isLoading}
-      className={`btn px-6 border-cyan-700 hover:border-cyan-500 btn-secondary bg-gradient-to-br from-black via-slate-800 to-neutral-800 hover:bg-black text-cyan-700 hover:text-fuchsia-400 w-full max-w-[1000px] ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`w-full mc-mono text-[11px] uppercase tracking-widest px-3 py-2 rounded bg-white/[0.08] border border-white/25 text-[#e7eaee] hover:bg-[#22d3ee]/15 hover:border-[#22d3ee] hover:text-[#22d3ee] transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
-      {isLoading ? 'Creating...' : 'New Day'}
+      {isLoading ? 'Creating...' : '+ New Day'}
     </button>
   );
 };
