@@ -60,14 +60,18 @@ function relDue(due: string | null, today: string): { text: string; cls: string 
 const Lane: React.FC<{
   title: string;
   count: number;
+  accent: string;
   onAdd?: () => void;
   addHref?: string;
   children: React.ReactNode;
-}> = ({ title, count, onAdd, addHref, children }) => (
-  <div className="mc-panel flex flex-col min-h-[220px] max-h-[440px]">
+}> = ({ title, count, accent, onAdd, addHref, children }) => (
+  <div
+    className="mc-panel mc-kpi-card flex flex-col min-h-[220px] max-h-[440px]"
+    style={{ "--kpi-accent": accent } as React.CSSProperties}
+  >
     <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/[0.08]">
-      <span className="mc-label">{title}</span>
-      <span className="mc-mono text-[11px] text-[#5b626d]">{count}</span>
+      <span className="mc-lane-label">{title}</span>
+      <span className="mc-mono text-[12px] font-bold text-[#e7eaee]">{count}</span>
       {addHref && (
         <a href={addHref} className="ml-auto mc-mono text-[#5b626d] hover:text-[#22d3ee] text-sm leading-none">
           +
@@ -251,7 +255,7 @@ export default function OpsBoard() {
   return (
     <div className="mc grid gap-2.5 md:grid-cols-3 w-full mc-stagger">
       {/* MILESTONES */}
-      <Lane title="Milestones" count={milestones.length} addHref="/projects">
+      <Lane title="Milestones" count={milestones.length} accent="#22d3ee" addHref="/projects">
         {!loaded && <Skeleton />}
         {Object.entries(msByProject).map(([proj, items]) => (
           <div key={proj} className="py-1">
@@ -280,7 +284,7 @@ export default function OpsBoard() {
       </Lane>
 
       {/* TASKS */}
-      <Lane title="ToDos" count={dueTasks.length} onAdd={() => setQuickTask("")}>
+      <Lane title="ToDos" count={dueTasks.length} accent="#22d3ee" onAdd={() => setQuickTask("")}>
         {!loaded && <Skeleton />}
         {quickTask !== null && (
           <input
@@ -324,7 +328,7 @@ export default function OpsBoard() {
       </Lane>
 
       {/* LISTS */}
-      <Lane title="Lists" count={lists.length}>
+      <Lane title="Lists" count={lists.length} accent="#22d3ee">
         {!loaded && <Skeleton />}
         {lists.map((l) => {
           const total = l.list.length;

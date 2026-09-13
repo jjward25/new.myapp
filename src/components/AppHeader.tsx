@@ -10,6 +10,7 @@ const NAV = [
   { href: "/workouts", label: "Workouts" },
   { href: "/morning-review", label: "Morning Review" },
   { href: "/language-tutor", label: "Language Tutor" },
+  { href: "/architecture", label: "Architecture" },
 ];
 
 const WEATHER_URL =

@@ -47,7 +47,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 // Miles goal for weekly completion
-const MILES_GOAL = 6;
+const MILES_GOAL = 3;
 
 // Lift categories for counting lift sessions
 const LIFT_CATEGORIES = ['Chest+Tris', 'Shoulders', 'Quads', 'Hamstrings', 'Hips', 'Back+Bis', 'Core'];
@@ -135,7 +135,7 @@ export default function WeeklyGoalsSummary() {
   const liftSessions = getLiftSessions();
   const cardioSessions = getCardioSessions();
   
-  // Check if weekly workout is complete (2 lift, 3 cardio, 6 miles)
+  // Check if weekly workout is complete (2 lift, 3 cardio, 3 miles)
   const isWeeklyComplete = liftSessions >= 2 && cardioSessions >= 3 && totalMiles >= MILES_GOAL;
   
   // Check for weekly completion and trigger achievement

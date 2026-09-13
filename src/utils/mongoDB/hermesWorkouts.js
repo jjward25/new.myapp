@@ -38,7 +38,6 @@ export async function listWorkoutEntries({ sinceDays, category, categoryPrefix, 
     category: d.category || '',
     notes: d.notes || '',
     rir: d.rir ?? null,
-    rom: d.rom ?? null,
   }));
 }
 
@@ -65,7 +64,6 @@ export async function logWorkoutEntry(entry) {
     category: entry.category || '',
     notes: entry.notes || '',
     rir: entry.rir ?? null,
-    rom: entry.rom ?? null,
     created_at: now,
     updated_at: now,
   };
@@ -77,7 +75,7 @@ export async function logWorkoutEntry(entry) {
 export async function updateWorkoutEntry(id, fields) {
   const c = await col('workouts');
   const set = { updated_at: new Date() };
-  for (const k of ['sets', 'cardio', 'notes', 'rir', 'rom', 'category', 'exercise']) {
+  for (const k of ['sets', 'cardio', 'notes', 'rir', 'category', 'exercise']) {
     if (fields[k] !== undefined) set[k] = fields[k];
   }
   if (set.exercise) set.exercise_lower = String(set.exercise).toLowerCase();
@@ -101,6 +99,8 @@ export async function getDefinitions() {
     freeform: !!d.freeform,
     description: d.description || '',
     exercises: d.exercises || [],
+    program: d.program ?? null,
+    weekday: d.weekday ?? null,
   }));
 }
 

@@ -29,6 +29,70 @@
 
 .mc-mono { font-family: var(--mc-mono); font-variant-numeric: tabular-nums; }
 
+/* --- runner icon (miles KPI) --- */
+.mc-runner {
+  overflow: visible;
+  filter: drop-shadow(0 0 0 transparent);
+  transition: filter 0.3s ease;
+}
+.mc-runner.flame {
+  animation: mc-flame-flicker 0.55s ease-in-out infinite;
+}
+@keyframes mc-flame-flicker {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 122, 24, 0.55)) saturate(1); }
+  50% { filter: drop-shadow(0 0 7px rgba(240, 66, 106, 0.75)) saturate(1.3); }
+}
+.mc-runner .mc-runner-bob {
+  animation: mc-run-bob calc(var(--run-dur, 0.7s) / 2) ease-in-out infinite;
+}
+.mc-runner .mc-runner-swing-a {
+  transform-origin: var(--pivot, center);
+  animation: mc-run-swing-a var(--run-dur, 0.7s) ease-in-out infinite;
+}
+.mc-runner .mc-runner-swing-b {
+  transform-origin: var(--pivot, center);
+  animation: mc-run-swing-b var(--run-dur, 0.7s) ease-in-out infinite;
+}
+@keyframes mc-run-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.4px); }
+}
+@keyframes mc-run-swing-a {
+  0%, 100% { transform: rotate(-24deg); }
+  50% { transform: rotate(24deg); }
+}
+@keyframes mc-run-swing-b {
+  0%, 100% { transform: rotate(24deg); }
+  50% { transform: rotate(-24deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-runner .mc-runner-bob,
+  .mc-runner .mc-runner-swing-a,
+  .mc-runner .mc-runner-swing-b,
+  .mc-runner.flame {
+    animation: none;
+  }
+}
+
+/* --- figure icons (tasks-done milestone portraits) --- */
+.mc-figure-stage {
+  perspective: 200px;
+  display: inline-block;
+}
+.mc-figure {
+  overflow: visible;
+  transform-origin: 50% 92%;
+  transform-style: preserve-3d;
+  animation: mc-nod-3d 2.6s ease-in-out infinite;
+}
+@keyframes mc-nod-3d {
+  0%, 100% { transform: rotateY(-16deg) rotateX(3deg); }
+  50% { transform: rotateY(16deg) rotateX(-3deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-figure { animation: none; }
+}
+
 /* --- motion --- */
 @media (prefers-reduced-motion: no-preference) {
   .mc-stagger > * {
@@ -80,6 +144,50 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mc-ink-dim);
+}
+
+/* --- kpi cards --- */
+.mc-kpi-card {
+  position: relative;
+  overflow: hidden;
+  border-top: 2px solid var(--kpi-accent, var(--mc-signal));
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--kpi-accent, var(--mc-signal)) 10%, var(--mc-surface)) 0%,
+      var(--mc-surface) 70%
+    );
+}
+.mc-kpi-card:hover {
+  border-color: var(--mc-line);
+  border-top-color: var(--kpi-accent, var(--mc-signal));
+}
+
+.mc-kpi-label {
+  font-family: var(--mc-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mc-ink);
+}
+
+.mc-lane-label {
+  font-family: var(--mc-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mc-ink);
+}
+
+.mc-kpi-value {
+  font-family: var(--mc-mono);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
 
 .mc-row {

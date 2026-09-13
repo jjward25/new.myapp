@@ -40,10 +40,22 @@ export async function GET() {
       .catch(() => []);
     if (activities.length) {
       source = 'activities';
+      let overrideMiles = null;
       activities.forEach((a) => {
+        // A manual override for this week replaces the computed sum rather
+        // than adding to it (see /api/kpis/miles) — skip it here and apply
+        // it after the loop.
+        if (a.manualOverride && inRange(a.date, thisWeek.start, thisWeek.end)) {
+          overrideMiles = Number(a.miles) || 0;
+          return;
+        }
         if (inRange(a.date, thisWeek.start, thisWeek.end)) milesThisWeek += Number(a.miles) || 0;
         else if (inRange(a.date, lastWeek.start, lastWeek.end)) milesLastWeek += Number(a.miles) || 0;
       });
+      if (overrideMiles !== null) {
+        milesThisWeek = overrideMiles;
+        source = 'manual';
+      }
     } else {
       workoutEntries.forEach((e) => {
         const miles = Number(e.cardio?.miles) || 0;
@@ -103,7 +115,7 @@ export async function GET() {
     });
 
     return NextResponse.json({
-      miles: { thisWeek: Math.round(milesThisWeek * 10) / 10, lastWeek: Math.round(milesLastWeek * 10) / 10, goal: 6, source },
+      miles: { thisWeek: Math.round(milesThisWeek * 10) / 10, lastWeek: Math.round(milesLastWeek * 10) / 10, goal: 3, source },
       tasksCompleted: { thisWeek: completedThisWeek, lastWeek: completedLastWeek },
       openTasksDue: openDue,
       events: { thisWeek: eventsThisWeek, lastWeek: eventsLastWeek, next: nextEvent },

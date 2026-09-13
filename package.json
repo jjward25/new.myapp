@@ -21,13 +21,15 @@
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/three": "^0.186.0",
     "daisyui": "^4.12.10",
     "eslint": "^8",
     "eslint-config-next": "^15.5.25",

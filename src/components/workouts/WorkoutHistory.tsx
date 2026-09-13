@@ -11,7 +11,6 @@ interface Entry {
   date: string;
   category: string;
   rir: string | null;
-  rom: string | null;
   notes: string;
 }
 
@@ -75,14 +74,6 @@ export default function WorkoutHistory({ sessions }: { sessions: Entry[] }) {
                       <span className="text-[13px] text-[#e7eaee]">
                         {e.exercise}
                         {e.rir && <span className="mc-mono text-[10px] text-[#8a919c] ml-2">RIR {e.rir}</span>}
-                        {e.rom && e.rom !== "—" && (
-                          <span
-                            className="mc-mono text-[10px] ml-1.5"
-                            style={{ color: e.rom === "held" ? "#35c48b" : "#f5a623" }}
-                          >
-                            ROM {e.rom}
-                          </span>
-                        )}
                       </span>
                       <span className="mc-mono text-[11px] text-[#c4c9d1] text-right">{setStr(e)}</span>
                     </div>
