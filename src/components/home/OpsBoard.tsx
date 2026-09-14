@@ -133,7 +133,7 @@ export default function OpsBoard() {
     // ToDos has its own tasks lane (the `b`/tasks fetch above) -- don't also
     // list its issues here as "milestones", or they show up twice.
     (Array.isArray(p) ? p : [])
-      .filter((proj: any) => proj["Project Name"] !== "ToDos")
+      .filter((proj: any) => proj["Project Name"] !== "ToDos" && !proj.Hidden)
       .forEach((proj: any) => {
         Object.entries(proj.Milestones || {}).forEach(([name, m]: [string, any]) => {
           if (!m["Complete Date"]) {

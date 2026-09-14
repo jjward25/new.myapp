@@ -165,20 +165,20 @@ const PRIORITY_FROM_LINEAR = { 1: '0', 2: '1', 3: '2', 4: '3', 0: '' };
 // project priority is the raw local 0-5 ranking clamped into Linear's 0-4 Int field
 const clampProjectPriority = (p) => Math.max(0, Math.min(4, Number(p) || 0));
 
-function encodeProjectDescription(type, notes) {
-  const meta = JSON.stringify({ type: type || '' });
+function encodeProjectDescription(type, notes, hidden) {
+  const meta = JSON.stringify({ type: type || '', hidden: !!hidden });
   return `<!--meta:${meta}-->\n\n${notes || ''}`;
 }
 function decodeProjectDescription(desc) {
   const d = desc || '';
   const m = d.match(/^<!--meta:(.*?)-->\n?\n?/);
-  let meta = { type: '' };
+  let meta = { type: '', hidden: false };
   let notes = d;
   if (m) {
     try { meta = { ...meta, ...JSON.parse(m[1]) }; } catch { /* malformed, ignore */ }
     notes = d.slice(m[0].length);
   }
-  return { type: meta.type, notes: notes.trim() };
+  return { type: meta.type, notes: notes.trim(), hidden: !!meta.hidden };
 }
 
 function encodeIssueDescription(fields) {
@@ -259,7 +259,7 @@ export async function getAllProjectsWithMilestones() {
     (issuesByProject[pid] ||= []).push(issue);
   }
   return projectsData.projects.nodes.map((p) => {
-    const { type, notes } = decodeProjectDescription(p.description);
+    const { type, notes, hidden } = decodeProjectDescription(p.description);
     const milestones = {};
     for (const issue of issuesByProject[p.id] || []) {
       milestones[issue.title] = issueToMilestone(issue);
@@ -270,6 +270,7 @@ export async function getAllProjectsWithMilestones() {
       'Project Priority': p.priority,
       Type: type,
       Notes: notes,
+      Hidden: hidden,
       'Project Complete Date': p.state === 'completed' ? dayOnly(p.completedAt) : null,
       sortOrder: p.sortOrder,
       Milestones: milestones,
@@ -304,7 +305,11 @@ export async function deleteProjectByName(projectName) {
   return result.projectDelete.success;
 }
 
-// updates: any of "Project Name"/"Project Priority"/"Type"/"Notes"/"Project Complete Date"
+// updates: any of "Project Name"/"Project Priority"/"Type"/"Notes"/"Hidden"/"Project Complete Date"
+// "Hidden" hides the project from the homepage's Milestones lane while it
+// stays fully visible/editable in the Work tab -- separate concept from
+// deleting it outright. Stored in the description's meta JSON, same
+// pattern as Type/Notes (Linear projects have no free field for this).
 export async function updateProjectByRef(projectNameOrId, updates) {
   const projects = await getAllProjectsWithMilestones();
   const project = projects.find((p) => p['Project Name'] === projectNameOrId || p._id === projectNameOrId);
@@ -321,8 +326,9 @@ export async function updateProjectByRef(projectNameOrId, updates) {
 
   const nextType = updates['Type'] !== undefined ? updates['Type'] : project['Type'];
   const nextNotes = updates['Notes'] !== undefined ? updates['Notes'] : project['Notes'];
-  if (updates['Type'] !== undefined || updates['Notes'] !== undefined) {
-    input.description = encodeProjectDescription(nextType, nextNotes);
+  const nextHidden = updates['Hidden'] !== undefined ? updates['Hidden'] : project['Hidden'];
+  if (updates['Type'] !== undefined || updates['Notes'] !== undefined || updates['Hidden'] !== undefined) {
+    input.description = encodeProjectDescription(nextType, nextNotes, nextHidden);
   }
 
   // Drag-reorder in the projects rail -- caller computes the midpoint float
