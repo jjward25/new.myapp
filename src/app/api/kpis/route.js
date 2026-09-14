@@ -5,6 +5,7 @@ import { APP_DB } from '@/utils/mongoDB/dbName';
 import { getWeekBoundsEST, getNowEST, formatDateEST } from '@/utils/dateUtils';
 import { getToDosTasks } from '@/utils/linear/client';
 import { listWorkoutEntries } from '@/utils/mongoDB/hermesWorkouts';
+import { gcalConfigured, listEvents } from '@/utils/gcal';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,7 +72,12 @@ export async function GET() {
     // "completed this week" with milestone-completion history.
     let completedThisWeek = 0;
     let completedLastWeek = 0;
-    const openDue = { thisWeek: 0, lastWeek: 0, p0: 0, p1: 0, p2plus: 0, overdue: 0 };
+    // dueTotal* counts EVERY task due in that week regardless of completion
+    // status -- a pure due-date volume comparison, separate from openDue
+    // below (which only counts still-open tasks).
+    let dueTotalThisWeek = 0;
+    let dueTotalLastWeek = 0;
+    const openDue = { thisWeek: 0, lastWeek: 0, p0: 0, p1: 0, p2plus: 0, overdue: 0, stale: 0 };
 
     const tally = (rows) => {
       rows.forEach((t) => {
@@ -79,8 +85,16 @@ export async function GET() {
         if (inRange(cd, thisWeek.start, thisWeek.end)) completedThisWeek++;
         else if (inRange(cd, lastWeek.start, lastWeek.end)) completedLastWeek++;
 
-        if (t['Complete Date'] || t.Missed === true) return;
         const due = t['Due Date'];
+        if (inRange(due, thisWeek.start, thisWeek.end)) dueTotalThisWeek++;
+        else if (inRange(due, lastWeek.start, lastWeek.end)) dueTotalLastWeek++;
+
+        // Note: deliberately NOT skipping on t.Missed here -- that flag (see
+        // issueToTask) is just "open + due date before today," which is
+        // exactly the overdue-but-still-open case openDue.overdue exists to
+        // catch below. Skipping on it silently dropped overdue tasks from
+        // "Open due this week" entirely.
+        if (t['Complete Date']) return;
         if (inRange(due, thisWeek.start, thisWeek.end)) {
           openDue.thisWeek++;
           const p = String(t.Priority || '').toUpperCase();
@@ -90,6 +104,10 @@ export async function GET() {
           if (due < todayStr) openDue.overdue++;
         } else if (inRange(due, lastWeek.start, lastWeek.end)) {
           openDue.lastWeek++;
+        } else if (due && due < thisWeek.start) {
+          // Open and due before this week even started -- older than the
+          // "late this week" bucket above.
+          openDue.stale++;
         }
       });
     };
@@ -101,24 +119,38 @@ export async function GET() {
       tally(backlog);
     }
 
-    // 4. Events scheduled this week + the next upcoming one
+    // 4. Events scheduled this week + the next 3 upcoming. Gcal is the real
+    // source of truth (and the only place with a time-of-day) when
+    // configured; the Mongo cache (date-only) is the fallback.
+    let eventList = calendar.map((e) => ({ title: e.title, date: e.date, time: '' }));
+    if (gcalConfigured()) {
+      try {
+        const timeMin = new Date(lastWeek.start).toISOString();
+        const timeMax = new Date(nowEST);
+        timeMax.setDate(timeMax.getDate() + 30);
+        const g = await listEvents(timeMin, timeMax.toISOString());
+        eventList = g.map((e) => ({ title: e.title, date: e.date, time: e.time || '' }));
+      } catch (e) {
+        console.error('kpi gcal', e);
+      }
+    }
+
     let eventsThisWeek = 0;
     let eventsLastWeek = 0;
-    let nextEvent = null;
-    calendar.forEach((e) => {
+    const upcoming = [];
+    eventList.forEach((e) => {
       const d = e.date;
       if (inRange(d, thisWeek.start, thisWeek.end)) eventsThisWeek++;
       else if (inRange(d, lastWeek.start, lastWeek.end)) eventsLastWeek++;
-      if (d && d >= todayStr && (!nextEvent || d < nextEvent.date)) {
-        nextEvent = { title: e.title, date: d };
-      }
+      if (d && d >= todayStr) upcoming.push(e);
     });
+    upcoming.sort((a, b) => (a.date + (a.time || '00:00')).localeCompare(b.date + (b.time || '00:00')));
 
     return NextResponse.json({
       miles: { thisWeek: Math.round(milesThisWeek * 10) / 10, lastWeek: Math.round(milesLastWeek * 10) / 10, goal: 3, source },
       tasksCompleted: { thisWeek: completedThisWeek, lastWeek: completedLastWeek },
-      openTasksDue: openDue,
-      events: { thisWeek: eventsThisWeek, lastWeek: eventsLastWeek, next: nextEvent },
+      openTasksDue: { ...openDue, dueTotalThisWeek, dueTotalLastWeek },
+      events: { thisWeek: eventsThisWeek, lastWeek: eventsLastWeek, upcoming: upcoming.slice(0, 3) },
     });
   } catch (error) {
     console.error('Error fetching KPIs:', error);

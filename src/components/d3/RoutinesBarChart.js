@@ -32,7 +32,7 @@ const RoutinesBarChart = () => {
   }, []);
 
   const calculateWeeklyStats = (data) => {
-    // Get start of current week (Monday) in EST
+    // Get start of current week (Sunday) in EST
     const weekStart = getWeekStartEST();
     
     // Filter to this week's entries (Date is stored as YYYY-MM-DD string)

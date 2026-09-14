@@ -39,37 +39,36 @@ export function getDayOfWeekEST() {
 }
 
 /**
- * Get week bounds (Monday to Sunday) in EST timezone
+ * Get week bounds (Sunday to Saturday) in EST timezone
  * Returns { start: 'YYYY-MM-DD', end: 'YYYY-MM-DD', startDate: Date, endDate: Date }
  */
 export function getWeekBoundsEST(date = new Date()) {
   // Convert to EST
   const estString = date.toLocaleString('en-US', { timeZone: 'America/New_York' });
   const estDate = new Date(estString);
-  
+
   const day = estDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-  const diff = day === 0 ? 6 : day - 1; // Monday = 0 offset
-  
-  // Calculate Monday (start of week)
-  const monday = new Date(estDate);
-  monday.setDate(estDate.getDate() - diff);
-  monday.setHours(0, 0, 0, 0);
-  
-  // Calculate Sunday (end of week)
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
-  
+
+  // Calculate Sunday (start of week)
+  const sunday = new Date(estDate);
+  sunday.setDate(estDate.getDate() - day);
+  sunday.setHours(0, 0, 0, 0);
+
+  // Calculate Saturday (end of week)
+  const saturday = new Date(sunday);
+  saturday.setDate(sunday.getDate() + 6);
+  saturday.setHours(23, 59, 59, 999);
+
   return {
-    start: formatDateEST(monday),
-    end: formatDateEST(sunday),
-    startDate: monday,
-    endDate: sunday
+    start: formatDateEST(sunday),
+    end: formatDateEST(saturday),
+    startDate: sunday,
+    endDate: saturday
   };
 }
 
 /**
- * Get week start (Monday) in EST as YYYY-MM-DD string
+ * Get week start (Sunday) in EST as YYYY-MM-DD string
  */
 export function getWeekStartEST(date = new Date()) {
   return getWeekBoundsEST(date).start;
@@ -77,11 +76,11 @@ export function getWeekStartEST(date = new Date()) {
 
 /**
  * Get remaining days in the week (including today) based on EST
- * Sunday = 1 day remaining, Saturday = 2, ..., Monday = 7
+ * Sunday = 7 days remaining, Saturday = 1
  */
 export function getRemainingDaysEST() {
   const day = getDayOfWeekEST();
-  return day === 0 ? 1 : 8 - day;
+  return 7 - day;
 }
 
 

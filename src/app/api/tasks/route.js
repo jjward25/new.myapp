@@ -8,7 +8,7 @@
 // Mongo Personal.Backlog fallback. Linear is the single source now, same as
 // /api/projects and /api/tasks/by-project.
 import { NextResponse } from 'next/server';
-import { getToDosTasks, createToDosTask, updateTaskById } from '@/utils/linear/client';
+import { getToDosTasks, createToDosTask, updateTaskById, deleteTaskById } from '@/utils/linear/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +39,17 @@ export async function PATCH(req) {
     return NextResponse.json({ ok: success });
   } catch (e) {
     console.error('tasks PATCH', e);
+    return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const { id } = await req.json();
+    const success = await deleteTaskById(id);
+    return NextResponse.json({ ok: success });
+  } catch (e) {
+    console.error('tasks DELETE', e);
     return NextResponse.json({ error: String(e.message || e) }, { status: 500 });
   }
 }

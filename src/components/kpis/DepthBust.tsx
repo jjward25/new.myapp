@@ -14,7 +14,7 @@ const ROT_X_DEG = 3;
 const NOD_MS = 2600; // matches the old CSS mc-nod-3d duration
 const SEG_X = 64;
 const SEG_Y = 80;
-const AVATAR_ASSET_VERSION = 6; // bump to cache-bust /avatars/*.png after regenerating
+const AVATAR_ASSET_VERSION = 7; // bump to cache-bust /avatars/*.png after regenerating
 
 // Recessed areas (eye sockets, under the chin) come back from the depth model
 // noticeably darker than the face plane, which read as unsettling hollow/black
@@ -28,10 +28,11 @@ const shapeDepth = (raw: number) => {
   return sign * Math.pow(mag, exp);
 };
 
-export const DepthBust: React.FC<{ name: string; size?: number; glow?: string }> = ({
+export const DepthBust: React.FC<{ name: string; size?: number; glow?: string; aspect?: number }> = ({
   name,
   size = 76,
   glow = "#f5d97a",
+  aspect = 1.24, // height / width — bust portraits default; full-body figures pass ~1.5
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = React.useState(false);
@@ -48,11 +49,21 @@ export const DepthBust: React.FC<{ name: string; size?: number; glow?: string }>
     let texture: THREE.Texture | null = null;
 
     const W = size;
-    const H = Math.round(size * 1.24);
+    const H = Math.round(size * aspect);
+
+    // Camera distance must be derived from the plane's own height, not a
+    // fixed constant — a fixed 2.4 only covers ~1.2 world units of vertical
+    // FOV at 28°, which is shorter than even the bust's planeH (1.24), let
+    // alone a full-body planeH (1.5). Any fixed distance crops the top/bottom
+    // of taller planes before the render ever reaches the canvas. A 20%
+    // margin leaves room for the nod rotation without clipping.
+    const FOV_DEG = 28;
+    const MARGIN = 1.2;
+    const camDist = (aspect / 2) * MARGIN / Math.tan(THREE.MathUtils.degToRad(FOV_DEG / 2));
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(28, W / H, 0.1, 10);
-    camera.position.set(0, 0, 2.4);
+    const camera = new THREE.PerspectiveCamera(FOV_DEG, W / H, 0.1, 10);
+    camera.position.set(0, 0, camDist);
     const group = new THREE.Group();
     scene.add(group);
 
@@ -60,7 +71,7 @@ export const DepthBust: React.FC<{ name: string; size?: number; glow?: string }>
       if (!alive) return;
 
       const planeW = 1;
-      const planeH = 1.24;
+      const planeH = aspect;
       geometry = new THREE.PlaneGeometry(planeW, planeH, SEG_X, SEG_Y);
 
       const gridW = SEG_X + 1;
@@ -174,7 +185,7 @@ export const DepthBust: React.FC<{ name: string; size?: number; glow?: string }>
       material?.dispose();
       texture?.dispose();
     };
-  }, [name, size]);
+  }, [name, size, aspect]);
 
   const glowFilter = `drop-shadow(0 0 7px ${glow}99) drop-shadow(0 4px 14px rgba(0,0,0,0.7))`;
 

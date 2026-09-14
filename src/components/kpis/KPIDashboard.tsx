@@ -6,8 +6,18 @@ import { DepthBust } from "./DepthBust";
 interface KPIData {
   miles: { thisWeek: number; lastWeek: number; goal: number; source: string };
   tasksCompleted: { thisWeek: number; lastWeek: number };
-  openTasksDue: { thisWeek: number; lastWeek: number; p0: number; p1: number; p2plus: number; overdue: number };
-  events: { thisWeek: number; lastWeek: number; next: { title: string; date: string } | null };
+  openTasksDue: {
+    thisWeek: number;
+    lastWeek: number;
+    p0: number;
+    p1: number;
+    p2plus: number;
+    overdue: number;
+    stale: number;
+    dueTotalThisWeek: number;
+    dueTotalLastWeek: number;
+  };
+  events: { thisWeek: number; lastWeek: number; upcoming: { title: string; date: string; time: string }[] };
 }
 
 export function refreshKPIs() {
@@ -39,6 +49,19 @@ function useCountUp(value: number, ms = 650) {
     return () => cancelAnimationFrame(raf);
   }, [value, ms]);
   return n;
+}
+
+// "Mon @ 2p" / "Mon @ 2:30p" / "Mon" (all-day, no time set).
+function formatEventTimeLabel(dateStr: string, timeStr: string): string {
+  const wd = new Date(`${dateStr}T00:00:00`).toLocaleDateString("en-US", { weekday: "short" });
+  if (!timeStr) return wd;
+  const [hStr, mStr] = timeStr.split(":");
+  let h = parseInt(hStr, 10);
+  const m = parseInt(mStr, 10) || 0;
+  const ampm = h >= 12 ? "p" : "a";
+  h = h % 12 || 12;
+  const time = m === 0 ? `${h}${ampm}` : `${h}:${String(m).padStart(2, "0")}${ampm}`;
+  return `${wd} @ ${time}`;
 }
 
 const WoW: React.FC<{ current: number; previous: number; unit?: string; invert?: boolean }> = ({
@@ -128,19 +151,38 @@ const figureForCount = (n: number): FigureVariant | null => {
   return null;
 };
 
-const Card: React.FC<{ label: string; accent: string; children: React.ReactNode }> = ({
+const Card: React.FC<{ label: string; accent: string; overflowVisible?: boolean; children: React.ReactNode }> = ({
   label,
   accent,
+  overflowVisible,
   children,
 }) => (
   <div
     className="mc-panel mc-kpi-card p-3.5 flex flex-col gap-2"
-    style={{ "--kpi-accent": accent } as React.CSSProperties}
+    style={{
+      "--kpi-accent": accent,
+      position: "relative",
+      ...(overflowVisible ? { overflow: "visible" } : {}),
+    } as React.CSSProperties}
   >
     <div className="mc-kpi-label">{label}</div>
     {children}
   </div>
 );
+
+// Open-Tasks avatar tiers -- "volume" is completed + open-due this week;
+// "open" is just the open-due count. Resets naturally each week since both
+// inputs are already weekly figures. The 8/15 boundaries: <8 low, 8-15
+// medium, >15 high (median-side inclusive since the original spec left the
+// exact value 8 unassigned).
+type OpenTaskAvatar = { name: string; aspect: number };
+const avatarForVolume = (completed: number, open: number): OpenTaskAvatar => {
+  const volume = completed + open;
+  const busy = open > 5;
+  if (volume < 8) return busy ? { name: "skinny-checklist", aspect: 1.5 } : { name: "skinny-hobo", aspect: 1.5 };
+  if (volume <= 15) return busy ? { name: "buff-curls", aspect: 1.5 } : { name: "buff-chicken", aspect: 1.33 };
+  return busy ? { name: "atlas", aspect: 1.5 } : { name: "hercules", aspect: 1.5 };
+};
 
 const KPIDashboard: React.FC = () => {
   const [data, setData] = useState<KPIData | null>(null);
@@ -211,7 +253,7 @@ const KPIDashboard: React.FC = () => {
   const miles = useCountUp(data?.miles.thisWeek ?? 0);
   const done = useCountUp(data?.tasksCompleted.thisWeek ?? 0);
   const openDue = useCountUp(data?.openTasksDue.thisWeek ?? 0);
-  const events = useCountUp(data?.events.thisWeek ?? 0);
+  const eventsCount = useCountUp(data?.events.thisWeek ?? 0);
 
   if (loading || !data) {
     return (
@@ -225,7 +267,6 @@ const KPIDashboard: React.FC = () => {
 
   const milesPct = Math.min((data.miles.thisWeek / data.miles.goal) * 100, 100);
   const od = data.openTasksDue;
-  const odTotal = Math.max(od.p0 + od.p1 + od.p2plus, 1);
 
   return (
     <div className="mc grid grid-cols-2 md:grid-cols-4 gap-2.5 w-full mc-stagger">
@@ -284,52 +325,87 @@ const KPIDashboard: React.FC = () => {
 
       {/* Tasks completed */}
       <Card label="Tasks done · wk" accent="#35c48b">
-        <div className="flex items-baseline gap-1.5">
-          <span className="mc-kpi-value text-4xl">{Math.round(done)}</span>
-          <span className="ml-auto">
+        <div className="flex items-start gap-1">
+          <span className="mc-kpi-value text-4xl leading-none">{Math.round(done)}</span>
+          <span className="mt-0.5">
             <WoW current={data.tasksCompleted.thisWeek} previous={data.tasksCompleted.lastWeek} />
           </span>
         </div>
-        <div className="flex items-center">
+        <div className="h-[34px] flex items-center pr-[92px]">
           <span className="mc-mono text-[10px] text-[#5b626d]">last wk {data.tasksCompleted.lastWeek}</span>
-          {figureForCount(data.tasksCompleted.thisWeek) && (
-            <span className="ml-auto">
-              <DepthBust name={figureForCount(data.tasksCompleted.thisWeek)!} size={64} />
-            </span>
-          )}
         </div>
+        {figureForCount(data.tasksCompleted.thisWeek) && (
+          <div style={{ position: "absolute", right: 8, bottom: 16 }}>
+            <DepthBust name={figureForCount(data.tasksCompleted.thisWeek)!} size={78} />
+          </div>
+        )}
       </Card>
 
       {/* Open due this week */}
       <Card label="Open · due this wk" accent={od.overdue > 0 ? "#f0426a" : "#f5a623"}>
-        <div className="flex items-baseline gap-1.5">
-          <span className="mc-kpi-value text-4xl">{Math.round(openDue)}</span>
-          {od.overdue > 0 && (
-            <span className="mc-mono text-[10px] text-[#f0426a]">{od.overdue} late</span>
-          )}
-          <span className="ml-auto">
-            <WoW current={od.thisWeek} previous={od.lastWeek} invert />
+        <div className="flex items-start gap-1">
+          <span className="mc-kpi-value text-4xl leading-none">{Math.round(openDue)}</span>
+          <span className="mt-0.5">
+            <WoW current={od.dueTotalThisWeek} previous={od.dueTotalLastWeek} />
           </span>
         </div>
-        <div className="flex h-1 rounded-full overflow-hidden bg-white/5">
-          {od.p0 > 0 && <div style={{ width: `${(od.p0 / odTotal) * 100}%`, background: "#f0426a" }} />}
-          {od.p1 > 0 && <div style={{ width: `${(od.p1 / odTotal) * 100}%`, background: "#f5a623" }} />}
-          {od.p2plus > 0 && <div style={{ width: `${(od.p2plus / odTotal) * 100}%`, background: "#35c48b" }} />}
+        <div className="h-[34px] flex items-center pr-[92px]">
+          {(() => {
+            const closed = data.tasksCompleted.thisWeek;
+            const late = od.overdue;
+            const notLate = Math.max(od.thisWeek - late, 0);
+            const stale = od.stale;
+            const total = Math.max(closed + od.thisWeek + stale, 1);
+            return (
+              <div className="flex-1 h-1 rounded-full overflow-hidden bg-white/5 flex">
+                {closed > 0 && (
+                  <div className="h-full" style={{ width: `${(closed / total) * 100}%`, background: "#35c48b" }} />
+                )}
+                {notLate > 0 && (
+                  <div className="h-full" style={{ width: `${(notLate / total) * 100}%`, background: "#22d3ee" }} />
+                )}
+                {late > 0 && (
+                  <div className="h-full" style={{ width: `${(late / total) * 100}%`, background: "#a78bfa" }} />
+                )}
+                {stale > 0 && (
+                  <div className="h-full" style={{ width: `${(stale / total) * 100}%`, background: "#f0426a" }} />
+                )}
+              </div>
+            );
+          })()}
         </div>
+        {(() => {
+          const avatar = avatarForVolume(data.tasksCompleted.thisWeek, od.thisWeek);
+          return (
+            <div style={{ position: "absolute", right: 8, bottom: 26 }}>
+              <DepthBust name={avatar.name} size={78} aspect={avatar.aspect} />
+            </div>
+          );
+        })()}
       </Card>
 
       {/* Events */}
       <Card label="Events · wk" accent="#a78bfa">
         <div className="flex items-baseline gap-1.5">
-          <span className="mc-kpi-value text-4xl">{Math.round(events)}</span>
-          <span className="ml-auto">
-            <WoW current={data.events.thisWeek} previous={data.events.lastWeek} />
-          </span>
+          <span className="mc-kpi-value text-4xl">{Math.round(eventsCount)}</span>
         </div>
-        <div className="mc-mono text-[10px] text-[#5b626d] truncate">
-          {data.events.next ? `next · ${data.events.next.title}` : "nothing upcoming"}
-        </div>
+        {data.events.upcoming.length > 0 ? (
+          <ul className="flex flex-col gap-0.5">
+            {data.events.upcoming.map((e, i) => (
+              <li key={i} className="text-[11.5px] text-[#c4c9d0] truncate">
+                <span className="text-[#5b626d]">• </span>
+                {e.title}{" "}
+                <span className="mc-mono text-[10px] text-[#8a919c]">
+                  ({formatEventTimeLabel(e.date, e.time)})
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="mc-mono text-[10px] text-[#5b626d]">nothing upcoming</div>
+        )}
       </Card>
+
     </div>
   );
 };

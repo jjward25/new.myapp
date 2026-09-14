@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { refreshKPIs } from "@/components/kpis/KPIDashboard";
 import { getWeekBoundsEST, getTodayEST } from "@/utils/dateUtils";
+import EditItemModal, { type EditItemFields } from "@/components/home/EditItemModal";
 
 /* ------------------------------------------------------------------ */
 /* data types                                                          */
@@ -16,12 +17,15 @@ interface Task {
   Type: string;
   Size: string;
   Missed?: boolean;
+  Notes?: string;
 }
 interface Milestone {
   name: string;
   project: string;
+  projectId: string;
   priority: number;
   due: string;
+  notes: string;
 }
 interface ListDoc {
   name: string;
@@ -134,8 +138,10 @@ export default function OpsBoard() {
             ms.push({
               name,
               project: proj["Project Name"],
+              projectId: proj._id,
               priority: Number(m["Milestone Priority"]) || 3,
               due: m["Due Date"] || "",
+              notes: m.Notes || "",
             });
           }
         });
@@ -196,6 +202,69 @@ export default function OpsBoard() {
       body: JSON.stringify(item),
     });
     setQuickTask(null);
+    load();
+    refreshKPIs();
+  };
+
+  // --- click-to-edit modals ---
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [editingMilestone, setEditingMilestone] = useState<Milestone | null>(null);
+
+  const saveTask = async (t: Task, fields: EditItemFields) => {
+    await fetch("/api/tasks", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: t._id,
+        updatedItem: {
+          "Task Name": fields.name,
+          Priority: fields.priority,
+          "Due Date": fields.dueDate || null,
+          Notes: fields.notes,
+          "Complete Date": fields.completed ? today : "",
+        },
+      }),
+    });
+    load();
+    refreshKPIs();
+  };
+
+  const deleteTask = async (t: Task) => {
+    await fetch("/api/tasks", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: t._id }),
+    });
+    load();
+    refreshKPIs();
+  };
+
+  const saveMilestone = async (m: Milestone, fields: EditItemFields) => {
+    await fetch("/api/projects", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        projectId: m.projectId,
+        milestoneName: m.name,
+        updates: {
+          title: fields.name,
+          "Milestone Priority": fields.priority.replace(/^P/, ""),
+          "Due Date": fields.dueDate || null,
+          Notes: fields.notes,
+          "Complete Date": fields.completed ? today : "",
+        },
+      }),
+    });
+    load();
+    refreshKPIs();
+  };
+
+  const deleteMilestone = async (m: Milestone) => {
+    await fetch("/api/projects", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ projectId: m.projectId, milestoneName: m.name }),
+    });
     load();
     refreshKPIs();
   };
@@ -273,7 +342,12 @@ export default function OpsBoard() {
                 return (
                   <div key={m.name} className={`mc-row${m.priority <= 2 ? ` p-${m.priority}` : ""}`}>
                     <span className="rail" />
-                    <span className="rname">{m.name}</span>
+                    <button
+                      className="rname text-left hover:text-[#22d3ee] bg-transparent border-0 p-0 font-[inherit] cursor-pointer"
+                      onClick={() => setEditingMilestone(m)}
+                    >
+                      {m.name}
+                    </button>
                     <span className={`rmeta ${rd.cls}`}>{m.due ? rd.text : `P${m.priority}`}</span>
                   </div>
                 );
@@ -315,7 +389,12 @@ export default function OpsBoard() {
                   onClick={() => completeTask(t._id)}
                   aria-label="complete task"
                 />
-                <span className="rname truncate">{t["Task Name"]}</span>
+                <button
+                  className="rname truncate text-left hover:text-[#22d3ee] bg-transparent border-0 p-0 font-[inherit] cursor-pointer min-w-0"
+                  onClick={() => setEditingTask(t)}
+                >
+                  {t["Task Name"]}
+                </button>
               </div>
               <div className="flex items-center gap-2">
                 {t.Size && <span className="mc-chip">{t.Size}</span>}
@@ -382,6 +461,38 @@ export default function OpsBoard() {
         })}
         {loaded && lists.length === 0 && <Empty>no lists</Empty>}
       </Lane>
+
+      {editingTask && (
+        <EditItemModal
+          title="Edit Task"
+          initial={{
+            name: editingTask["Task Name"],
+            priority: editingTask.Priority || "P3",
+            dueDate: editingTask["Due Date"] || "",
+            notes: editingTask.Notes || "",
+            completed: !!editingTask["Complete Date"],
+          }}
+          onSave={(fields) => saveTask(editingTask, fields)}
+          onDelete={() => deleteTask(editingTask)}
+          onClose={() => setEditingTask(null)}
+        />
+      )}
+
+      {editingMilestone && (
+        <EditItemModal
+          title="Edit Milestone"
+          initial={{
+            name: editingMilestone.name,
+            priority: `P${editingMilestone.priority}`,
+            dueDate: editingMilestone.due || "",
+            notes: editingMilestone.notes || "",
+            completed: false,
+          }}
+          onSave={(fields) => saveMilestone(editingMilestone, fields)}
+          onDelete={() => deleteMilestone(editingMilestone)}
+          onClose={() => setEditingMilestone(null)}
+        />
+      )}
     </div>
   );
 }

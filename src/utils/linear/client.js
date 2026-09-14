@@ -385,6 +385,7 @@ export async function updateMilestoneByName(projectId, milestoneName, updates) {
 
   const merged = { ...current, ...updates };
   const input = {};
+  if (updates.title !== undefined && updates.title !== milestoneName) input.title = updates.title;
   if (updates['Milestone Priority'] !== undefined) {
     input.priority = PRIORITY_TO_LINEAR[updates['Milestone Priority']] ?? 0;
   }
@@ -444,6 +445,7 @@ function issueToTask(issue) {
     Priority: TASK_PRIORITY_FROM_LINEAR[issue.priority] || 'P3',
     Type: 'Task',
     Size: '',
+    Notes: issue.description || '',
     // Linear has no "missed" flag -- approximate it as open + past due.
     Missed: !issue.completedAt && !!due && due < dayOnly(new Date().toISOString()),
     sortOrder: issue.sortOrder,
@@ -467,7 +469,7 @@ export async function getToDosTasks() {
   const projectId = await getToDosProjectId();
   const data = await linearRequest(
     `query($projectId: ID!) { issues(filter: { project: { id: { eq: $projectId } } }, first: 250) {
-      nodes { id title dueDate completedAt priority sortOrder } } }`,
+      nodes { id title dueDate completedAt priority sortOrder description } } }`,
     { projectId }
   );
   return data.issues.nodes.map(issueToTask).sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
@@ -503,9 +505,18 @@ export async function updateTaskById(issueId, fields) {
       ? stateByType(team, 'completed').id
       : stateByType(team, 'backlog').id;
   }
+  if (fields.Notes !== undefined) input.description = fields.Notes || '';
   const result = await linearRequest(
     `mutation($id: String!, $input: IssueUpdateInput!) { issueUpdate(id: $id, input: $input) { success } }`,
     { id: issueId, input }
   );
   return result.issueUpdate.success;
+}
+
+export async function deleteTaskById(issueId) {
+  const result = await linearRequest(
+    `mutation($id: String!) { issueDelete(id: $id) { success } }`,
+    { id: issueId }
+  );
+  return result.issueDelete.success;
 }
