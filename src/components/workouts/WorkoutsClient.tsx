@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ProgramView from "./ProgramView";
 import WorkoutProgressionChart from "./WorkoutProgressionChart";
 import WorkoutHistory from "./WorkoutHistory";
+import BenchmarksPanel from "./BenchmarksPanel";
 
 type TabId = "program" | "progress" | "history";
 
@@ -43,7 +44,12 @@ export default function WorkoutsClient({ sessions }: { sessions: any[] }) {
         </div>
 
         {tab === "program" && <ProgramView />}
-        {tab === "progress" && <WorkoutProgressionChart />}
+        {tab === "progress" && (
+          <div className="flex flex-col gap-3">
+            <WorkoutProgressionChart />
+            <BenchmarksPanel />
+          </div>
+        )}
         {tab === "history" && <WorkoutHistory sessions={sessions} />}
       </div>
     </div>

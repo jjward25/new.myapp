@@ -10,6 +10,58 @@ export async function getLists() {
   return lists;
 }
 
+// Renames a list. Names are the primary key here (no separate _id lookups
+// elsewhere reference a list by name), so this is a straightforward field
+// update, guarded against colliding with an existing list.
+export async function renameList(oldName, newName) {
+  const client = await clientPromise;
+  const db = client.db(APP_DB);
+  const collection = db.collection('Lists');
+
+  if (newName !== oldName) {
+    const existing = await collection.findOne({ name: newName });
+    if (existing) throw new Error('A list with that name already exists');
+  }
+
+  const result = await collection.updateOne({ name: oldName }, { $set: { name: newName } });
+  if (result.matchedCount === 0) {
+    throw new Error('List not found');
+  }
+  return result;
+}
+
+// kind: "progress" shows a completion bar in OpsBoard; anything falsy clears
+// it back to the default rolling-checklist display.
+export async function updateListKind(listName, kind) {
+  const client = await clientPromise;
+  const db = client.db(APP_DB);
+  const collection = db.collection('Lists');
+
+  const update = kind ? { $set: { kind } } : { $unset: { kind: '' } };
+  const result = await collection.updateOne({ name: listName }, update);
+  if (result.matchedCount === 0) {
+    throw new Error('List not found');
+  }
+  return result;
+}
+
+// Persists a full drag-to-reorder pass: orderedNames[i] gets sortOrder = i.
+// One bulkWrite rather than N separate round-trips.
+export async function reorderLists(orderedNames) {
+  const client = await clientPromise;
+  const db = client.db(APP_DB);
+  const collection = db.collection('Lists');
+
+  if (!Array.isArray(orderedNames) || orderedNames.length === 0) {
+    return { success: true, modifiedCount: 0 };
+  }
+  const ops = orderedNames.map((name, i) => ({
+    updateOne: { filter: { name }, update: { $set: { sortOrder: i } } },
+  }));
+  const result = await collection.bulkWrite(ops);
+  return result;
+}
+
 export async function updateListParent(listName, parentName) {
   const client = await clientPromise;
   const db = client.db(APP_DB);
@@ -143,10 +195,11 @@ export async function updateListItem(listName, itemName, updates) {
   const collection = db.collection('Lists');
   
   // Set individual fields on the matched element — never replace the whole
-  // element (that would drop `name` and any other fields).
+  // element (that would drop `name` and any other fields). The query below
+  // matches on the OLD itemName, so including a new `name` here safely
+  // renames that element via the positional $ operator.
   const setDoc = {};
   for (const [k, v] of Object.entries(updates || {})) {
-    if (k === 'name') continue; // renames go through a different path
     setDoc[`list.$.${k}`] = v;
   }
   if (Object.keys(setDoc).length === 0) return { matchedCount: 1, modifiedCount: 0 };

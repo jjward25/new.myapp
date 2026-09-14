@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import SimpleWorkoutModal from './SimpleWorkoutModal';
 import WeeklyGoalsSummary from './WeeklyGoalsSummary';
-import BenchmarksPanel from './BenchmarksPanel';
 import OneRepMaxChart from '../d3/OneRepMaxChart';
-import DailyWorkoutChart from '../d3/DailyWorkoutChart';
 
 export default function WorkoutSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,12 +20,6 @@ export default function WorkoutSection() {
 
       {/* Weekly Goals Summary */}
       <WeeklyGoalsSummary />
-
-      {/* Mobility Benchmarks */}
-      <BenchmarksPanel />
-
-      {/* Daily Workout Chart */}
-      <DailyWorkoutChart />
 
       {/* 1RM Progress Chart */}
       <OneRepMaxChart />

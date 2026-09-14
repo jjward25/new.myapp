@@ -6,7 +6,19 @@ import { getWeekStartEST } from '@/utils/dateUtils';
 const RoutinesBarChart = () => {
   const [data, setData] = useState([]);
   const [weeklyStats, setWeeklyStats] = useState(null);
+  const [resizeTick, setResizeTick] = useState(0);
   const svgRef = useRef(null);
+  const chartAreaRef = useRef(null);
+
+  // Redraw when the container's actual size changes, not just when data
+  // does -- otherwise a CSS height change never reaches the SVG and it
+  // overflows/underfills its box instead of resizing.
+  useEffect(() => {
+    if (!chartAreaRef.current) return;
+    const observer = new ResizeObserver(() => setResizeTick((t) => t + 1));
+    observer.observe(chartAreaRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,16 +146,21 @@ const RoutinesBarChart = () => {
 
     const fields = ["Mobility", "Exercise", "Language", "Piano", "ReadLearn", "Journal"];
     const containerWidth = svgRef.current.clientWidth;
-    const margin = { top: 10, right: 15, bottom: 120, left: 30 };
+    // legendReserve mirrors the fixed bottom margin the legend/x-axis labels
+    // need; the rest of the flex-1 area (driven by the shared grid row on
+    // the homepage) goes to actual plot height instead of a fixed 250px.
+    const legendReserve = 110;
+    const margin = { top: 10, right: 15, bottom: legendReserve, left: 30 };
     const width = containerWidth - margin.left - margin.right;
-    const height = 250 - margin.top - margin.bottom;
+    const totalHeight = Math.max(160, chartAreaRef.current?.clientHeight || 200);
+    const height = Math.max(40, totalHeight - margin.top - margin.bottom);
 
     d3.select("#barchart").selectAll("*").remove();
 
     const svg = d3
       .select("#barchart")
       .attr("width", containerWidth)
-      .attr("height", 200)
+      .attr("height", totalHeight)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -259,7 +276,7 @@ const RoutinesBarChart = () => {
     const legend = d3
       .select(svgRef.current)
       .append("g")
-      .attr("transform", `translate(${margin.left}, ${200 - margin.bottom + 80})`);
+      .attr("transform", `translate(${margin.left}, ${totalHeight - margin.bottom + 80})`);
 
     const legendItemWidth = 90;
     const legendItemHeight = 15;
@@ -306,7 +323,7 @@ const RoutinesBarChart = () => {
                d3.select(this).style("background-color") === "rgb(23, 26, 31)";
       }).remove();
     };
-  }, [stackedData, data]);
+  }, [stackedData, data, resizeTick]);
 
   const getProgressColor = (current, target) => {
     // mc semantic tokens: done green / p1 amber / ink-faint gray
@@ -337,12 +354,12 @@ const RoutinesBarChart = () => {
   ];
 
   return (
-    <div style={{ maxWidth: "100%" }}>
+    <div className="flex-1 flex flex-col min-h-0 w-full" style={{ maxWidth: "100%" }}>
       {/* Weekly Summary */}
       {summaryRows && (
-        <div className="mb-4 mc-panel px-3 py-2.5">
+        <div className="mb-4 mc-panel px-3 py-2.5 shrink-0">
           <div className="mc-label mb-2">This Week&apos;s Progress</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-1.5 mc-mono text-[11px]">
+          <div className="grid grid-cols-1 gap-y-1.5 mc-mono text-[11px]">
             {summaryRows.map(([label, stat]) => (
               <div key={label} className="flex justify-between">
                 <span className="text-[#c4c9d1]">{label}:</span>
@@ -355,8 +372,10 @@ const RoutinesBarChart = () => {
         </div>
       )}
 
-      {/* Daily Chart */}
-      <svg id="barchart" ref={svgRef} width="100%" height="100%" style={{ maxWidth: "100%" }}></svg>
+      {/* Daily Chart -- fills whatever's left of the flex column */}
+      <div ref={chartAreaRef} className="flex-1 min-h-0 w-full overflow-hidden">
+        <svg id="barchart" ref={svgRef} width="100%" height="100%" style={{ maxWidth: "100%" }}></svg>
+      </div>
     </div>
   );
 };

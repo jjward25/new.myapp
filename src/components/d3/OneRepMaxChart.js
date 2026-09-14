@@ -91,13 +91,13 @@ export default function OneRepMaxChart() {
     svg.append('g')
       .attr('transform', `translate(0,${height - margin.bottom})`)
       .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat('%b')))
-      .attr('color', '#94A3B8');
-    
+      .attr('color', '#5b626d');
+
     // Y axis
     svg.append('g')
       .attr('transform', `translate(${margin.left},0)`)
       .call(d3.axisLeft(yScale).ticks(5))
-      .attr('color', '#94A3B8');
+      .attr('color', '#5b626d');
     
     // Line generator
     const line = d3.line()
@@ -134,35 +134,35 @@ export default function OneRepMaxChart() {
   
   if (isLoading) {
     return (
-      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-        <p className="text-slate-400 text-sm text-center">Loading...</p>
+      <div className="mc-panel p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+        <p className="mc-mono text-[11px] text-[#8a919c] text-center">Loading…</p>
       </div>
     );
   }
-  
+
   if (!data.length) {
     return (
-      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-        <h3 className="text-sm font-semibold text-white mb-2">1RM Progress</h3>
-        <p className="text-slate-400 text-sm text-center">No 1RM data logged yet.</p>
+      <div className="mc-panel p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+        <span className="mc-label">1RM Progress</span>
+        <p className="mc-mono text-[11px] text-[#8a919c] text-center mt-2">No 1RM data logged yet.</p>
       </div>
     );
   }
-  
+
   return (
-    <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-      <h3 className="text-sm font-semibold text-white mb-2">1RM Progress</h3>
-      
+    <div className="mc-panel p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+      <span className="mc-label">1RM Progress</span>
+
       {/* Legend */}
-      <div className="flex flex-wrap gap-3 mb-3">
+      <div className="flex flex-wrap gap-3 mt-2 mb-3">
         {Object.entries(LIFT_COLORS).map(([lift, color]) => (
           <div key={lift} className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-xs text-slate-400">{lift}</span>
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
+            <span className="mc-mono text-[10px] text-[#8a919c]">{lift}</span>
           </div>
         ))}
       </div>
-      
+
       <div ref={containerRef} className="w-full">
         <svg ref={svgRef} className="w-full" />
       </div>

@@ -175,69 +175,70 @@ export default function WeeklyGoalsSummary() {
   
   if (isLoading) {
     return (
-      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-        <p className="text-slate-400 text-sm text-center">Loading...</p>
+      <div className="mc-panel p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+        <p className="mc-mono text-[11px] text-[#8a919c] text-center">Loading…</p>
       </div>
     );
   }
-  
+
   return (
-    <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+    <div className="mc-panel p-4" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-white">Weekly Workout Goals</h3>
-        <span className="text-xs text-slate-400">{daysRemaining} days left</span>
+        <span className="mc-label">Weekly Workout Goals</span>
+        <span className="mc-mono text-[10px] text-[#5b626d]">{daysRemaining} days left</span>
       </div>
-      
+
       {/* Weekly completion summary */}
       {isWeeklyComplete && (
-        <div className="bg-teal-900/50 border border-teal-600 rounded p-2 mb-3 text-center">
-          <span className="text-teal-400 text-xs font-semibold">Week Complete!</span>
+        <div className="rounded p-2 mb-3 text-center" style={{ background: 'rgba(53,196,139,0.1)', border: '1px solid #35c48b' }}>
+          <span className="mc-mono text-[10px] uppercase tracking-widest text-[#35c48b]">Week Complete!</span>
         </div>
       )}
-      
+
       {/* Miles progress */}
-      <div className="mb-3 p-2 rounded bg-slate-900 border border-slate-600">
+      <div className="mb-3 p-2 rounded bg-[#0c0d10] border border-white/10">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-xs text-slate-400">Miles This Week</span>
-          <span className={`text-sm font-bold ${totalMiles >= MILES_GOAL ? 'text-teal-400' : 'text-white'}`}>
+          <span className="mc-mono text-[10px] text-[#8a919c]">Miles This Week</span>
+          <span className={`mc-mono text-[13px] font-semibold ${totalMiles >= MILES_GOAL ? 'text-[#35c48b]' : 'text-[#e7eaee]'}`}>
             {totalMiles.toFixed(1)}/{MILES_GOAL}
           </span>
         </div>
-        <div className="w-full h-1 bg-slate-700 rounded-full overflow-hidden">
-          <div 
-            className="h-full rounded-full transition-all bg-rose-600"
+        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+          <div
+            className="h-full rounded-full transition-all bg-[#22d3ee]"
             style={{ width: `${Math.min((totalMiles / MILES_GOAL) * 100, 100)}%` }}
           />
         </div>
       </div>
-      
+
       <div className="grid grid-cols-4 gap-2">
         {Object.entries(WEEKLY_TARGETS).map(([category, target]) => {
           const current = counts[category] || 0;
           const isComplete = current >= target;
           const percentage = Math.min((current / target) * 100, 100);
-          
+
           return (
-            <div 
+            <div
               key={category}
               className="relative"
             >
-              <div className={`text-center p-2 rounded border ${
-                isComplete 
-                  ? 'bg-teal-900/50 border-teal-600' 
-                  : 'bg-slate-900 border-slate-600'
-              }`}>
-                <p className="text-[10px] text-slate-400 truncate mb-1">{category}</p>
-                <p className={`text-lg font-bold ${isComplete ? 'text-teal-400' : 'text-white'}`}>
+              <div
+                className="text-center p-2 rounded border"
+                style={isComplete
+                  ? { background: 'rgba(53,196,139,0.1)', borderColor: '#35c48b' }
+                  : { background: '#0c0d10', borderColor: 'rgba(255,255,255,0.1)' }}
+              >
+                <p className="mc-mono text-[9px] text-[#5b626d] truncate mb-1">{category}</p>
+                <p className={`text-[15px] font-semibold ${isComplete ? 'text-[#35c48b]' : 'text-[#e7eaee]'}`}>
                   {current}/{target}
                 </p>
                 {/* Progress bar */}
-                <div className="w-full h-1 bg-slate-700 rounded-full mt-1 overflow-hidden">
-                  <div 
+                <div className="w-full h-1 bg-white/10 rounded-full mt-1 overflow-hidden">
+                  <div
                     className="h-full rounded-full transition-all"
-                    style={{ 
+                    style={{
                       width: `${percentage}%`,
-                      backgroundColor: CATEGORY_COLORS[category] || '#64748b'
+                      backgroundColor: CATEGORY_COLORS[category] || '#5b626d'
                     }}
                   />
                 </div>

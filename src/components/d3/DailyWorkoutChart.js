@@ -21,7 +21,8 @@ export default function DailyWorkoutChart() {
   const containerRef = useRef(null);
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [resizeTick, setResizeTick] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,16 +35,26 @@ export default function DailyWorkoutChart() {
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
-  
+
+  // Redraw when the container's actual size changes, not just when data
+  // does -- otherwise a CSS height change never reaches the SVG and it
+  // overflows/underfills its box instead of resizing.
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(() => setResizeTick((t) => t + 1));
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!svgRef.current || !containerRef.current) return;
-    
+
     const container = containerRef.current;
     const width = container.clientWidth;
-    const height = 180;
+    const height = Math.max(120, container.clientHeight || 200); // fill the flex-1 area given by the shared grid row
     const margin = { top: 10, right: 10, bottom: 30, left: 30 };
     
     // Clear previous
@@ -130,42 +141,46 @@ export default function DailyWorkoutChart() {
       .call(d3.axisBottom(xScale)
         .tickFormat(formatDay)
         .tickSize(0))
-      .attr('color', '#94A3B8')
+      .attr('color', '#5b626d')
       .selectAll('text')
       .attr('font-size', '10px');
-    
+
     // Y axis
     svg.append('g')
       .attr('transform', `translate(${margin.left},0)`)
       .call(d3.axisLeft(yScale).ticks(3).tickFormat(d3.format('d')))
-      .attr('color', '#94A3B8');
+      .attr('color', '#5b626d');
     
-  }, [workouts]);
+  }, [workouts, resizeTick]);
   
   if (isLoading) {
     return (
-      <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-        <p className="text-slate-400 text-sm text-center">Loading...</p>
+      <div className="mc-panel p-4 h-full flex flex-col overflow-hidden" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+        <p className="mc-mono text-[11px] text-[#8a919c] text-center">Loading…</p>
       </div>
     );
   }
-  
+
   return (
-    <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-      <h3 className="text-sm font-semibold text-white mb-2">Daily Workouts (Last 14 Days)</h3>
-      
+    <div className="mc-panel p-4 h-full flex flex-col overflow-hidden" style={{ background: '#171a1f', borderColor: 'rgba(255,255,255,0.14)' }}>
+      <span className="mc-label shrink-0">Daily Workouts (Last 14 Days)</span>
+
       {/* Legend */}
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="flex flex-wrap gap-2 mt-2 mb-3 shrink-0">
         {Object.entries(CATEGORY_COLORS).map(([category, color]) => (
           <div key={category} className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: color }} />
-            <span className="text-[10px] text-slate-400">{category}</span>
+            <span className="mc-mono text-[9px] text-[#8a919c]">{category}</span>
           </div>
         ))}
       </div>
-      
-      <div ref={containerRef} className="w-full">
-        <svg ref={svgRef} className="w-full" />
+
+      {/* No CSS sizing on the svg itself -- width/height attrs are set
+          directly from the measured container in the draw effect, and must
+          be the sole source of the SVG's box (see TaskTrendChart.js for
+          why a competing CSS height silently misplaces the drawn content). */}
+      <div ref={containerRef} className="w-full flex-1 min-h-0 overflow-hidden">
+        <svg ref={svgRef} style={{ display: "block" }} />
       </div>
     </div>
   );

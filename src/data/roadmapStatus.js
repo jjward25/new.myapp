@@ -50,7 +50,7 @@ export const roadmapItems = [
 
   // ---- Housekeeping ----
   { area: "Housekeeping", status: "planned", title: "Codebase cleanup list", note: "compiled from an earlier full-repo review, never executed" },
-  { area: "Housekeeping", status: "planned", title: "GitHub Dependabot re-check", note: "worth a fresh count after the recent dependency changes" },
+  { area: "Housekeeping", status: "done", title: "GitHub Dependabot re-check", note: "4 alerts (2 high, 2 moderate), all one root cause -- postcss bundled inside next's own node_modules. Fixed by upgrading next 15.5.25 -> 16.3.5 (semver-major); npm audit now clean" },
   { area: "Housekeeping", status: "done", title: "Test-data cleanup, round 2", note: "ran clean, 0/0/0 -- those entries were already gone from an earlier pass" },
 ];
 

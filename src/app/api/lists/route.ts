@@ -1,4 +1,4 @@
-import { getLists, getListByName, createList, addItemsToList, deleteList, updateListParent } from "@/utils/mongoDB/listCRUD"
+import { getLists, getListByName, createList, addItemsToList, deleteList, updateListParent, renameList, updateListKind, reorderLists } from "@/utils/mongoDB/listCRUD"
 import { NextResponse } from "next/server"
 
 interface ListItem {
@@ -134,6 +134,33 @@ export async function PUT(request: Request) {
       }
       await updateListParent(listName, parent)
       return NextResponse.json({ success: true, message: "List parent updated successfully" })
+    }
+
+    if (action === "rename") {
+      const { newName } = body
+      if (!listName || !newName) {
+        return NextResponse.json({ error: "listName and newName are required" }, { status: 400 })
+      }
+      await renameList(listName, newName)
+      return NextResponse.json({ success: true })
+    }
+
+    if (action === "updateKind") {
+      const { kind } = body
+      if (!listName) {
+        return NextResponse.json({ error: "List name is required" }, { status: 400 })
+      }
+      await updateListKind(listName, kind || null)
+      return NextResponse.json({ success: true })
+    }
+
+    if (action === "reorder") {
+      const { order } = body
+      if (!Array.isArray(order)) {
+        return NextResponse.json({ error: "order array is required" }, { status: 400 })
+      }
+      await reorderLists(order)
+      return NextResponse.json({ success: true })
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 })

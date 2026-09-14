@@ -9,10 +9,25 @@ const PALETTE = ["#22d3ee", "#35c48b", "#f5a623", "#f0426a", "#a78bfa", "#38bdf8
 const TaskBarChart = () => {
   const [data, setData] = useState([])
   const [projectNames, setProjectNames] = useState([])
+  const [resizeTick, setResizeTick] = useState(0)
   const svgRef = useRef(null)
+  const containerRef = useRef(null)
   // date|project -> [task names] -- keyed lookup for the hover tooltip, kept
   // out of React state since it's only read inside the D3 effect.
   const detailRef = useRef({})
+
+  // The draw effect below only reruns on data changes -- it has no way to
+  // know the *container* itself resized (e.g. a CSS height tweak, a window
+  // resize, sidebar toggle). Without this, the SVG keeps whatever height it
+  // last computed and visually overflows/underfills its box. Real bug hit
+  // 2026-09-14: shrinking the homepage row's height didn't shrink the chart,
+  // it just overflowed into the section below.
+  useEffect(() => {
+    if (!containerRef.current) return
+    const observer = new ResizeObserver(() => setResizeTick((t) => t + 1))
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,8 +87,27 @@ const TaskBarChart = () => {
     if (!data.length || !svgRef.current || !projectNames.length) return
 
     const margin = { top: 20, right: 30, bottom: 40, left: 40 }
-    const width = svgRef.current.clientWidth - margin.left - margin.right
-    const height = 200 - margin.top - margin.bottom
+    // containerRef (a plain div), not svgRef -- an <svg> with no CSS width
+    // and no attr set yet reads its clientWidth as a browser-default ~300px,
+    // not the real available space. The wrapping div has no such quirk.
+    const width = (containerRef.current?.clientWidth || 300) - margin.left - margin.right
+
+    // Fill the actual available height (set by the flex-1 container, itself
+    // driven by the shared grid row height on the homepage) instead of a
+    // fixed pixel height -- reserve space for the legend based on how many
+    // rows it'll actually wrap to at this width, then give the rest to bars.
+    const legendItemWidth = 110
+    const legendItemHeight = 16
+    const activeNamesForLayout = projectNames.filter((n) => data.some((d) => d[n] > 0))
+    let legendRows = 1
+    let rowX = 0
+    activeNamesForLayout.forEach(() => {
+      if (rowX + legendItemWidth > width) { rowX = 0; legendRows++ }
+      rowX += legendItemWidth
+    })
+    const legendReserve = legendRows * legendItemHeight + 20
+    const containerHeight = containerRef.current?.clientHeight || 220
+    const height = Math.max(60, containerHeight - margin.top - margin.bottom - legendReserve)
 
     d3.select(svgRef.current).selectAll("*").remove()
 
@@ -181,8 +215,6 @@ const TaskBarChart = () => {
     yAxis.select(".domain").attr("stroke", "rgba(255,255,255,0.2)")
 
     // Legend -- wraps across rows since there can be up to ~10 projects.
-    const legendItemWidth = 110
-    const legendItemHeight = 16
     let legendX = 0
     let legendY = 0
     const legend = svg
@@ -203,18 +235,23 @@ const TaskBarChart = () => {
       legendX += legendItemWidth
     })
 
-    const svgHeight = height + margin.top + margin.bottom + legendY + 20
-    d3.select(svgRef.current).attr("height", svgHeight)
+    d3.select(svgRef.current).attr("height", containerHeight)
 
     // Clean up the body-appended tooltip when this effect reruns/unmounts.
     return () => {
       tooltip.remove()
     }
-  }, [data, projectNames])
+  }, [data, projectNames, resizeTick])
 
   return (
-    <div style={{ width: "100%", height: "100%", minHeight: "220px" }}>
-      <svg ref={svgRef} style={{ width: "100%", height: "100%" }}></svg>
+    <div ref={containerRef} className="flex-1 min-h-0 overflow-hidden" style={{ width: "100%" }}>
+      {/* No CSS height here on purpose -- the draw effect sets width/height
+          attrs directly from the measured container size, and those attrs
+          must be the SOLE source of the SVG's box. A competing CSS height
+          (100% etc.) can win the rendered box while the axis/bars are still
+          positioned using the JS-measured height, silently misplacing them
+          outside the visible box the moment the two disagree. */}
+      <svg ref={svgRef} style={{ display: "block" }}></svg>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import Routines from '../components/routines/Routines';
 import TaskTrendChart from '../components/d3/TaskTrendChart';
 import RoutinesBooleanBar from '../components/d3/RoutinesBarChart';
+import DailyWorkoutChart from '../components/d3/DailyWorkoutChart';
 import Calendar from '@/components/calendar/calendar';
 import AddEventButton from '@/components/calendar/AddEventButton';
 import WorkoutSection from '../components/workouts/WorkoutSection';
@@ -31,16 +32,19 @@ export default async function Home() {
         {/* Ask Hermes — above the charts */}
         <HermesChat title="Ask Hermes" placeholder="Ask Hermes anything…" />
 
-        {/* Charts (no data yet — revisit) */}
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="mc-panel p-4 w-full">
-            <div className="mc-label mb-2">Tasks completed · by day</div>
-            <TaskTrendChart />
-          </div>
-          <div className="mc-panel p-4 w-full md:max-w-[750px]">
-            <div className="mc-label mb-2">Daily routines</div>
+        {/* Charts: Daily routines / Tasks completed / Daily workouts — one row,
+            fixed shared height on desktop so all three charts actually fill
+            their panel instead of floating in a tall box with dead space. */}
+        <div className="grid grid-cols-1 md:grid-cols-[260px_1fr_1fr] md:grid-rows-[1fr] gap-3 md:h-[340px] overflow-hidden">
+          <div className="mc-panel p-4 w-full h-full flex flex-col overflow-hidden">
+            <div className="mc-label mb-2 shrink-0">Daily routines</div>
             <RoutinesBooleanBar />
           </div>
+          <div className="mc-panel p-4 w-full h-full flex flex-col overflow-hidden">
+            <div className="mc-label mb-2 shrink-0">Tasks completed · by day</div>
+            <TaskTrendChart />
+          </div>
+          <DailyWorkoutChart />
         </div>
 
         {/* Routines + Workout */}
