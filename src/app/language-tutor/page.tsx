@@ -60,7 +60,8 @@ export default function LanguageTutorPage() {
             title={`Practice ${language}`}
             placeholder="Say something in English..."
             systemPrompt={systemPrompt}
-            resetKey={language}
+            persistKey={`language-tutor:${language}`}
+            showProfileToggle={false}
             emptyState={`Write to me in English — I'll translate it into ${language} and reply in both.`}
           />
         </div>
