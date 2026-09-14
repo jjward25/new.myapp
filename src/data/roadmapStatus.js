@@ -8,6 +8,56 @@
 
 export const ROADMAP_UPDATED = "2026-09-14";
 
+// The user's own hand-ordered current-priorities outline -- distinct from
+// the flat status board below (that's a detailed done/in-progress/planned
+// inventory; this is "what actually matters next, in order"). Rendered at
+// the top of /architecture. Each entry is a label, an optional detail line,
+// and optional children -- children can nest arbitrarily (string or another
+// {label, children} node) to match the outline's real depth.
+export const currentPriorities = [
+  {
+    label: "Coder Agent",
+    detail:
+      "Should be able to update things like myapp's miles run target, and eventually spin up and work on wholly new projects -- may involve more updates to the chat UI.",
+    children: [
+      "Model evaluation re-run (including testing for the assistant and coder profiles)",
+      "Privilege-escalation check: confirm a cron job's enabled_toolsets can't be set to exceed what the creating platform itself is allowed -- blocks whether cronjob ever gets added to api_server",
+    ],
+  },
+  {
+    label: "Agent Skills",
+    children: [
+      "Finish News Roundup",
+      "Hermes Routines skill/tool",
+      "Events Finder",
+      "Financial Assistant",
+      "Mobile/Voice access",
+      "ComfyUI image pipeline",
+      "Knowledge Graph Cron",
+    ],
+  },
+  {
+    label: "Webapp",
+    children: [
+      "Long-running turn fixes",
+      {
+        label: "Workouts: make sure everything is properly mapped",
+        children: [
+          "Phase-aware weekly volume",
+          "Environment-aware exercise lists (gym, home, etc.)",
+          "Exercises in the program mapped to body parts for the Weekly Workout Goals",
+        ],
+      },
+      "Workout page: progress avatar",
+      "Architecture page",
+    ],
+  },
+  {
+    label: "Codebase Cleanup + one more security sweep",
+    children: ["Maybe add Signal alerts here", "Google OAuth stability check"],
+  },
+];
+
 export const roadmapItems = [
   // ---- Hermes core ----
   { area: "Hermes core", status: "done", title: "Model re-evaluation", note: "6 candidates tested across 2 rounds; gpt-oss-high-full:20b confirmed as root model" },

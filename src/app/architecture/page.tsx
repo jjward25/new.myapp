@@ -1,8 +1,33 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { roadmapItems, roadmapAreas, ROADMAP_UPDATED } from "@/data/roadmapStatus";
+import { roadmapItems, roadmapAreas, ROADMAP_UPDATED, currentPriorities } from "@/data/roadmapStatus";
 import { sides, GOVERNING_PRINCIPLE } from "@/data/architecture";
+
+type PriorityNode = string | { label: string; children?: PriorityNode[] };
+
+// Recursive renderer for currentPriorities' arbitrary-depth outline.
+function PriorityList({ nodes, depth = 0 }: { nodes: PriorityNode[]; depth?: number }) {
+  return (
+    <ul className={depth === 0 ? "flex flex-col gap-1" : "flex flex-col gap-1 mt-1 ml-4 border-l border-white/10 pl-3"}>
+      {nodes.map((node, i) => {
+        if (typeof node === "string") {
+          return (
+            <li key={i} className="text-[12px] text-[#c4c9d1] leading-snug">
+              {node}
+            </li>
+          );
+        }
+        return (
+          <li key={i}>
+            <span className="text-[13px] text-[#e7eaee]">{node.label}</span>
+            {node.children && <PriorityList nodes={node.children} depth={depth + 1} />}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 type Status = "done" | "in_progress" | "planned";
 const COLUMNS: { status: Status; label: string; color: string }[] = [
@@ -34,6 +59,30 @@ export default function ArchitecturePage() {
             How Hermes and the webapp fit together, and what&apos;s actually left to build.
           </p>
         </div>
+
+        {/* ---------------- Current priorities ---------------- */}
+        <section className="flex flex-col gap-3">
+          <span className="mc-label">Current Priorities</span>
+          <div className="grid md:grid-cols-2 gap-3">
+            {currentPriorities.map((group) => (
+              <div
+                key={group.label}
+                className="mc-panel p-4"
+                style={{ background: "#171a1f", borderColor: "rgba(255,255,255,0.14)" }}
+              >
+                <span className="text-[14px] font-semibold text-[#e7eaee]">{group.label}</span>
+                {group.detail && (
+                  <p className="mc-mono text-[11px] text-[#8a919c] mt-1 leading-snug">{group.detail}</p>
+                )}
+                {group.children && (
+                  <div className="mt-2">
+                    <PriorityList nodes={group.children} />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* ---------------- Roadmap board ---------------- */}
         <section className="flex flex-col gap-3">
