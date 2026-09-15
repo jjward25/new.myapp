@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { roadmapItems, roadmapAreas, ROADMAP_UPDATED, currentPriorities } from "@/data/roadmapStatus";
 import { sides, GOVERNING_PRINCIPLE } from "@/data/architecture";
+import AgentFlowDiagram from "@/components/AgentFlowDiagram";
 
 type PriorityNode = string | { label: string; children?: PriorityNode[] };
 
@@ -166,6 +167,17 @@ export default function ArchitecturePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ---------------- Agent flow ---------------- */}
+        <section className="flex flex-col gap-3">
+          <span className="mc-label">Agent Flow</span>
+          <p className="mc-mono text-[11px] text-[#8a919c]">
+            One prompt, end to end -- context aggregation, then the tool/skill loop, to response.
+          </p>
+          <div className="mc-panel p-4" style={{ background: "#171a1f", borderColor: "rgba(255,255,255,0.14)" }}>
+            <AgentFlowDiagram />
           </div>
         </section>
       </div>
