@@ -31,7 +31,7 @@ export default function LanguageTutorPage() {
   const systemPrompt = useMemo(() => buildTutorPrompt(language), [language]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full">
+    <main className="flex min-h-screen flex-col items-center p-4 md:px-24 md:pt-6 w-full h-full bg-[#0c0d10]">
       <h1 className="text-4xl font-semibold bg-clip-text text-transparent bg-cyan-700 mt-6 md:mt-0 mb-6 text-center">
         Language Tutor
       </h1>

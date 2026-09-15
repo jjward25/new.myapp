@@ -27,7 +27,14 @@ export const currentPriorities = [
   {
     label: "Agent Skills",
     children: [
-      "Finish News Roundup",
+      {
+        label: "Finish News Roundup",
+        children: [
+          "5 watchlist sources return 0 headlines 3 days straight (verified 2026-09-14 against real daily_roundups + news_seen_articles data, not assumed): CNN, Ground News, WSJ, The Economist, Jacobin -- CNN/Ground News confirmed zero articles ever recorded, not just \"nothing new since last check\". Needs a live fetch-logic fix per source in plugins/news/tools.py.",
+          "FIXED 2026-09-14: digest was dropping article URLs for RSS sources (NYT/Fox/Reuters/AP/The Hill) -- root cause was the digest-writing system prompt (plugins/news/tools.py) never telling the model to preserve URLs. First fix (asking the model to copy URLs verbatim) worked but the small local model corrupted some long URLs in transcription (e.g. duplicated date path segments) -- replaced with a marker-substitution approach: each item gets a short [[N]] placeholder instead of its real URL, the model only has to preserve the marker, and a deterministic regex swap restores the real URL afterward, so correctness never depends on model transcription. Live-verified against real stored digest content across all 4 distinct format shapes (NYT plain-bullet, Politico linked-bullet, ZeroHedge numbered-list, BBC markdown-table) -- zero corrupted/missing/leftover markers.",
+          "Reuters and AP still have no real per-article URLs -- different root cause than the above, not yet fixed: their watchlist entries are bare homepage URLs, not real RSS feeds, so they go through Firecrawl/general-page extraction rather than RSS parsing, and that path doesn't appear to preserve per-article URLs the same way.",
+        ],
+      },
       "Hermes Routines skill/tool",
       "Events Finder",
       "Financial Assistant",

@@ -21,7 +21,7 @@ export default function WorkoutsClient({ sessions }: { sessions: any[] }) {
     <div className="mc min-h-screen bg-[#0c0d10] text-[#e7eaee]">
       <div className="w-full max-w-[1100px] mx-auto px-3 md:px-6 py-6 flex flex-col gap-5">
         <div>
-          <h1 className="mc-mono text-lg tracking-[0.2em] text-[#e7eaee]">WORKOUTS</h1>
+          <h1 className="mc-mono text-lg tracking-[0.2em] text-[#e7eaee]">FITNESS</h1>
           <p className="mc-mono text-[11px] text-[#8a919c] mt-1">
             The program, your progression, every logged session. Logging lives on the home page.
           </p>

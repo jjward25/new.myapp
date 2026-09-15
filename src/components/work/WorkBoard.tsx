@@ -474,7 +474,7 @@ export default function WorkBoard() {
     <div className="mc w-full max-w-[1200px] mx-auto px-3 md:px-6 py-6 flex flex-col gap-5">
       {/* masthead */}
       <div>
-        <h1 className="mc-mono text-lg tracking-[0.2em] text-[#e7eaee]">WORK</h1>
+        <h1 className="mc-mono text-lg tracking-[0.2em] text-[#e7eaee]">PROJECT MANAGEMENT</h1>
         <div className="mc-mono text-[11px] text-[#8a919c] mt-1 flex flex-wrap gap-x-4 gap-y-1">
           <span>{stats.open} open</span>
           <span className={stats.overdue ? "text-[#f0426a]" : ""}>{stats.overdue} overdue</span>

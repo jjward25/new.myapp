@@ -43,7 +43,8 @@ const OPEN_ISSUES_QUERY = `
       nodes {
         identifier
         title
-        priorityLabel
+        priority
+        dueDate
         state { name }
         project { name }
       }
@@ -65,7 +66,12 @@ export async function getOpenTasksByProject() {
       id: issue.identifier,
       title: issue.title,
       state: issue.state?.name,
-      priority: issue.priorityLabel,
+      // Same "P0".."P3" convention as ToDos tasks elsewhere in this file
+      // (TASK_PRIORITY_TO_LINEAR below: Linear 1=Urgent..4=Low) -- was
+      // previously returning Linear's raw priorityLabel ("Urgent"/"High"/
+      // ...) instead, inconsistent with the rest of the app.
+      priority: TASK_PRIORITY_FROM_LINEAR[issue.priority] || "",
+      dueDate: issue.dueDate,
     });
   }
   return grouped;

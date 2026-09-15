@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 
 const NAV = [
   { href: "/", label: "Home" },
-  { href: "/work", label: "Work" },
-  { href: "/workouts", label: "Workouts" },
+  { href: "/work", label: "PM" },
+  { href: "/workouts", label: "Fitness" },
   { href: "/morning-review", label: "Morning Review" },
   { href: "/language-tutor", label: "Language Tutor" },
   { href: "/architecture", label: "Architecture" },
@@ -95,17 +95,23 @@ export default function AppHeader() {
         </Link>
 
         <div className="app-header__nav">
-          {NAV.map((item) => {
+          {NAV.map((item, i) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`app-header__link${active ? " is-active" : ""}`}
-              >
-                {item.label}
-              </Link>
+              <React.Fragment key={item.href}>
+                {i > 0 && (
+                  <span aria-hidden="true" className="mc-mono text-[11px] text-[#3a3f47] select-none inline-flex items-center">
+                    |
+                  </span>
+                )}
+                <Link
+                  href={item.href}
+                  className={`app-header__link${active ? " is-active" : ""}`}
+                >
+                  {item.label}
+                </Link>
+              </React.Fragment>
             );
           })}
         </div>

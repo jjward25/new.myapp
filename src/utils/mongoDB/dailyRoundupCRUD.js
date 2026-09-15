@@ -24,3 +24,16 @@ export async function getLatestDailyRoundup() {
     updatedAt: doc.updated_at,
   };
 }
+
+// Last N days' digests (most recent first), for the "has this source
+// returned nothing for N days straight" staleness check on /morning-review
+// -- reading the raw content of each so the same client-side parser can be
+// reused rather than duplicating per-site logic server-side.
+export async function getRecentDailyRoundups(n = 3) {
+  const client = await clientPromise;
+  const db = client.db(APP_DB);
+  const collection = db.collection('daily_roundups');
+
+  const docs = await collection.find({}).sort({ date: -1 }).limit(n).toArray();
+  return docs.map((doc) => ({ date: doc.date, content: doc.content }));
+}
