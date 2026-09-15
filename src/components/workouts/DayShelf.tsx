@@ -90,9 +90,8 @@ function ExerciseTrend({ exercise }: { exercise: string }) {
   );
 }
 
-// A synthetic def for freeform-only logging on a day with no prescribed
-// workout -- ExerciseLogRow needs a WorkoutDef for category/session_type,
-// even when there's nothing actually planned.
+// A synthetic def for the day-wide freeform "+ Add exercise" fallback --
+// logging something that isn't part of any named/started workout.
 const FREEFORM_DEF: WorkoutDef = {
   key: "freeform",
   label: "Freeform",
@@ -102,83 +101,57 @@ const FREEFORM_DEF: WorkoutDef = {
   exercises: [],
 };
 
-export default function DayShelf({
-  entries,
-  def,
-  defs,
+// One titled, independently-collapsible workout within the day (the
+// auto-suggested one for today's weekday, plus any started via "+ Start
+// Workout" -- e.g. a nightly stretch routine alongside the main lift day).
+// State (swaps/added rows/pickers) is lifted to DayShelf, keyed by workout
+// key, so the day-wide "extra logged" fallback can know what every section
+// has already claimed -- only collapse state is local, nothing outside
+// this component needs it.
+function WorkoutSection({
+  workoutDef,
+  byExerciseLower,
+  swaps,
+  added,
+  swappingKey,
+  addingOpen,
+  allExerciseNames,
   date,
+  phase,
+  environment,
   onLogged,
+  onOpenSwap,
+  onSwap,
+  onToggleAdding,
+  onAddExercise,
 }: {
-  entries: Entry[];
-  def?: WorkoutDef | null;
-  defs: WorkoutDef[];
+  workoutDef: WorkoutDef;
+  byExerciseLower: Record<string, Entry[]>;
+  swaps: Record<string, DefExercise>;
+  added: { id: number; ex: DefExercise }[];
+  swappingKey: string | null;
+  addingOpen: boolean;
+  allExerciseNames: string[];
   date: string;
+  phase: string;
+  environment: string;
   onLogged: () => void;
+  onOpenSwap: (origLower: string | null) => void;
+  onSwap: (origLower: string, name: string) => void;
+  onToggleAdding: () => void;
+  onAddExercise: (name: string) => void;
 }) {
-  const [phase, setPhase] = useState(() => readStored(PHASE_KEY));
-  const [environment, setEnvironment] = useState(() => readStored(ENV_KEY));
-  // Keyed by the ORIGINAL prescribed exercise's lowercased name so the row's
-  // React `key` never changes when swapped -- swapping must not remount
-  // ExerciseLogRow (that would silently discard an in-progress open/expanded
-  // input).
-  const [swaps, setSwaps] = useState<Record<string, DefExercise>>({});
-  const [added, setAdded] = useState<{ id: number; ex: DefExercise }[]>([]);
-  const [swappingKey, setSwappingKey] = useState<string | null>(null);
-  const [addingOpen, setAddingOpen] = useState(false);
-  const nextAddedId = useRef(0);
-
-  const updatePhase = (v: string) => { setPhase(v); writeStored(PHASE_KEY, v); };
-  const updateEnvironment = (v: string) => { setEnvironment(v); writeStored(ENV_KEY, v); };
-
-  // Case-insensitive so a logged "Bench Press" matches a prescribed "bench press".
-  const byExerciseLower = entries.reduce<Record<string, Entry[]>>((acc, e) => {
-    (acc[e.exercise.toLowerCase()] ||= []).push(e);
-    return acc;
-  }, {});
-
-  const prescribed = def?.exercises ?? [];
-
-  const effectiveDef = def ?? FREEFORM_DEF;
-
-  // Every exercise name across BOTH programs, deduped case-insensitively --
-  // already fetched by ProgramView, no new API call needed for the picker.
-  const allExerciseNames = useMemo(() => {
-    const seen = new Map<string, string>();
-    defs.forEach((d) => d.exercises.forEach((e) => {
-      const lower = e.name.toLowerCase();
-      if (!seen.has(lower)) seen.set(lower, e.name);
-    }));
-    return Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
-  }, [defs]);
-
-  // Names already accounted for by a prescribed (possibly swapped) slot or a
-  // freeform-added row -- excluded from the "extra logged" fallback so a
-  // swapped/added exercise's log entries don't also render a second time.
-  const claimedNamesLower = new Set([
-    ...prescribed.map((ex) => (swaps[ex.name.toLowerCase()]?.name || ex.name).toLowerCase()),
-    ...added.map((a) => a.ex.name.toLowerCase()),
-  ]);
-  const extraExerciseNames = Object.keys(byExerciseLower).filter((n) => !claimedNamesLower.has(n));
-
-  const hasAnything = prescribed.length > 0 || added.length > 0 || extraExerciseNames.length > 0;
+  const [collapsed, setCollapsed] = useState(false);
+  const prescribed = workoutDef.exercises;
 
   return (
-    <div className="pt-3 mt-3 border-t border-white/[0.08]">
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <select value={phase} onChange={(e) => updatePhase(e.target.value)} className={inputCls}>
-          <option value="">Phase —</option>
-          {PHASES.map((p) => <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>)}
-        </select>
-        <select value={environment} onChange={(e) => updateEnvironment(e.target.value)} className={inputCls}>
-          <option value="">Environment —</option>
-          {ENVIRONMENTS.map((env) => <option key={env} value={env}>{env}</option>)}
-        </select>
-      </div>
-
-      {!hasAnything ? (
-        <p className="mc-mono text-[11px] text-[#8a919c] italic">Nothing prescribed or logged this day.</p>
-      ) : (
-        <div className="flex flex-col gap-2">
+    <div className="border border-white/[0.08] rounded-lg p-2.5">
+      <button onClick={() => setCollapsed((v) => !v)} className="w-full flex items-center justify-between gap-2">
+        <span className="mc-label">{workoutDef.label}</span>
+        <span className="mc-mono text-[10px] text-[#8a919c]">{collapsed ? "Show" : "Hide"}</span>
+      </button>
+      {!collapsed && (
+        <div className="flex flex-col gap-2 mt-2">
           {prescribed.map((original) => {
             const origLower = original.name.toLowerCase();
             const swap = swaps[origLower];
@@ -189,10 +162,10 @@ export default function DayShelf({
               <div key={origLower} className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <div className="flex-1 min-w-0">
-                    <ExerciseLogRow ex={ex} def={effectiveDef} date={date} phase={phase} environment={environment} onLogged={onLogged} />
+                    <ExerciseLogRow ex={ex} def={workoutDef} date={date} phase={phase} environment={environment} onLogged={onLogged} />
                   </div>
                   <button
-                    onClick={() => setSwappingKey(swappingKey === origLower ? null : origLower)}
+                    onClick={() => onOpenSwap(swappingKey === origLower ? null : origLower)}
                     className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] hover:text-[#22d3ee] shrink-0"
                   >
                     Swap
@@ -202,11 +175,8 @@ export default function DayShelf({
                   <ExercisePicker
                     options={allExerciseNames}
                     placeholder="Swap to…"
-                    onCancel={() => setSwappingKey(null)}
-                    onPick={(name) => {
-                      setSwaps((p) => ({ ...p, [origLower]: { ...original, name } }));
-                      setSwappingKey(null);
-                    }}
+                    onCancel={() => onOpenSwap(null)}
+                    onPick={(name) => onSwap(origLower, name)}
                   />
                 )}
                 <p className="text-[12px] pl-1" style={{ color: logged ? "#c4c9d1" : "#8a919c" }}>
@@ -224,7 +194,168 @@ export default function DayShelf({
             const logged = rows.length > 0;
             return (
               <div key={id} className="flex flex-col gap-1">
-                <ExerciseLogRow ex={ex} def={effectiveDef} date={date} phase={phase} environment={environment} onLogged={onLogged} />
+                <ExerciseLogRow ex={ex} def={workoutDef} date={date} phase={phase} environment={environment} onLogged={onLogged} />
+                <p className="text-[12px] pl-1" style={{ color: logged ? "#c4c9d1" : "#8a919c" }}>
+                  {logged ? loggedSummary(rows) : "not logged yet"}
+                </p>
+                <div className="pl-1">
+                  <ExerciseTrend exercise={ex.name} />
+                </div>
+              </div>
+            );
+          })}
+
+          {prescribed.length === 0 && added.length === 0 && (
+            <p className="mc-mono text-[11px] text-[#8a919c] italic">No prescribed exercises.</p>
+          )}
+
+          <div className="mt-1">
+            {!addingOpen ? (
+              <button onClick={onToggleAdding} className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] hover:text-[#22d3ee]">
+                + Add exercise
+              </button>
+            ) : (
+              <ExercisePicker options={allExerciseNames} placeholder="Add exercise…" onCancel={onToggleAdding} onPick={onAddExercise} />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function DayShelf({
+  entries,
+  def,
+  defs,
+  date,
+  onLogged,
+}: {
+  entries: Entry[];
+  def?: WorkoutDef | null;
+  defs: WorkoutDef[];
+  date: string;
+  onLogged: () => void;
+}) {
+  const [phase, setPhase] = useState(() => readStored(PHASE_KEY));
+  const [environment, setEnvironment] = useState(() => readStored(ENV_KEY));
+
+  // Workouts active on this day: the auto-suggested one for today's weekday
+  // (if any) plus any started explicitly via "+ Start Workout" -- e.g. a
+  // nightly stretch routine alongside the main lift day. Ephemeral per day
+  // view (DayShelf remounts on date change via `key={selectedDate}` in
+  // ProgramView), same as the swap/added-exercise state below.
+  const [addedWorkoutKeys, setAddedWorkoutKeys] = useState<string[]>([]);
+  const [startingWorkout, setStartingWorkout] = useState(false);
+
+  // Per-workout state, keyed by workout `key` -- multiple workouts can be
+  // active at once, each with its own swaps/added rows/open pickers.
+  const [swapsByWorkout, setSwapsByWorkout] = useState<Record<string, Record<string, DefExercise>>>({});
+  const [addedExByWorkout, setAddedExByWorkout] = useState<Record<string, { id: number; ex: DefExercise }[]>>({});
+  const [swappingFor, setSwappingFor] = useState<{ workoutKey: string; origLower: string } | null>(null);
+  const [addingExFor, setAddingExFor] = useState<string | null>(null);
+  const nextAddedId = useRef(0);
+
+  // Day-wide freeform logging, outside any named/started workout.
+  const [dayAdded, setDayAdded] = useState<{ id: number; ex: DefExercise }[]>([]);
+  const [dayAddingOpen, setDayAddingOpen] = useState(false);
+
+  const updatePhase = (v: string) => { setPhase(v); writeStored(PHASE_KEY, v); };
+  const updateEnvironment = (v: string) => { setEnvironment(v); writeStored(ENV_KEY, v); };
+
+  // Case-insensitive so a logged "Bench Press" matches a prescribed "bench press".
+  const byExerciseLower = entries.reduce<Record<string, Entry[]>>((acc, e) => {
+    (acc[e.exercise.toLowerCase()] ||= []).push(e);
+    return acc;
+  }, {});
+
+  const activeDefs = useMemo(() => {
+    const base = def ? [def] : [];
+    const extra = addedWorkoutKeys.map((k) => defs.find((d) => d.key === k)).filter((d): d is WorkoutDef => !!d);
+    return [...base, ...extra];
+  }, [def, addedWorkoutKeys, defs]);
+
+  const activeKeysLower = new Set(activeDefs.map((d) => d.key));
+  const startableDefs = defs.filter((d) => !activeKeysLower.has(d.key));
+
+  // Every exercise name across BOTH programs, deduped case-insensitively --
+  // already fetched by ProgramView, no new API call needed for the picker.
+  const allExerciseNames = useMemo(() => {
+    const seen = new Map<string, string>();
+    defs.forEach((d) => d.exercises.forEach((e) => {
+      const lower = e.name.toLowerCase();
+      if (!seen.has(lower)) seen.set(lower, e.name);
+    }));
+    return Array.from(seen.values()).sort((a, b) => a.localeCompare(b));
+  }, [defs]);
+
+  // Names already accounted for by some active workout's prescribed
+  // (possibly swapped) slot, that workout's added rows, or a day-wide added
+  // row -- excluded from the "extra logged" fallback so those entries don't
+  // also render a second time.
+  const claimedNamesLower = new Set<string>();
+  activeDefs.forEach((wd) => {
+    const swaps = swapsByWorkout[wd.key] || {};
+    wd.exercises.forEach((ex) => claimedNamesLower.add((swaps[ex.name.toLowerCase()]?.name || ex.name).toLowerCase()));
+    (addedExByWorkout[wd.key] || []).forEach((a) => claimedNamesLower.add(a.ex.name.toLowerCase()));
+  });
+  dayAdded.forEach((a) => claimedNamesLower.add(a.ex.name.toLowerCase()));
+  const extraExerciseNames = Object.keys(byExerciseLower).filter((n) => !claimedNamesLower.has(n));
+
+  const hasAnything = activeDefs.length > 0 || dayAdded.length > 0 || extraExerciseNames.length > 0;
+
+  return (
+    <div className="pt-3 mt-3 border-t border-white/[0.08]">
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <select value={phase} onChange={(e) => updatePhase(e.target.value)} className={inputCls}>
+          <option value="">Phase —</option>
+          {PHASES.map((p) => <option key={p} value={p}>{p.charAt(0) + p.slice(1).toLowerCase()}</option>)}
+        </select>
+        <select value={environment} onChange={(e) => updateEnvironment(e.target.value)} className={inputCls}>
+          <option value="">Environment —</option>
+          {ENVIRONMENTS.map((env) => <option key={env} value={env}>{env}</option>)}
+        </select>
+      </div>
+
+      {!hasAnything ? (
+        <p className="mc-mono text-[11px] text-[#8a919c] italic mb-2">Nothing prescribed or logged this day.</p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {activeDefs.map((wd) => (
+            <WorkoutSection
+              key={wd.key}
+              workoutDef={wd}
+              byExerciseLower={byExerciseLower}
+              swaps={swapsByWorkout[wd.key] || {}}
+              added={addedExByWorkout[wd.key] || []}
+              swappingKey={swappingFor?.workoutKey === wd.key ? swappingFor.origLower : null}
+              addingOpen={addingExFor === wd.key}
+              allExerciseNames={allExerciseNames}
+              date={date}
+              phase={phase}
+              environment={environment}
+              onLogged={onLogged}
+              onOpenSwap={(origLower) => setSwappingFor(origLower ? { workoutKey: wd.key, origLower } : null)}
+              onSwap={(origLower, name) => {
+                const original = wd.exercises.find((e) => e.name.toLowerCase() === origLower);
+                if (!original) return;
+                setSwapsByWorkout((p) => ({ ...p, [wd.key]: { ...(p[wd.key] || {}), [origLower]: { ...original, name } } }));
+                setSwappingFor(null);
+              }}
+              onToggleAdding={() => setAddingExFor(addingExFor === wd.key ? null : wd.key)}
+              onAddExercise={(name) => {
+                setAddedExByWorkout((p) => ({ ...p, [wd.key]: [...(p[wd.key] || []), { id: nextAddedId.current++, ex: { name } }] }));
+                setAddingExFor(null);
+              }}
+            />
+          ))}
+
+          {dayAdded.map(({ id, ex }) => {
+            const rows = byExerciseLower[ex.name.toLowerCase()] || [];
+            const logged = rows.length > 0;
+            return (
+              <div key={id} className="flex flex-col gap-1">
+                <ExerciseLogRow ex={ex} def={FREEFORM_DEF} date={date} phase={phase} environment={environment} onLogged={onLogged} />
                 <p className="text-[12px] pl-1" style={{ color: logged ? "#c4c9d1" : "#8a919c" }}>
                   {logged ? loggedSummary(rows) : "not logged yet"}
                 </p>
@@ -254,24 +385,46 @@ export default function DayShelf({
         </div>
       )}
 
-      <div className="mt-2">
-        {!addingOpen ? (
-          <button
-            onClick={() => setAddingOpen(true)}
-            className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] hover:text-[#22d3ee]"
-          >
+      <div className="mt-3 flex flex-wrap items-center gap-4">
+        {!dayAddingOpen ? (
+          <button onClick={() => setDayAddingOpen(true)} className="mc-mono text-[10px] uppercase tracking-widest text-[#8a919c] hover:text-[#22d3ee]">
             + Add exercise
           </button>
         ) : (
-          <ExercisePicker
-            options={allExerciseNames}
-            placeholder="Add exercise…"
-            onCancel={() => setAddingOpen(false)}
-            onPick={(name) => {
-              setAdded((p) => [...p, { id: nextAddedId.current++, ex: { name } }]);
-              setAddingOpen(false);
-            }}
-          />
+          <div className="w-full max-w-xs">
+            <ExercisePicker
+              options={allExerciseNames}
+              placeholder="Add exercise…"
+              onCancel={() => setDayAddingOpen(false)}
+              onPick={(name) => {
+                setDayAdded((p) => [...p, { id: nextAddedId.current++, ex: { name } }]);
+                setDayAddingOpen(false);
+              }}
+            />
+          </div>
+        )}
+
+        {!startingWorkout ? (
+          <button
+            onClick={() => setStartingWorkout(true)}
+            className="mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded bg-white/[0.08] border border-white/25 text-[#e7eaee] hover:bg-[#22d3ee]/15 hover:border-[#22d3ee] hover:text-[#22d3ee]"
+          >
+            + Start Workout
+          </button>
+        ) : (
+          <div className="w-full max-w-xs">
+            <ExercisePicker
+              options={startableDefs.map((d) => d.label)}
+              placeholder="Start workout…"
+              allowNew={false}
+              onCancel={() => setStartingWorkout(false)}
+              onPick={(label) => {
+                const chosen = startableDefs.find((d) => d.label === label);
+                if (chosen) setAddedWorkoutKeys((p) => [...p, chosen.key]);
+                setStartingWorkout(false);
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

@@ -13,15 +13,19 @@ export default function ExercisePicker({
   onPick,
   onCancel,
   placeholder,
+  allowNew = true,
 }: {
   options: string[];
   onPick: (name: string) => void;
   onCancel: () => void;
   placeholder?: string;
+  // false for pickers over a fixed, real list (e.g. "start a workout") where
+  // typing something new wouldn't correspond to anything real.
+  allowNew?: boolean;
 }) {
   const [selected, setSelected] = useState("");
   const [newName, setNewName] = useState("");
-  const isNew = selected === NEW_VALUE;
+  const isNew = allowNew && selected === NEW_VALUE;
 
   const confirm = () => {
     const name = (isNew ? newName : selected).trim();
@@ -37,7 +41,7 @@ export default function ExercisePicker({
           {options.map((name) => (
             <option key={name} value={name}>{name}</option>
           ))}
-          <option value={NEW_VALUE}>+ New exercise…</option>
+          {allowNew && <option value={NEW_VALUE}>+ New exercise…</option>}
         </select>
       ) : (
         <input
