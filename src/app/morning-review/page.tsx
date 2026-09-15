@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { askHermesDirect } from "../../utils/hermes/directChat";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { askHermesDirect, synthesizeSpeech } from "../../utils/hermes/directChat";
 import { NEWS_SECTIONS, POLITICO_SUBFEEDS, YOUTUBE_SITES } from "@/data/newsWatchlist";
 
 interface Headline {
@@ -158,6 +158,19 @@ interface SummaryResult {
   summary?: string;
   error?: string;
 }
+
+// Read-aloud voices -- must match browser_proxy/proxy.py's TTS_VOICES
+// allowlist exactly (that's a fixed server-side list, not client-supplied).
+// All edge-tts, free, no API key -- see that file's own comment for why.
+const TTS_VOICES = [
+  { id: "en-GB-SoniaNeural", label: "Sonia (UK)" },
+  { id: "en-US-AriaNeural", label: "Aria (US)" },
+  { id: "en-US-JennyNeural", label: "Jenny (US)" },
+  { id: "en-US-AndrewNeural", label: "Andrew (US)" },
+  { id: "en-US-BrianNeural", label: "Brian (US)" },
+];
+const DEFAULT_TTS_VOICE = TTS_VOICES[0].id;
+const TTS_VOICE_KEY = "morningReview.ttsVoice";
 
 function HeadlineRow({
   headline,
@@ -422,7 +435,8 @@ function BatchActionBar({
   batchRunning,
   onGetSummaries,
   onClear,
-  supportsTTS,
+  voice,
+  onVoiceChange,
   readState,
   readIndex,
   queue,
@@ -435,7 +449,8 @@ function BatchActionBar({
   batchRunning: boolean;
   onGetSummaries: () => void;
   onClear: () => void;
-  supportsTTS: boolean;
+  voice: string;
+  onVoiceChange: (v: string) => void;
   readState: "idle" | "playing" | "paused";
   readIndex: number;
   queue: QueueItem[];
@@ -456,8 +471,17 @@ function BatchActionBar({
           >
             {batchRunning ? "Summarizing..." : "Get Summaries"}
           </button>
-          {supportsTTS && queue.length > 0 && (
+          {queue.length > 0 && (
             <>
+              <select
+                value={voice}
+                onChange={(e) => onVoiceChange(e.target.value)}
+                disabled={readState !== "idle"}
+                title="Read-aloud voice"
+                className="text-[11px] px-2 py-1.5 rounded bg-[#0c0d10] border border-white/15 text-slate-300 disabled:opacity-40"
+              >
+                {TTS_VOICES.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}
+              </select>
               {readState === "playing" ? (
                 <button onClick={onPause} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-white/15 text-slate-300 hover:text-white">
                   Pause
@@ -507,7 +531,34 @@ export default function MorningReviewPage() {
   const [batchRunning, setBatchRunning] = useState(false);
   const [readState, setReadState] = useState<"idle" | "playing" | "paused">("idle");
   const [readIndex, setReadIndex] = useState(0);
-  const supportsTTS = typeof window !== "undefined" && "speechSynthesis" in window;
+  const [voice, setVoice] = useState(() => {
+    if (typeof window === "undefined") return DEFAULT_TTS_VOICE;
+    try { return window.localStorage.getItem(TTS_VOICE_KEY) || DEFAULT_TTS_VOICE; } catch { return DEFAULT_TTS_VOICE; }
+  });
+  const updateVoice = (v: string) => {
+    setVoice(v);
+    try { window.localStorage.setItem(TTS_VOICE_KEY, v); } catch { /* per-viewer convenience only */ }
+  };
+  // Real <audio> playback via Hermes' /tts endpoint, not the browser's own
+  // (often robotic, inconsistent-quality) built-in voice. Not rendered
+  // visibly -- just needs to exist in the DOM for playback.
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  // index (into readQueue) -> already-synthesized object URL, so the NEXT
+  // item is ready by the time the current one finishes speaking (10-20+s of
+  // playback is plenty of time to synthesize ~0.5-1s of audio in the
+  // background) -- only the very first item in a queue pays synthesis
+  // latency up front.
+  const audioCacheRef = useRef<Map<number, string>>(new Map());
+  const prefetchingRef = useRef<Set<number>>(new Set());
+  // Invalidates in-flight playback continuations on stop/skip/restart, so a
+  // stale async callback from a superseded play doesn't resurrect itself.
+  const playGenRef = useRef(0);
+
+  const clearAudioCache = () => {
+    audioCacheRef.current.forEach((url) => URL.revokeObjectURL(url));
+    audioCacheRef.current.clear();
+    prefetchingRef.current.clear();
+  };
 
   useEffect(() => {
     (async () => {
@@ -678,55 +729,106 @@ export default function MorningReviewPage() {
     .filter(({ id }) => selected.has(id))
     .map(({ id, site, headline }) => ({ id, site, headline, result: results.get(id) }));
 
+  const utteranceTextFor = (item: QueueItem) => `${item.site}. ${item.headline.title}. ${item.summary}`;
+
+  // Returns a playable object URL for queue index i, synthesizing on demand
+  // if it wasn't already prefetched. null on failure (caller skips ahead
+  // rather than stalling the whole queue on one bad TTS call).
+  const getOrSynthesize = async (i: number): Promise<string | null> => {
+    if (i < 0 || i >= readQueue.length) return null;
+    const cached = audioCacheRef.current.get(i);
+    if (cached) return cached;
+    try {
+      const url = await synthesizeSpeech(utteranceTextFor(readQueue[i]), voice);
+      audioCacheRef.current.set(i, url);
+      return url;
+    } catch {
+      return null;
+    }
+  };
+
+  // Fire-and-forget: get the NEXT item ready while the current one plays.
+  const prefetchNext = (i: number) => {
+    const next = i + 1;
+    if (next >= readQueue.length) return;
+    if (audioCacheRef.current.has(next) || prefetchingRef.current.has(next)) return;
+    prefetchingRef.current.add(next);
+    synthesizeSpeech(utteranceTextFor(readQueue[next]), voice)
+      .then((url) => { audioCacheRef.current.set(next, url); })
+      .catch(() => { /* will just synthesize on demand when actually reached */ })
+      .finally(() => { prefetchingRef.current.delete(next); });
+  };
+
   const speakFrom = (startAt: number) => {
-    if (!supportsTTS) return;
-    window.speechSynthesis.cancel();
+    const audio = audioRef.current;
+    if (!audio) return;
+    const gen = ++playGenRef.current;
     let i = startAt;
-    const speakNext = () => {
+
+    const playNext = async () => {
+      if (gen !== playGenRef.current) return; // superseded by a newer play/skip/stop
       if (i >= readQueue.length) {
         setReadState("idle");
         setReadIndex(0);
         return;
       }
       setReadIndex(i);
-      const item = readQueue[i];
-      const utter = new SpeechSynthesisUtterance(`${item.site}. ${item.headline.title}. ${item.summary}`);
-      utter.onend = () => {
+      const url = await getOrSynthesize(i);
+      if (gen !== playGenRef.current) return;
+      if (!url) {
         i += 1;
-        speakNext();
-      };
-      utter.onerror = () => {
-        i += 1;
-        speakNext();
-      };
-      window.speechSynthesis.speak(utter);
+        playNext();
+        return;
+      }
+      prefetchNext(i);
+      audio.src = url;
+      audio.onended = () => { if (gen === playGenRef.current) { i += 1; playNext(); } };
+      audio.onerror = () => { if (gen === playGenRef.current) { i += 1; playNext(); } };
+      try {
+        await audio.play();
+      } catch {
+        if (gen === playGenRef.current) { i += 1; playNext(); }
+      }
     };
+
     setReadState("playing");
-    speakNext();
+    playNext();
   };
 
   const handlePlay = () => {
     if (readState === "paused") {
-      window.speechSynthesis.resume();
+      audioRef.current?.play();
       setReadState("playing");
     } else {
       speakFrom(0);
     }
   };
   const handlePause = () => {
-    window.speechSynthesis.pause();
+    audioRef.current?.pause();
     setReadState("paused");
   };
   const handleSkip = () => speakFrom(readIndex + 1);
   const handleStop = () => {
-    window.speechSynthesis.cancel();
+    playGenRef.current += 1; // invalidate any in-flight continuation
+    const audio = audioRef.current;
+    if (audio) {
+      audio.onended = null;
+      audio.onerror = null;
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+    }
+    clearAudioCache();
     setReadState("idle");
     setReadIndex(0);
   };
 
   useEffect(() => {
+    const audio = audioRef.current;
     return () => {
-      if (supportsTTS) window.speechSynthesis.cancel();
+      playGenRef.current += 1;
+      audio?.pause();
+      clearAudioCache();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -807,6 +909,9 @@ export default function MorningReviewPage() {
         {selected.size > 0 && <SelectedSummariesPanel items={selectedItems} />}
       </div>
 
+      {/* Not rendered visibly -- just needs to exist for <audio> playback. */}
+      <audio ref={audioRef} className="hidden" />
+
       {selected.size > 0 && (
         <BatchActionBar
           selectedCount={selected.size}
@@ -816,7 +921,8 @@ export default function MorningReviewPage() {
             handleStop();
             setSelected(new Set());
           }}
-          supportsTTS={supportsTTS}
+          voice={voice}
+          onVoiceChange={updateVoice}
           readState={readState}
           readIndex={readIndex}
           queue={readQueue}
