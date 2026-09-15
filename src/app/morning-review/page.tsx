@@ -189,11 +189,16 @@ function HeadlineRow({
     }
   };
 
-  // The batch result (from the floating bar's queue) takes precedence over
-  // this row's own single-article state once it exists.
-  const shownSummary = batchResult?.status === "done" ? batchResult.summary : summary;
-  const shownError = batchResult?.status === "error" ? batchResult.error : error;
+  // A batch result (from the checkbox + "Get Summaries" flow) used to render
+  // its full text inline here too, duplicating what the "Selected Articles"
+  // section at the bottom of the page already shows -- confirmed the user
+  // prefers it live only in that one place. This row still shows its own
+  // single-article "get summary" click inline (a distinct, simpler flow, not
+  // part of the batch selection), plus a light status indicator once a batch
+  // result exists so it's not invisible from here that something happened.
   const pending = batchResult?.status === "pending";
+  const batchDone = batchResult?.status === "done";
+  const batchError = batchResult?.status === "error";
 
   return (
     <div className={`py-2 border-b border-white/[0.06] last:border-0 flex items-start gap-2 ${checked ? "bg-cyan-500/[0.06] rounded px-1 -mx-1" : ""}`}>
@@ -213,7 +218,7 @@ function HeadlineRow({
         ) : (
           <span className="font-serif text-[15px] text-[#e7eaee] leading-snug">{headline.title}</span>
         )}
-        {!shownSummary && !pending && headline.url && (
+        {!summary && !pending && !batchDone && !batchError && headline.url && (
           <button
             onClick={getSummary}
             disabled={loading}
@@ -223,10 +228,51 @@ function HeadlineRow({
           </button>
         )}
         {pending && <span className="ml-3 text-[11px] text-slate-500 align-middle">fetching article...</span>}
-        {shownSummary && <p className="mt-1 text-[13px] text-slate-300 whitespace-pre-wrap font-serif">{shownSummary}</p>}
-        {shownError && <p className="mt-1 text-xs text-red-400">{shownError}</p>}
+        {batchDone && <span className="ml-3 text-[11px] text-cyan-500 align-middle">✓ summarized — see below</span>}
+        {batchError && <span className="ml-3 text-[11px] text-red-400 align-middle">✗ failed — see below</span>}
+        {summary && <p className="mt-1 text-[13px] text-slate-300 whitespace-pre-wrap font-serif">{summary}</p>}
+        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
       </div>
     </div>
+  );
+}
+
+// The full readable summary lives here now, not duplicated inline under
+// each headline -- one place to actually read (or skim before hitting
+// "Read Aloud"), grouped by the articles you actually picked rather than
+// scattered across whichever source sections they came from. Temporary in
+// the sense that it's driven entirely by `selected` -- clearing the
+// selection clears this section too, nothing persisted.
+function SelectedSummariesPanel({
+  items,
+}: {
+  items: { id: string; site: string; headline: Headline; result: SummaryResult | undefined }[];
+}) {
+  if (!items.length) return null;
+  return (
+    <section className="mt-10 pt-6 border-t-2 border-cyan-800/60">
+      <div className="flex items-baseline gap-3 mb-1">
+        <h2 className="font-serif text-2xl text-cyan-200">Selected Articles</h2>
+        <span className="text-[11px] uppercase tracking-widest text-slate-500">{items.length} selected</span>
+      </div>
+      <p className="text-[11px] text-slate-500 mb-4">Clears when you clear your selection above.</p>
+      <div className="flex flex-col gap-4">
+        {items.map(({ id, site, headline, result }) => (
+          <div key={id} className="pb-4 border-b border-white/[0.06] last:border-0">
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-[10px] uppercase tracking-widest text-slate-500 shrink-0">{site}</span>
+              <a href={headline.url} target="_blank" rel="noreferrer" className="font-serif text-[15px] text-[#e7eaee] hover:text-cyan-200 leading-snug">
+                {headline.title}
+              </a>
+            </div>
+            {result?.status === "pending" && <p className="mt-1 text-[12px] text-slate-500">fetching article...</p>}
+            {result?.status === "done" && <p className="mt-1 text-[13px] text-slate-300 whitespace-pre-wrap font-serif">{result.summary}</p>}
+            {result?.status === "error" && <p className="mt-1 text-xs text-red-400">{result.error}</p>}
+            {!result && <p className="mt-1 text-[12px] text-slate-500 italic">Not summarized yet — hit &quot;Get Summaries&quot; below.</p>}
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -625,6 +671,13 @@ export default function MorningReviewPage() {
     .filter(({ id }) => selected.has(id) && results.get(id)?.status === "done")
     .map(({ id, site, headline }) => ({ id, site, headline, summary: results.get(id)!.summary! }));
 
+  // Every selected headline regardless of summary status (pending/done/
+  // error/not-yet-requested) -- feeds the "Selected Articles" section, which
+  // is meant to show the whole selection's progress, not just finished ones.
+  const selectedItems = allSelectableHeadlines
+    .filter(({ id }) => selected.has(id))
+    .map(({ id, site, headline }) => ({ id, site, headline, result: results.get(id) }));
+
   const speakFrom = (startAt: number) => {
     if (!supportsTTS) return;
     window.speechSynthesis.cancel();
@@ -750,6 +803,8 @@ export default function MorningReviewPage() {
             </div>
           ))}
         </section>
+
+        {selected.size > 0 && <SelectedSummariesPanel items={selectedItems} />}
       </div>
 
       {selected.size > 0 && (
