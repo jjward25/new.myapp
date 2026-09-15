@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { askHermesDirect, synthesizeSpeech } from "../../utils/hermes/directChat";
 import { NEWS_SECTIONS, POLITICO_SUBFEEDS, YOUTUBE_SITES } from "@/data/newsWatchlist";
 
@@ -185,66 +186,36 @@ function HeadlineRow({
   batchResult: SummaryResult | undefined;
   onToggleSelect: (id: string) => void;
 }) {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const getSummary = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const text = await askHermesDirect(buildSummaryPrompt(headline.url));
-      setSummary(text);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not get a summary.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // A batch result (from the checkbox + "Get Summaries" flow) used to render
-  // its full text inline here too, duplicating what the "Selected Articles"
-  // section at the bottom of the page already shows -- confirmed the user
-  // prefers it live only in that one place. This row still shows its own
-  // single-article "get summary" click inline (a distinct, simpler flow, not
-  // part of the batch selection), plus a light status indicator once a batch
-  // result exists so it's not invisible from here that something happened.
+  // 2026-09-15: the single-article "get summary" click was removed -- the
+  // checkbox + "Get Summaries" batch flow is now the only way to summarize,
+  // so this row is just a checkbox, the headline, and a light status
+  // indicator once a batch result exists (full text renders once, in
+  // SelectedSummariesPanel below, not duplicated here).
   const pending = batchResult?.status === "pending";
   const batchDone = batchResult?.status === "done";
   const batchError = batchResult?.status === "error";
 
   return (
-    <div className={`py-2 border-b border-white/[0.06] last:border-0 flex items-start gap-2 ${checked ? "bg-cyan-500/[0.06] rounded px-1 -mx-1" : ""}`}>
+    <div className={`py-2 border-b border-[#00000014] last:border-0 flex items-start gap-2 ${checked ? "bg-[#7a3324]/[0.06] rounded px-1 -mx-1" : ""}`}>
       <input
         type="checkbox"
         checked={checked}
         disabled={!headline.url}
         onChange={() => onToggleSelect(id)}
         title={!headline.url ? "No article URL -- can't be summarized" : undefined}
-        className="mt-1.5 shrink-0 accent-cyan-500 disabled:opacity-30"
+        className="mt-1.5 shrink-0 accent-[#7a3324] disabled:opacity-30"
       />
       <div className="flex-1 min-w-0">
         {headline.url ? (
-          <a href={headline.url} target="_blank" rel="noreferrer" className="font-serif text-[15px] text-[#e7eaee] hover:text-cyan-200 leading-snug">
+          <a href={headline.url} target="_blank" rel="noreferrer" title={headline.title} className="block truncate font-serif text-[15px] text-[#241a12] hover:text-[#9c4530] leading-snug">
             {headline.title}
           </a>
         ) : (
-          <span className="font-serif text-[15px] text-[#e7eaee] leading-snug">{headline.title}</span>
+          <span title={headline.title} className="block truncate font-serif text-[15px] text-[#241a12] leading-snug">{headline.title}</span>
         )}
-        {!summary && !pending && !batchDone && !batchError && headline.url && (
-          <button
-            onClick={getSummary}
-            disabled={loading}
-            className="ml-3 text-[11px] text-slate-500 hover:text-cyan-300 disabled:opacity-40 underline align-middle"
-          >
-            {loading ? "fetching article..." : "get summary"}
-          </button>
-        )}
-        {pending && <span className="ml-3 text-[11px] text-slate-500 align-middle">fetching article...</span>}
-        {batchDone && <span className="ml-3 text-[11px] text-cyan-500 align-middle">✓ summarized — see below</span>}
-        {batchError && <span className="ml-3 text-[11px] text-red-400 align-middle">✗ failed — see below</span>}
-        {summary && <p className="mt-1 text-[13px] text-slate-300 whitespace-pre-wrap font-serif">{summary}</p>}
-        {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
+        {pending && <span className="ml-3 text-[11px] text-[#7d6a52] align-middle">fetching article...</span>}
+        {batchDone && <span className="ml-3 text-[11px] text-[#7a3324] align-middle">✓ summarized — see below</span>}
+        {batchError && <span className="ml-3 text-[11px] text-[#9b1c1c] align-middle">✗ failed — see below</span>}
       </div>
     </div>
   );
@@ -263,25 +234,25 @@ function SelectedSummariesPanel({
 }) {
   if (!items.length) return null;
   return (
-    <section className="mt-10 pt-6 border-t-2 border-cyan-800/60">
+    <section className="mt-10 pt-6 border-t-2 border-[#7a3324]/40">
       <div className="flex items-baseline gap-3 mb-1">
-        <h2 className="font-serif text-2xl text-cyan-200">Selected Articles</h2>
-        <span className="text-[11px] uppercase tracking-widest text-slate-500">{items.length} selected</span>
+        <h2 className="font-serif text-2xl text-[#7a3324]">Selected Articles</h2>
+        <span className="text-[11px] uppercase tracking-widest text-[#7d6a52]">{items.length} selected</span>
       </div>
-      <p className="text-[11px] text-slate-500 mb-4">Clears when you clear your selection above.</p>
+      <p className="text-[11px] text-[#7d6a52] mb-4">Clears when you clear your selection above.</p>
       <div className="flex flex-col gap-4">
         {items.map(({ id, site, headline, result }) => (
-          <div key={id} className="pb-4 border-b border-white/[0.06] last:border-0">
+          <div key={id} className="pb-4 border-b border-[#00000014] last:border-0">
             <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-[10px] uppercase tracking-widest text-slate-500 shrink-0">{site}</span>
-              <a href={headline.url} target="_blank" rel="noreferrer" className="font-serif text-[15px] text-[#e7eaee] hover:text-cyan-200 leading-snug">
+              <span className="text-[10px] uppercase tracking-widest text-[#7d6a52] shrink-0">{site}</span>
+              <a href={headline.url} target="_blank" rel="noreferrer" className="font-serif text-[15px] text-[#241a12] hover:text-[#9c4530] leading-snug">
                 {headline.title}
               </a>
             </div>
-            {result?.status === "pending" && <p className="mt-1 text-[12px] text-slate-500">fetching article...</p>}
-            {result?.status === "done" && <p className="mt-1 text-[13px] text-slate-300 whitespace-pre-wrap font-serif">{result.summary}</p>}
-            {result?.status === "error" && <p className="mt-1 text-xs text-red-400">{result.error}</p>}
-            {!result && <p className="mt-1 text-[12px] text-slate-500 italic">Not summarized yet — hit &quot;Get Summaries&quot; below.</p>}
+            {result?.status === "pending" && <p className="mt-1 text-[12px] text-[#7d6a52]">fetching article...</p>}
+            {result?.status === "done" && <p className="mt-1 text-[13px] text-[#241a12] whitespace-pre-wrap font-serif">{result.summary}</p>}
+            {result?.status === "error" && <p className="mt-1 text-xs text-[#9b1c1c]">{result.error}</p>}
+            {!result && <p className="mt-1 text-[12px] text-[#7d6a52] italic">Not summarized yet — hit &quot;Get Summaries&quot; below.</p>}
           </div>
         ))}
       </div>
@@ -318,7 +289,7 @@ function DueDateTag({ dueDate }: { dueDate: string | null | undefined }) {
   const late = dueDate < today;
   const text = new Date(dueDate + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
   return (
-    <span className={`shrink-0 text-[10px] ${late ? "text-[#f0426a]" : "text-slate-500"}`}>{text}</span>
+    <span className={`shrink-0 text-[10px] ${late ? "text-[#f0426a]" : "text-[#7d6a52]"}`}>{text}</span>
   );
 }
 
@@ -329,6 +300,8 @@ function SourceToggle({
   selected,
   results,
   onToggleSelect,
+  open,
+  onToggle,
 }: {
   site: string;
   headlines: Headline[];
@@ -336,8 +309,12 @@ function SourceToggle({
   selected: Set<string>;
   results: Map<string, SummaryResult>;
   onToggleSelect: (id: string) => void;
+  open: boolean;
+  onToggle: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  // Lifted to the parent (openSites) so an "expand all"/"collapse all" pill
+  // can control every source in the active section at once -- this can no
+  // longer be a local useState.
   const empty = headlines.length === 0;
   // Data-driven, not a hardcoded site list -- confirmed 2026-09-14 this is a
   // real news_roundup digest bug (the URL is fetched and even handed to the
@@ -349,12 +326,12 @@ function SourceToggle({
   return (
     <div className="mb-4 break-inside-avoid">
       <button
-        onClick={() => !empty && setOpen((v) => !v)}
+        onClick={() => !empty && onToggle()}
         disabled={empty}
         className={`w-full flex items-center justify-between gap-2 text-left mb-1 ${empty ? "opacity-40 cursor-default" : ""}`}
       >
         <span className="flex items-center gap-1.5">
-          <span className="text-[12px] font-semibold uppercase tracking-wide text-slate-400">{site}</span>
+          <span className="text-[14px] font-bold uppercase tracking-wide text-[#7d6a52]">{site}</span>
           {stale && (
             <span
               title="0 headlines for 3 days straight -- likely a broken fetch, not normal 'nothing new'"
@@ -372,7 +349,7 @@ function SourceToggle({
             </span>
           )}
         </span>
-        <span className="text-[11px] text-slate-500 shrink-0">({headlines.length}){!empty && ` ${open ? "−" : "+"}`}</span>
+        <span className="text-[11px] text-[#7d6a52] shrink-0">({headlines.length}){!empty && ` ${open ? "−" : "+"}`}</span>
       </button>
       {open &&
         headlines.map((h, i) => {
@@ -395,18 +372,18 @@ function SourceToggle({
 function ProjectToggle({ name, tasks }: { name: string; tasks: any[] }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-white/[0.06] last:border-0">
+    <div className="border-b border-[#00000014] last:border-0">
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between gap-2 py-2 text-left"
       >
-        <span className="text-[13px] font-medium text-slate-200">{name}</span>
-        <span className="text-[11px] text-slate-500 shrink-0">{tasks.length} · {open ? "−" : "+"}</span>
+        <span className="text-[13px] font-medium text-[#241a12]">{name}</span>
+        <span className="text-[11px] text-[#7d6a52] shrink-0">{tasks.length} · {open ? "−" : "+"}</span>
       </button>
       {open && (
         <ul className="pb-2 space-y-1.5">
           {tasks.map((t: any) => (
-            <li key={t.id} className="flex items-start gap-2 text-[12px] text-slate-300">
+            <li key={t.id} className="flex items-start gap-2 text-[12px] text-[#241a12]">
               <span className="flex-1 min-w-0">{t.title}</span>
               <PriorityTag priority={t.priority} />
               <DueDateTag dueDate={t.dueDate} />
@@ -461,13 +438,13 @@ function BatchActionBar({
 }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-4 pointer-events-none">
-      <div className="pointer-events-auto w-full max-w-[700px] bg-[#171a1f] border border-cyan-800/60 rounded-t-xl shadow-[0_-8px_30px_rgba(0,0,0,0.5)] px-4 py-3 flex flex-col gap-2">
+      <div className="pointer-events-auto w-full max-w-[700px] bg-[#f8f1e0] border border-[#7a3324]/40 rounded-t-xl shadow-[0_-8px_30px_rgba(0,0,0,0.5)] px-4 py-3 flex flex-col gap-2">
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="font-serif text-[14px] text-cyan-200">{selectedCount} selected</span>
+          <span className="font-serif text-[14px] text-[#7a3324]">{selectedCount} selected</span>
           <button
             onClick={onGetSummaries}
             disabled={batchRunning}
-            className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded bg-cyan-800/40 border border-cyan-700 text-cyan-200 hover:bg-cyan-800/60 disabled:opacity-40"
+            className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded bg-[#7a3324]/10 border border-[#7a3324] text-[#7a3324] hover:bg-[#7a3324]/20 disabled:opacity-40"
           >
             {batchRunning ? "Summarizing..." : "Get Summaries"}
           </button>
@@ -478,37 +455,37 @@ function BatchActionBar({
                 onChange={(e) => onVoiceChange(e.target.value)}
                 disabled={readState !== "idle"}
                 title="Read-aloud voice"
-                className="text-[11px] px-2 py-1.5 rounded bg-[#0c0d10] border border-white/15 text-slate-300 disabled:opacity-40"
+                className="text-[11px] px-2 py-1.5 rounded bg-[#f8f1e0] border border-[#00000020] text-[#241a12] disabled:opacity-40"
               >
                 {TTS_VOICES.map((v) => <option key={v.id} value={v.id}>{v.label}</option>)}
               </select>
               {readState === "playing" ? (
-                <button onClick={onPause} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-white/15 text-slate-300 hover:text-white">
+                <button onClick={onPause} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-[#00000020] text-[#241a12] hover:text-[#7a3324]">
                   Pause
                 </button>
               ) : (
-                <button onClick={onPlay} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-white/15 text-slate-300 hover:text-white">
+                <button onClick={onPlay} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-[#00000020] text-[#241a12] hover:text-[#7a3324]">
                   {readState === "paused" ? "Resume" : "Read Aloud"}
                 </button>
               )}
               {readState !== "idle" && (
                 <>
-                  <button onClick={onSkip} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-white/15 text-slate-300 hover:text-white">
+                  <button onClick={onSkip} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-[#00000020] text-[#241a12] hover:text-[#7a3324]">
                     Skip
                   </button>
-                  <button onClick={onStop} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-white/15 text-slate-300 hover:text-white">
+                  <button onClick={onStop} className="text-[11px] uppercase tracking-widest px-3 py-1.5 rounded border border-[#00000020] text-[#241a12] hover:text-[#7a3324]">
                     Stop
                   </button>
                 </>
               )}
             </>
           )}
-          <button onClick={onClear} className="ml-auto text-[11px] text-slate-500 hover:text-slate-300 underline">
+          <button onClick={onClear} className="ml-auto text-[11px] text-[#7d6a52] hover:text-[#241a12] underline">
             Clear
           </button>
         </div>
         {readState !== "idle" && queue[readIndex] && (
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-[#7d6a52]">
             Now reading {readIndex + 1} of {queue.length}: {queue[readIndex].site} -- {queue[readIndex].headline.title}
           </p>
         )}
@@ -517,7 +494,7 @@ function BatchActionBar({
   );
 }
 
-export default function MorningReviewPage() {
+export default function MorningReviewView() {
   const [journal, setJournal] = useState<{ content: string; entryDatetime: string } | null>(null);
   const [tasksByProject, setTasksByProject] = useState<Record<string, any[]> | null>(null);
   const [tasksError, setTasksError] = useState<string | null>(null);
@@ -525,6 +502,22 @@ export default function MorningReviewPage() {
   const [roundupDate, setRoundupDate] = useState<string | null>(null);
   const [staleSites, setStaleSites] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  // Pill-nav'd single section, not a scroller -- Traditional (RSS) first
+  // since NEWS_SECTIONS already lists it first (src/data/newsWatchlist.js).
+  const [activeSection, setActiveSection] = useState(0);
+  // Which sources are expanded, by site name -- lifted out of SourceToggle
+  // (was a local useState there) so the expand-all/collapse-all pill can
+  // drive every source in the active section at once. Keyed globally (not
+  // per-section) so expand state is remembered if you switch sections and
+  // come back.
+  const [openSites, setOpenSites] = useState<Set<string>>(new Set());
+  const toggleSiteOpen = (site: string) =>
+    setOpenSites((prev) => {
+      const next = new Set(prev);
+      if (next.has(site)) next.delete(site);
+      else next.add(site);
+      return next;
+    });
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [results, setResults] = useState<Map<string, SummaryResult>>(new Map());
@@ -642,6 +635,17 @@ export default function MorningReviewPage() {
     if (unmatched.length) out.push({ section: "Other", sites: unmatched });
     return out;
   }, [siteSections]);
+
+  // Drives both the expand-all/collapse-all pill (in the header row) and
+  // the source list below it -- computed once here rather than twice.
+  const currentSites = grouped[activeSection]?.sites ?? [];
+  const allSourcesOpen = currentSites.length > 0 && currentSites.every((s) => openSites.has(s.site));
+  const toggleAllCurrentSites = () =>
+    setOpenSites((prev) => {
+      const next = new Set(prev);
+      currentSites.forEach((s) => (allSourcesOpen ? next.delete(s.site) : next.add(s.site)));
+      return next;
+    });
 
   // Flat list of every currently-selectable (url-having) headline across
   // every section, in page order -- feeds both the batch queue and the
@@ -834,57 +838,98 @@ export default function MorningReviewPage() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#0c0d10]">
-      <div className="text-white px-4 py-8 max-w-5xl mx-auto">
+    <div className="min-h-screen w-full bg-[#efe0c3]">
+      <div className="text-[#241a12] px-4 py-8 max-w-5xl mx-auto">
         {/* masthead */}
-        <div className="text-center border-b-2 border-cyan-800/60 pb-4 mb-8">
-          <h1 className="font-serif text-4xl tracking-tight text-cyan-200">Morning Review</h1>
-          <p className="text-[11px] uppercase tracking-[0.25em] text-slate-500 mt-2">
+        <div className="text-center border-b-2 border-[#7a3324]/40 pb-4 mb-8">
+          <h1 className="font-serif text-4xl tracking-tight text-[#7a3324]">Morning Review</h1>
+          <p className="text-[11px] uppercase tracking-[0.25em] text-[#7d6a52] mt-2">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
           </p>
         </div>
 
-        {loading && <p className="text-slate-400 text-center">Loading...</p>}
+        {loading && <p className="text-[#7d6a52] text-center">Loading...</p>}
 
         {/* Tasks (1/3) + Journal (2/3) */}
         <div className="grid md:grid-cols-3 gap-6 mb-10">
-          <section className="md:col-span-1 bg-[#171a1f] rounded-xl border border-white/10 p-4">
-            <h2 className="font-serif text-lg text-cyan-200 mb-1">Open Tasks by Project</h2>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">tap a project to expand</p>
-            {tasksError && <p className="text-sm text-red-400">{tasksError}</p>}
+          <section className="md:col-span-1 bg-[#f8f1e0] rounded-xl border border-[#7a3324]/40 p-4">
+            <h2 className="font-serif text-lg text-[#7a3324] mb-1">Open Tasks by Project</h2>
+            <p className="text-[10px] uppercase tracking-widest text-[#7d6a52] mb-2">tap a project to expand</p>
+            {tasksError && <p className="text-sm text-[#9b1c1c]">{tasksError}</p>}
             {tasksByProject &&
               Object.entries(tasksByProject)
                 .sort(([a], [b]) => (a === "ToDos" ? -1 : b === "ToDos" ? 1 : a.localeCompare(b)))
                 .map(([project, tasks]) => <ProjectToggle key={project} name={project} tasks={tasks} />)}
           </section>
 
-          <section className="md:col-span-2 bg-[#171a1f] rounded-xl border border-white/10 p-4">
-            <h2 className="font-serif text-lg text-cyan-200 mb-1">Last Journal Entry</h2>
+          <section className="md:col-span-2 bg-[#f8f1e0] rounded-xl border border-[#7a3324]/40 p-4">
+            <h2 className="font-serif text-lg text-[#7a3324] mb-1">Last Journal Entry</h2>
             {journal ? (
               <>
-                <p className="text-xs text-slate-500 mb-2">{new Date(journal.entryDatetime).toLocaleString()}</p>
-                <p className="text-[14px] text-slate-300 whitespace-pre-wrap font-serif leading-relaxed">{journal.content}</p>
+                <p className="text-xs text-[#7d6a52] mb-2">{new Date(journal.entryDatetime).toLocaleString()}</p>
+                <p className="text-[14px] text-[#241a12] whitespace-pre-wrap font-serif leading-relaxed">{journal.content}</p>
               </>
             ) : (
-              !loading && <p className="text-sm text-slate-500">No recent journal entry.</p>
+              !loading && <p className="text-sm text-[#7d6a52]">No recent journal entry.</p>
             )}
           </section>
         </div>
 
-        {/* News Roundup, grouped by watchlist section -> source */}
+        {/* News Roundup -- pill nav picks one category, shown as a single
+            full-width column (not a scroller, not a 2-col grid). Traditional
+            (RSS) first since NEWS_SECTIONS lists it first. */}
         <section>
-          <div className="flex items-baseline gap-3 border-b-2 border-cyan-800/60 pb-2 mb-4">
-            <h2 className="font-serif text-2xl text-cyan-200">News Roundup</h2>
-            {roundupDate && <span className="text-[11px] uppercase tracking-widest text-slate-500">{roundupDate}</span>}
+          <div className="flex items-baseline gap-3 border-b-2 border-[#7a3324]/40 pb-2">
+            <h2 className="font-serif text-2xl text-[#7a3324]">News Roundup</h2>
+            {roundupDate && <span className="text-[11px] uppercase tracking-widest text-[#7d6a52]">{roundupDate}</span>}
           </div>
-          {!loading && grouped.length === 0 && <p className="text-sm text-slate-400">No roundup yet.</p>}
-          {grouped.map(({ section, sites }) => (
-            <div key={section} className="mb-8">
-              <h3 className="text-[11px] uppercase tracking-[0.2em] text-cyan-500/80 font-semibold mb-3 pb-1 border-b border-cyan-900/50">
-                {section}
-              </h3>
-              <div className="grid md:grid-cols-2 gap-x-8">
-                {sites.map((s) => {
+          {!loading && grouped.length === 0 && <p className="text-sm text-[#7d6a52]">No roundup yet.</p>}
+          {grouped.length > 0 && (
+            <>
+              <div className="flex items-center justify-between gap-2 mb-6 px-3 py-2.5 bg-[#7a3324]/10 border-b border-[#7a3324]/25">
+                <button
+                  onClick={() => setActiveSection((i) => Math.max(0, i - 1))}
+                  disabled={activeSection === 0}
+                  aria-label="Previous category"
+                  className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#7a3324]/30 text-[#7a3324] hover:border-[#7a3324] disabled:opacity-30 disabled:hover:border-[#7a3324]/30"
+                >
+                  <ChevronLeft size={14} />
+                </button>
+                <div className="flex-1 flex items-center justify-center gap-6 overflow-x-auto">
+                  {grouped.map(({ section }, i) => (
+                    <button
+                      key={section}
+                      onClick={() => setActiveSection(i)}
+                      className={`shrink-0 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border ${
+                        i === activeSection
+                          ? "bg-[#7a3324] border-[#7a3324] text-[#f8f1e0]"
+                          : "border-[#7a3324]/30 text-[#7a3324]/70 hover:border-[#7a3324]"
+                      }`}
+                    >
+                      {section}
+                    </button>
+                  ))}
+                  <button
+                    onClick={toggleAllCurrentSites}
+                    title={allSourcesOpen ? "Collapse all" : "Expand all"}
+                    aria-label={allSourcesOpen ? "Collapse all" : "Expand all"}
+                    className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#7a3324]/30 text-[#7a3324] hover:border-[#7a3324] text-[15px] leading-none"
+                  >
+                    {allSourcesOpen ? "−" : "+"}
+                  </button>
+                </div>
+                <button
+                  onClick={() => setActiveSection((i) => Math.min(grouped.length - 1, i + 1))}
+                  disabled={activeSection === grouped.length - 1}
+                  aria-label="Next category"
+                  className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#7a3324]/30 text-[#7a3324] hover:border-[#7a3324] disabled:opacity-30 disabled:hover:border-[#7a3324]/30"
+                >
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                {currentSites.map((s) => {
                   const norm = (x: string) => x.toLowerCase();
                   const stale = [...staleSites].some(
                     (known) => s.site === known || norm(s.site).includes(norm(known)) || norm(known).includes(norm(s.site))
@@ -898,12 +943,14 @@ export default function MorningReviewPage() {
                       selected={selected}
                       results={results}
                       onToggleSelect={toggleSelect}
+                      open={openSites.has(s.site)}
+                      onToggle={() => toggleSiteOpen(s.site)}
                     />
                   );
                 })}
               </div>
-            </div>
-          ))}
+            </>
+          )}
         </section>
 
         {selected.size > 0 && <SelectedSummariesPanel items={selectedItems} />}
