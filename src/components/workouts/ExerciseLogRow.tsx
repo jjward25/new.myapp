@@ -34,11 +34,15 @@ export default function ExerciseLogRow({
   ex,
   def,
   date,
+  phase,
+  environment,
   onLogged,
 }: {
   ex: DefExercise;
   def: WorkoutDef;
   date: string;
+  phase?: string;
+  environment?: string;
   onLogged: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -61,6 +65,8 @@ export default function ExerciseLogRow({
         date,
         rir: rir || null,
         notes: ex.superset ? `SS ${ex.superset}` : '',
+        phase: phase || null,
+        environment: environment || null,
       };
       if (isCardio && (miles || minutes)) {
         body.cardio = { miles: miles ? Number(miles) : null, minutes: minutes ? Number(minutes) : null };
@@ -79,8 +85,8 @@ export default function ExerciseLogRow({
     <div className="border border-white/10 rounded bg-[#0c0d10]">
       <button onClick={() => setOpen((v) => !v)} className="w-full flex items-center gap-2 px-2.5 py-2 text-left">
         <span className="mc-mono text-[10px] text-[#5b626d] w-3">{open ? '−' : '+'}</span>
-        <span className="text-[13px] text-[#e7eaee] flex-1 min-w-0 truncate">
-          {ex.superset && <span className="text-[#5b626d] mr-1">[{ex.superset}]</span>}
+        <span className="text-[13px] font-medium text-[#e7eaee] flex-1 min-w-0 truncate">
+          {ex.superset && <span className="text-[#8a919c] mr-1">[{ex.superset}]</span>}
           {ex.name}
         </span>
         <span className="mc-mono text-[10px] text-[#8a919c] shrink-0">{prescribed}</span>

@@ -5,7 +5,6 @@ import { mission, goalLegend } from "@/data/fitnessProgram";
 import type { WorkoutDef } from "./ExerciseLogRow";
 import WeekCalendar from "./WeekCalendar";
 import DayShelf from "./DayShelf";
-import StartWorkoutModal from "./StartWorkoutModal";
 import PhilosophyPanel from "./PhilosophyPanel";
 import { getTodayEST } from "@/utils/dateUtils";
 
@@ -19,7 +18,6 @@ export default function ProgramView() {
   const [defs, setDefs] = useState<WorkoutDef[]>([]);
   const [entries, setEntries] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(getTodayEST());
-  const [modal, setModal] = useState<{ date: string; def: WorkoutDef | null } | null>(null);
 
   const load = useCallback(async () => {
     const [d, e] = await Promise.all([
@@ -76,24 +74,13 @@ export default function ProgramView() {
         entries={entries}
         selectedDate={selectedDate}
         onSelectDay={setSelectedDate}
-        onStartWorkout={(date, def) => setModal({ date, def })}
-      />
+      >
+        {selectedDate && (
+          <DayShelf key={selectedDate} entries={dayEntries} def={selectedDef} defs={defs} date={selectedDate} onLogged={load} />
+        )}
+      </WeekCalendar>
 
       <PhilosophyPanel />
-
-      {selectedDate && (
-        <DayShelf date={selectedDate} entries={dayEntries} def={selectedDef} onClose={() => setSelectedDate(null)} />
-      )}
-
-      {modal && (
-        <StartWorkoutModal
-          date={modal.date}
-          programDefs={programDefs}
-          initialDef={modal.def}
-          onClose={() => setModal(null)}
-          onLogged={load}
-        />
-      )}
     </div>
   );
 }

@@ -64,6 +64,12 @@ export async function logWorkoutEntry(entry) {
     category: entry.category || '',
     notes: entry.notes || '',
     rir: entry.rir ?? null,
+    // Session-level tags from the day accordion -- not yet used to change
+    // what's prescribed (phase-aware volume / environment-aware exercise
+    // lists are a separate, bigger, not-yet-designed feature); recorded now
+    // so that history exists once that work happens.
+    phase: entry.phase || null,
+    environment: entry.environment || null,
     created_at: now,
     updated_at: now,
   };

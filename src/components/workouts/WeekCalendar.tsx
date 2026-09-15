@@ -33,15 +33,21 @@ export default function WeekCalendar({
   defs,
   entries,
   onSelectDay,
-  onStartWorkout,
   selectedDate,
+  children,
 }: {
   program: "baddie" | "original";
   defs: WorkoutDef[];
   entries: Entry[];
-  onSelectDay: (date: string) => void;
-  onStartWorkout: (date: string, def: WorkoutDef | null) => void;
+  onSelectDay: (date: string | null) => void;
   selectedDate: string | null;
+  // The selected day's exercise list -- rendered as a real accordion panel
+  // inside this same calendar card, not a separate floating overlay. Was a
+  // `fixed inset-x-0 bottom-0` sheet detached from the calendar entirely, so
+  // clicking a date up in the grid popped an unrelated panel at the bottom
+  // of the whole viewport -- confirmed the actual bug 2026-09-15, not just a
+  // style nitpick.
+  children?: React.ReactNode;
 }) {
   const today = getTodayEST();
   // Every program is pinned to fixed weekdays (see byWeekday below), so the
@@ -83,7 +89,7 @@ export default function WeekCalendar({
           return (
             <button
               key={date}
-              onClick={() => onSelectDay(date)}
+              onClick={() => onSelectDay(isSelected ? null : date)}
               className={`flex flex-col items-center gap-1 rounded p-1.5 border text-left transition-colors ${
                 isSelected ? "border-[#22d3ee] bg-[#22d3ee]/10" : "border-white/10 bg-[#0c0d10] hover:border-white/25"
               }`}
@@ -104,31 +110,18 @@ export default function WeekCalendar({
       {selectedDate && (
         <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/[0.08]">
           <span className="mc-mono text-[11px] text-[#8a919c]">{selectedDate}</span>
-          {(() => {
-            const dow = new Date(selectedDate + "T00:00:00").getDay();
-            const suggestedDef = byWeekday[WEEKDAY_KEYS[dow]];
-            const hasLog = (entriesByDate[selectedDate] || []).length > 0;
-            return (
-              <>
-                <button
-                  onClick={() => onStartWorkout(selectedDate, suggestedDef || null)}
-                  className="ml-auto mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded bg-white/[0.08] border border-white/25 text-[#e7eaee] hover:bg-[#22d3ee]/15 hover:border-[#22d3ee] hover:text-[#22d3ee]"
-                >
-                  {hasLog ? "Edit Workout" : "Start Workout"}
-                </button>
-                {hasLog && (
-                  <button
-                    onClick={() => onStartWorkout(selectedDate, null)}
-                    className="mc-mono text-[10px] uppercase tracking-widest px-3 py-1.5 rounded bg-white/[0.06] border border-white/15 text-[#8a919c] hover:text-[#e7eaee]"
-                  >
-                    + Add Another
-                  </button>
-                )}
-              </>
-            );
-          })()}
         </div>
       )}
+
+      {/* Accordion: animates by height (grid-template-rows 0fr<->1fr), not
+          position -- the panel grows directly out of the calendar it
+          belongs to instead of appearing somewhere else on screen. */}
+      <div
+        className="grid transition-[grid-template-rows] duration-200 ease-out"
+        style={{ gridTemplateRows: selectedDate ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">{selectedDate ? children : null}</div>
+      </div>
     </div>
   );
 }
